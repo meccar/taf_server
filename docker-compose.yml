@@ -1,0 +1,6 @@
+﻿services:
+  taf_server:
+    image: taf_server
+    build:
+      context: .
+      dockerfile: Dockerfile
