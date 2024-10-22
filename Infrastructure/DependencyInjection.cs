@@ -25,7 +25,7 @@ public static class DependencyInjection
         // services.ConfigureHangfireServices();
         // services.ConfigureMediatR();
         // services.ConfigureIdentity();
-        // services.ConfigureMapper();
+        services.ConfigureMapper();
         // services.ConfigureSwagger();
         // services.ConfigureAppSettings(configuration);
         // services.ConfigureApplication();
