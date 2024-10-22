@@ -9,6 +9,7 @@ using taf_server.Domain.Interfaces;
 using taf_server.Infrastructure.Data;
 using taf_server.Infrastructure.Entities;
 using taf_server.Presentations.Dtos.UserLoginData;
+using taf_server.Presentations.Helper;
 
 namespace taf_server.Infrastructure.Repositories;
 public class UserLoginDataCommandRepository 
@@ -36,6 +37,7 @@ public class UserLoginDataCommandRepository
     {
         var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataDto);
         
+        userLoginDataEntity.PasswordHash = HashHelper.Encrypt(userLoginDataDto.Password);
         await CreateAsync(userLoginDataEntity);
 
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);

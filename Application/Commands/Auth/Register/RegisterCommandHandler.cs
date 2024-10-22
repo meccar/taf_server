@@ -19,7 +19,7 @@ public class RegisterCommandHandler(UnitOfWork unitOfWork)
 
         var userAccount = await unitOfWork.UserAccountCommandRepository.CreateUserAsync(request.UserAccount);
         userAccount.UserLoginData = await unitOfWork.UserLoginDataCommandRepository.CreateUserLoginData(request.UserLogin);
-        
+
         return userAccount;
     }
 }
