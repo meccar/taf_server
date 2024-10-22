@@ -1,6 +1,6 @@
-﻿using taf_server.Presentations.Dtos.Authentication;
+﻿using taf_server.Domain.Model;
+using taf_server.Presentations.Dtos.Authentication;
 using taf_server.Domain.SeedWork.Command;
-using taf_server.Domain.SeedWork.Enums.UserAccount;
 using taf_server.Presentations.Dtos.UserAccount;
 using taf_server.Presentations.Dtos.UserLoginData;
 
@@ -12,7 +12,7 @@ namespace taf_server.Application.Commands.Auth.Register;
 /// <remarks>
 /// This command is used to create a new user account with the provided details.
 /// </remarks>
-public class RegisterCommand : ICommand<RegisterUserResponseDto>
+public class RegisterCommand : ICommand<UserAccountModel>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommand"/> class.

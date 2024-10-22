@@ -37,6 +37,8 @@ public class UserAccountCommandRepository
     {
         var userAccountEntity = _mapper.Map<UserAccountEntity>(createUserAccountDto);
         
+        await CreateAsync(userAccountEntity);
+        
         var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
         return userAccountModel;
     }
