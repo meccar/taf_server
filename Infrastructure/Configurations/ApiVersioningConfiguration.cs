@@ -22,7 +22,13 @@ public static class ApiVersioningConfiguration
                 options =>
                 {
                     options.Conventions.Add( new VersionByNamespaceConvention() );
-                } );
+                })
+            .AddApiExplorer(
+                options =>
+                {
+                    options.GroupNameFormat = "'v'VVV";
+                    options.SubstituteApiVersionInUrl = true;
+                });
                 
         return services;
     }

@@ -22,16 +22,11 @@ try
     
     // Add services to the container.
     builder.Logging.AddConsole();
-    builder.Services.AddControllers();
-    builder.Services.AddEndpointsApiExplorer();
+    // builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
     builder.Services.AddGrpc();
 
-    // builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-    // builder.Services.AddScoped<IUserAccountCommandRepository, UserAccountCommandRepository>();
-    // builder.Services.AddScoped<IUserLoginDataCommandRepository, UserLoginDataCommandRepository>();
 
-    // builder.Services.AddScoped<IValidator<RegisterUserRequestDto>, RegisterValidator>();
 
     builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
 

@@ -1,7 +1,13 @@
 
+using FluentValidation;
 using MediatR;
 using taf_server.Infrastructure.Configurations;
 using Microsoft.Extensions.DependencyInjection;
+using taf_server.Domain.Interfaces;
+using taf_server.Infrastructure.Repositories;
+using taf_server.Infrastructure.Repositories.Command;
+using taf_server.Presentations.Dtos.Authentication;
+using taf_server.Presentations.Validators.Auth;
 
 namespace taf_server.Infrastructure;
 
@@ -14,7 +20,7 @@ public static class DependencyInjection
         services.ConfigureControllers();
         services.ConfigureApiVersioning();
         // services.ConfigureCors(appCors);
-        // services.ConfigureApplicationDbContext(configuration);
+        services.ConfigureDbContext(configuration);
         // services.ConfigureQuartz();
         // services.ConfigureHangfireServices();
         // services.ConfigureMediatR();
@@ -35,7 +41,13 @@ public static class DependencyInjection
         // services.Decorate(typeof(INotificationHandler<>), typeof(IdempotentDomainEventHandler<>));
 
         // services.AddScoped<IProcessOutboxMessagesJob, ProcessOutboxMessagesJob>();
-
+        
+        services.AddScoped<IUserAccountCommandRepository, UserAccountCommandRepository>();
+        services.AddScoped<IUserLoginDataCommandRepository, UserLoginDataCommandRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        
+        services.AddScoped<IValidator<RegisterUserRequestDto>, RegisterValidator>();
+        
         // services
         //     .AddTransient<ISerializeService, SerializeService>()
         //     .AddTransient<ICacheService, CacheService>()

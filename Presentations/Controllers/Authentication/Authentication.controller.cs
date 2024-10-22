@@ -1,8 +1,8 @@
+using Asp.Versioning;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using taf_server.Presentations.Dtos.Authentication;
-// using taf_server.Presentations.Usecases.Authentication;
 using Swashbuckle.AspNetCore.Annotations;
 using taf_server.Application.Commands.Auth.Register;
 using taf_server.Application.Exceptions;
@@ -12,7 +12,9 @@ using taf_server.Presentations.HttpResponss;
 namespace taf_server.Presentations.Controllers.Authentication;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/{version:apiVersion}/[controller]")]
+
 public class AuthenticationController
     : ControllerBase
 {
