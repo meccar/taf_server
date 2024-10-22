@@ -6,6 +6,15 @@ using taf_server.Presentations.Dtos.Authentication;
 
 namespace taf_server.Application.Commands.Auth.Register;
 
+/// <summary>
+/// Handles the registration of a new user account.
+/// </summary>
+/// <remarks>
+/// This command handler checks for the existence of the user's email and phone number
+/// to prevent duplicates. If the email or phone number already exists, it throws a 
+/// <see cref="BadRequestException"/>. If both are valid, it creates a new user account 
+/// and associated login data.
+/// </remarks>
 public class RegisterCommandHandler(UnitOfWork unitOfWork) 
         : ICommandHandler<RegisterCommand, UserAccountModel>
 {

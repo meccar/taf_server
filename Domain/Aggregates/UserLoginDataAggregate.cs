@@ -5,6 +5,15 @@ using taf_server.Domain.SeedWork.Interfaces;
 
 namespace taf_server.Domain.Aggregates;
 
+/// <summary>
+/// Represents the login data associated with a user account.
+/// </summary>
+/// <remarks>
+/// This aggregate extends the IdentityUser class and encapsulates data related to
+/// user authentication, including password management, email status, and user 
+/// account association. It implements the <see cref="IDateTracking"/> interface 
+/// for tracking the creation and update timestamps.
+/// </remarks>
 public class UserLoginDataAggregate : IdentityUser, IDateTracking
 {
     public int Id { get; set; }

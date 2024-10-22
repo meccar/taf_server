@@ -8,14 +8,21 @@
     <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="FluentValidation" Version="11.10.0" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Grpc.AspNetCore" Version="2.57.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="MicroElements.Swashbuckle.FluentValidation" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0-rc.2.24473.5" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Serilog" Version="4.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0-rc.2.24474.1" />
@@ -30,5 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Application\Queries\Auth\" />
+    <Folder Include="Infrastructure\Repositories\Query\" />
   </ItemGroup>
 </Project>

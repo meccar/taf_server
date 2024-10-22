@@ -6,6 +6,15 @@ using taf_server.Domain.SeedWork.Interfaces;
 using taf_server.Infrastructure.Entities;
 
 namespace taf_server.Domain.Aggregates;
+
+/// <summary>
+/// Represents a user account within the application, extending the IdentityUser class.
+/// </summary>
+/// <remarks>
+/// This aggregate encapsulates user-related data and behavior, including personal details,
+/// account status, and associated tokens. It implements the <see cref="IDateTracking"/> 
+/// interface for managing creation and update timestamps.
+/// </remarks>
 public class UserAccountAggregate : IdentityUser, IDateTracking
 {
     public int Id { get; set; }

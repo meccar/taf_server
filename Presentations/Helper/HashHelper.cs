@@ -1,10 +1,8 @@
-using BCrypt.Net;
-
 namespace taf_server.Presentations.Helper;
 
 public class HashHelper
 {
-    private const int salt = 10;
+    private const int Salt = 10;
 
     /// <summary>
     /// Encrypts a plain string
@@ -12,7 +10,7 @@ public class HashHelper
     /// <param name="str">The string to encrypt</param>
     /// <returns>A Task that represents the asynchronous operation. The task result contains the encrypted string.</returns>
     public static string Encrypt(string str) =>
-        BCrypt.Net.BCrypt.HashPassword(str, salt );
+        BCrypt.Net.BCrypt.HashPassword(str, Salt );
 
     
     /// <summary>

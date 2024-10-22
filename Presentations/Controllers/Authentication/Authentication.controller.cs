@@ -54,9 +54,5 @@ public class AuthenticationController
         {
             return BadRequest(new ApiBadRequestResponse(e.Message));
         }
-        // catch (Exception)
-        // {
-        //     throw;
-        // }
     }
 }
