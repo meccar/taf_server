@@ -15,24 +15,36 @@ namespace taf_server.Infrastructure.Repositories;
 /// made to the database, ensuring data integrity. The class encapsulates repositories for user accounts 
 /// and user login data, providing a cohesive interface for managing related data operations.
 /// </remarks>
-public class UnitOfWork(
-    ApplicationDbContext context,
-    bool disposed,
-    IUserAccountCommandRepository userAccountCommandRepository,
-    IUserLoginDataCommandRepository userLoginDataCommandRepository)
-    : IUnitOfWork
+public class UnitOfWork() : IUnitOfWork
 {
-    private bool _disposed = disposed;
+    private readonly ApplicationDbContext _context;
+    private bool _disposed = false;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
+    /// </summary>
+    /// <param name="context">The database context used for data operations.</param>
+    /// <param name="userAccountCommandRepository">The repository for user account commands.</param>
+    /// <param name="userLoginDataCommandRepository">The repository for user login data commands.</param>
+    public UnitOfWork(
+        ApplicationDbContext context,
+        IUserAccountCommandRepository userAccountCommandRepository,
+        IUserLoginDataCommandRepository userLoginDataCommandRepository)
+    {
+        _context = context;
+        UserAccountCommandRepository = userAccountCommandRepository;
+        UserLoginDataCommandRepository = userLoginDataCommandRepository;
+    }
 
     /// <summary>
     /// Gets the repository for user account commands.
     /// </summary>
-    public IUserAccountCommandRepository UserAccountCommandRepository { get; } = userAccountCommandRepository;
+    public IUserAccountCommandRepository UserAccountCommandRepository { get; }
     
     /// <summary>
     /// Gets the repository for user login data commands.
     /// </summary>
-    public IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; } = userLoginDataCommandRepository;
+    public IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; }
 
     /// <summary>
     /// Releases the resources used by the <see cref="UnitOfWork"/> class.
@@ -49,7 +61,7 @@ public class UnitOfWork(
     /// <returns>A task representing the asynchronous operation, with the task result containing the number of state entries written to the database.</returns>
     public Task<int> CommitAsync()
     {
-        return context.SaveChangesAsync();
+        return _context.SaveChangesAsync();
     }
 
     /// <summary>
@@ -58,7 +70,7 @@ public class UnitOfWork(
     /// <returns>A task representing the asynchronous operation, with the task result containing the database transaction.</returns>
     public Task<IDbContextTransaction> BeginTransactionAsync()
     {
-        return context.Database.BeginTransactionAsync();
+        return _context.Database.BeginTransactionAsync();
     }
 
     /// <summary>
@@ -68,7 +80,7 @@ public class UnitOfWork(
     public async Task EndTransactionAsync()
     {
         await CommitAsync();
-        await context.Database.CommitTransactionAsync();
+        await _context.Database.CommitTransactionAsync();
     }
 
     /// <summary>
@@ -77,7 +89,7 @@ public class UnitOfWork(
     /// <returns>A task representing the asynchronous operation.</returns>
     public Task RollbackTransactionAsync()
     {
-        return context.Database.RollbackTransactionAsync();
+        return _context.Database.RollbackTransactionAsync();
     }
 
     /// <summary>
@@ -88,7 +100,7 @@ public class UnitOfWork(
     {
         if (!_disposed)
             if (disposing)
-                context.Dispose();
+                _context.Dispose();
         _disposed = true;
     }
 }
