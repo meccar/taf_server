@@ -10,14 +10,14 @@ public class RegisterCommandHandler(UnitOfWork unitOfWork)
 {
     public async Task<RegisterUserResponseDto> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        if (await unitOfWork.UserAccountCommandRepository.FindByEmailAsync(request.UserLogin.Email) != null)
+        if (await unitOfWork.UserLoginDataCommandRepository.IsUserLoginDataExisted(request.UserLogin.Email))
             throw new BadRequestException("Email already exists");
 
-        if (await unitOfWork.UserAccountCommandRepository.FindByPhoneNumberAsync(request.UserAccount.PhoneNumber) != null)
+        if (await unitOfWork.UserAccountCommandRepository.IsUserAccountDataExisted(request.UserAccount.PhoneNumber))
             throw new BadRequestException("Phone number already exists");
 
+        // var userLoginData =
         var userAccount = await unitOfWork.UserAccountCommandRepository.CreateUserAsync(request.UserAccount);
-        var userLoginData = await unitOfWork.UserLoginDataCommandRepository.IsUserLoginDataExisted(request.UserLogin.Email)
 
         return null;
     }

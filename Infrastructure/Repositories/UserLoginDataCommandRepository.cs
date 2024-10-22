@@ -13,13 +13,16 @@ namespace taf_server.Infrastructure.Repositories;
 public class UserLoginDataCommandRepository 
     : RepositoryBase<UserLoginDataEntity>, IUserLoginDataCommandRepository
 {
+    private readonly IMapper _mapper;
     private readonly UserManager<UserLoginDataAggregate> _userManager;
     
     public UserLoginDataCommandRepository(
         ApplicationDbContext context,
+        IMapper mapper,
         UserManager<UserLoginDataAggregate> userManager)
             : base(context)
     {
+        _mapper = mapper;
         _userManager = userManager;
     }
     
