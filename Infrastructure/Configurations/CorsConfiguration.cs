@@ -9,7 +9,7 @@ public static class CorsConfiguration
             options.AddPolicy(appCors, policy =>
                 {
                     policy
-                        .WithOrigins("*")
+                        // .WithOrigins("*")
                         .AllowCredentials()
                         .AllowAnyHeader()
                         .AllowAnyMethod();

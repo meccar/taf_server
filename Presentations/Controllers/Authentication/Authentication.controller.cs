@@ -7,6 +7,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using taf_server.Application.Commands.Auth.Register;
 using taf_server.Application.Exceptions;
 using taf_server.Presentations.Dtos.UserAccount;
+using taf_server.Presentations.HttpResponse;
 using taf_server.Presentations.HttpResponss;
 
 namespace taf_server.Presentations.Controllers.Authentication;

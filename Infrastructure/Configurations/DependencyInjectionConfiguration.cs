@@ -16,9 +16,9 @@ public static class DependencyInjectionConfiguration
         services
             .AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>))
             .AddScoped<IUnitOfWork, UnitOfWork>()
-            .AddScoped<IValidator<RegisterUserRequestDto>, RegisterValidator>()
             .AddScoped<IUserAccountCommandRepository, UserAccountCommandRepository>()
-            .AddScoped<IUserLoginDataCommandRepository, UserLoginDataCommandRepository>();
+            .AddScoped<IUserLoginDataCommandRepository, UserLoginDataCommandRepository>()
+            .AddScoped<IValidator<RegisterUserRequestDto>, RegisterValidator>();
         
         return services;
     }

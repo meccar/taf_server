@@ -12,7 +12,7 @@ public class CreateUserAccountDto
     [StringLength(255)] 
     public string LastName { get; set; } = "";
     [Required]
-    public Gender Gender { get; set; }
+    public string Gender { get; set; }
     [Required]
     public string DateOfBirth { get; set; } = "";
     [Required] 
