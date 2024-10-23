@@ -31,7 +31,8 @@ public class UserAccountAggregate : IdentityUser, IDateTracking
     public DateTime? UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }
     public UserLoginDataExternalEntity UserLoginDataExternal { get; set; }
-    public UserLoginDataModel UserLoginData { get; set; }
+    // public UserLoginDataModel UserLoginData { get; set; }
+    public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
     public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
     public List<UserTokenModel> Tokens { get; set; }
     public List<RoleModel> Roles { get; set; }

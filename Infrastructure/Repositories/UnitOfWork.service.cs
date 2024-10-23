@@ -15,7 +15,7 @@ namespace taf_server.Infrastructure.Repositories;
 /// made to the database, ensuring data integrity. The class encapsulates repositories for user accounts 
 /// and user login data, providing a cohesive interface for managing related data operations.
 /// </remarks>
-public class UnitOfWork() : IUnitOfWork
+public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
     private bool _disposed = false;

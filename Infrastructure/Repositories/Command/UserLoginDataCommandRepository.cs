@@ -19,12 +19,12 @@ namespace taf_server.Infrastructure.Repositories.Command;
 /// and checking for existing login credentials. It leverages AutoMapper for object mapping and 
 /// <see cref="UserManager{TUser}"/> for user management tasks.
 /// </remarks>
-public class UserLoginDataCommandRepository 
+public class UserLoginDataCommandRepository
     : RepositoryBase<UserLoginDataEntity>, IUserLoginDataCommandRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserLoginDataAggregate> _userManager;
-    
+    private readonly UserManager<UserAccountAggregate> _userManager;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="UserLoginDataCommandRepository"/> class.
     /// </summary>
@@ -34,13 +34,13 @@ public class UserLoginDataCommandRepository
     public UserLoginDataCommandRepository(
         ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserLoginDataAggregate> userManager)
-            : base(context)
+        UserManager<UserAccountAggregate> userManager)
+        : base(context)
     {
         _mapper = mapper;
         _userManager = userManager;
     }
-    
+
     /// <summary>
     /// Checks if a user login data with the specified credential exists.
     /// </summary>
@@ -50,7 +50,7 @@ public class UserLoginDataCommandRepository
     {
         return await ExistAsync(u => u.Email == loginCredential);
     }
-    
+
     /// <summary>
     /// Creates a new user login data entry based on the provided DTO.
     /// </summary>
@@ -59,7 +59,7 @@ public class UserLoginDataCommandRepository
     public async Task<UserLoginDataModel> CreateUserLoginData(CreateUserLoginDataDto userLoginDataDto)
     {
         var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataDto);
-        
+
         userLoginDataEntity.PasswordHash = HashHelper.Encrypt(userLoginDataDto.Password);
         await CreateAsync(userLoginDataEntity);
 

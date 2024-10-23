@@ -27,7 +27,8 @@ public class UserLoginDataAggregate : IdentityUser, IDateTracking
     public bool IsTwoFactorEnabled { get; set; }
     public bool IsTwoFactorVerified { get; set; }
     public UserPosition UserPosition { get; set; }
-    public UserAccountModel UserAccount { get; set; }
+    public virtual ICollection<UserAccountAggregate> UserAccount { get; set; } = new List<UserAccountAggregate>();
+    // public UserAccountModel UserAccount { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }

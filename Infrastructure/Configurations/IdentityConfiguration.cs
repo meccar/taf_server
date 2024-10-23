@@ -8,10 +8,10 @@ public static class IdentityConfiguration
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<UserAccountAggregate, RoleAggregate>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
+            .AddIdentity<UserAccountAggregate, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
         //.AddTokenProvider<>()
-        //.AddDefaultTokenProviders<>()
         
         return services;
     }
