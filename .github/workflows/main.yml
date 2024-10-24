@@ -1,6 +1,9 @@
-name: dotnet package
+name: .NET Build
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:

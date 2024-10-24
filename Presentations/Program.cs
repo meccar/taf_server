@@ -36,5 +36,5 @@ catch (Exception ex)
 finally
 {
     Log.Information("Shut down API complete");
-    Log.CloseAndFlushAsync();
+    await Log.CloseAndFlushAsync();
 }
