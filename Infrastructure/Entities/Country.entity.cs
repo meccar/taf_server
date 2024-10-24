@@ -5,9 +5,8 @@ namespace taf_server.Infrastructure.Entities;
 public class CountryEntity : BaseEntity
 {
     public int Id { get; set; }
-    public required string Uuid { get; set; }
+    public string Uuid { get; set; } = "";
 
-    public required string Name { get; set; }
-    public required string Initials { get; set; }
-    //public required BaseEntity baseEntity { get; set; }
+    public string Name { get; set; } = "";
+    public string Initials { get; set; } = "";
 }

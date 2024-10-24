@@ -8,11 +8,10 @@ public class UserTokenEntity : BaseEntity
     public int Id { get; set; }
     public int UserAccountId { get; set; }
     public UserTokenType Type { get; set; }
-    public required string IpAddress { get; set; }
-    public required string UserAgent { get; set; }
-    public required string Token { get; set; }
+    public string IpAddress { get; set; } = "";
+    public string UserAgent { get; set; } = "";
+    public string Token { get; set; } = "";
     public DateTime ExpiredAt { get; set; }
-    public required UserAccountEntity User { get; set; }
-    //public required BaseEntity baseEntity { get; set; }
+    public UserAccountEntity? User { get; set; }
 
 }

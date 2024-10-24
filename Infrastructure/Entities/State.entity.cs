@@ -5,11 +5,10 @@ namespace taf_server.Infrastructure.Entities;
 public class StateEntity : BaseEntity
 {
     public int Id { get; set; }
-    public required string Uuid { get; set; }
-    public required string Name { get; set; }
-    public required string Initials { get; set; }
-    public required string AreaCode { get; set; }
+    public string Uuid { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string Initials { get; set; } = "";
+    public string AreaCode { get; set; } = "";
     public int CountryId { get; set; }
-    public required CountryEntity Country { get; set; }
-    //public required BaseEntity baseEntity { get; set; }
+    public CountryEntity? Country { get; set; }
 }

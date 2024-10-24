@@ -15,7 +15,7 @@ namespace taf_server.Infrastructure.Mapper;
 /// It utilizes AutoMapper to facilitate seamless object-to-object mapping, enabling efficient transformation 
 /// between different representations of user login data.
 /// </remarks>
-public class UserLoginDataMapper
+public static class UserLoginDataMapper
 {
     /// <summary>
     /// Configures the mappings for user login data models and entities.

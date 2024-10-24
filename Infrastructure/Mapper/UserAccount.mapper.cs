@@ -14,7 +14,7 @@ namespace taf_server.Infrastructure.Mapper;
 /// as well as between <see cref="CreateUserAccountDto"/> and other models. It utilizes AutoMapper to facilitate object-to-object 
 /// mapping, enabling seamless transformation between different representations of user account data.
 /// </remarks>
-public class UserAccountMapper
+public static class UserAccountMapper
 {
     /// <summary>
     /// Configures the mappings for user account models and entities.

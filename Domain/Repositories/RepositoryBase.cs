@@ -88,7 +88,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// a boolean value indicating whether the entity exists.</returns>
     public async Task<bool> ExistAsync(Guid id)
     {
-        return await _context.Set<T>().AnyAsync(x => new Guid(x.GetType().GetProperty("Id").ToString()) == id);
+        return await _context.Set<T>().AnyAsync(x => new Guid(x.GetType().GetProperty("Id")!.ToString()!) == id);
     }
     /// <summary>
     /// Checks if any entity matching the specified condition exists asynchronously.
@@ -108,7 +108,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// the entity with the specified identifier.</returns>
     public async Task<T> GetByIdAsync(Guid id)
     {
-        return await _context.Set<T>().FindAsync(id);
+        return (await _context.Set<T>().FindAsync(id))!;
     }
     /// <summary>
     /// Retrieves an entity by its identifier asynchronously, including specified related entities.
@@ -119,7 +119,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// the entity with the specified identifier and included properties.</returns>
     public async Task<T> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includeProperties)
     {
-        return await _context.Set<T>().FindAsync(id, includeProperties);
+        return (await _context.Set<T>().FindAsync(id, includeProperties))!;
     }
     /// <summary>
     /// Creates a new entity asynchronously.
@@ -144,45 +144,50 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="entity">The entity to update.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task UpdateAsync(T entity)
+    public Task UpdateAsync(T entity)
     {
         if (_context.Entry(entity).State != EntityState.Unchanged)
             _context.Entry(entity).CurrentValues.SetValues(entity);
+        return Task.CompletedTask;
     }
     /// <summary>
     /// Deletes an existing entity asynchronously.
     /// </summary>
     /// <param name="entity">The entity to delete.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task DeleteAsync(T entity)
+    public Task DeleteAsync(T entity)
     {
         _context.Set<T>().Remove(entity);
+        return Task.CompletedTask;
     }
     /// <summary>
     /// Deletes a list of entities asynchronously.
     /// </summary>
     /// <param name="entities">The list of entities to delete.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task DeleteListAsync(IEnumerable<T> entities)
+    public Task DeleteListAsync(IEnumerable<T> entities)
     {
         _context.Set<T>().RemoveRange(entities);
+        return Task.CompletedTask;
     }
     /// <summary>
     /// Soft deletes an existing entity by setting its deletion timestamp asynchronously.
     /// </summary>
     /// <param name="entity">The entity to soft delete.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task SoftDeleteAsync(T entity)
+    public Task SoftDeleteAsync(T entity)
     {
         _context.Entry(entity).Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = DateTime.UtcNow;
+        return Task.CompletedTask;
     }
     /// <summary>
     /// Restores a soft-deleted entity by clearing its deletion timestamp asynchronously.
     /// </summary>
     /// <param name="entity">The entity to restore.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task RestoreAsync(T entity)
+    public Task RestoreAsync(T entity)
     {
         _context.Entry(entity).Property(nameof(ISoftDeletable.DeletedAt)).CurrentValue = null;
+        return Task.CompletedTask;
     }
 }

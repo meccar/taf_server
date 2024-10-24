@@ -16,14 +16,14 @@ namespace taf_server.Domain.Aggregates;
 /// </remarks>
 public class UserLoginDataAggregate : IdentityUser, IDateTracking
 {
-    public int Id { get; set; }
-    public string Uuid { get; set; }
+    public new int Id { get; set; }
+    public string Uuid { get; set; } = "";
     public int UserAccountId { get; set; }
-    public string PasswordHash { get; set; }
-    public string Email { get; set; }
+    public new string PasswordHash { get; set; } = "";
+    public new string Email { get; set; } = "";
     public EmailStatus EmailStatus { get; set; }
     public string PasswordRecoveryToken { get; set; }
-    public string ConfirmationToken { get; set; }
+    public string ConfirmationToken { get; set; } = "";
     public bool IsTwoFactorEnabled { get; set; }
     public bool IsTwoFactorVerified { get; set; }
     public UserPosition UserPosition { get; set; }

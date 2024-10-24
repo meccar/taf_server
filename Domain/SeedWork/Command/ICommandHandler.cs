@@ -12,7 +12,7 @@ namespace taf_server.Domain.SeedWork.Command;
 /// to handle commands of type <typeparamref name="TCommand"/> that produce a result of type <typeparamref name="TCommandResponse"/>.
 /// Implementations of this interface are responsible for executing the command and returning a result based on the command's logic.
 /// </remarks>
-public interface ICommandHandler<TCommand, TCommandResponse> : IRequestHandler<TCommand, TCommandResponse>
+public interface ICommandHandler<in TCommand, TCommandResponse> : IRequestHandler<TCommand, TCommandResponse>
     where TCommand : ICommand<TCommandResponse>
 {
 }

@@ -4,11 +4,11 @@ on:
     workflows: [ ".NET Build" ]
     types:
       - completed
-  push:
-    branches:
-      - master
-  pull_request:
-    types: [opened, synchronize, reopened]
+#  push:
+#    branches:
+#      - master
+#  pull_request:
+#    types: [opened, synchronize, reopened]
     
 jobs:
   build:
