@@ -24,8 +24,28 @@ public class ExceptionBehavior<TRequest, TResponse>
         catch (Exception e)
         {
             var requestName = typeof(TRequest).Name;
+            var requestType = typeof(TRequest).FullName;
+            var responseType = typeof(TResponse).FullName;
             
-            _logger.LogError(e, "Unhandled Exception for Request {Name} {@Request}", requestName, request);
+            _logger.LogError(
+                e,
+                """
+                Unhandled Exception:
+                Request Name: {RequestName}
+                Request Type: {RequestType}
+                Response Type: {ResponseType}
+                Request Details: {@Request}
+                """,
+                requestName,
+                requestType,
+                responseType,
+                request);
+            
+            e.Data["RequestName"] = requestName;
+            e.Data["RequestType"] = requestType;
+            e.Data["ResponseType"] = responseType;
+            e.Data["Request"] = request;
+            
             throw;
         }
     }
