@@ -5,6 +5,9 @@ using taf_server.Domain.SeedWork.Interfaces;
 namespace taf_server.Domain.Aggregates;
 public class RoleAggregate : IdentityRole<Guid>, IDateTracking
 {
+    public RoleAggregate() : base()
+    {
+    }
     public RoleAggregate(string name) : base(name)
     {
     }

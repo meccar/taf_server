@@ -1,11 +1,6 @@
-using FluentValidation;
-using taf_server.Domain.Abstractions;
-using taf_server.Domain.Interfaces;
-using taf_server.Domain.Repositories;
-using taf_server.Infrastructure.Repositories;
-using taf_server.Infrastructure.Repositories.Command;
-using taf_server.Presentations.Dtos.Authentication;
-using taf_server.Presentations.Validators.Auth;
+using taf_server.Infrastructure.Abstractions;
+using taf_server.Infrastructure.Data;
+using taf_server.Infrastructure.SeedWork.SqlConnection;
 
 namespace taf_server.Infrastructure.Configurations;
 
@@ -14,12 +9,9 @@ public static class DependencyInjectionConfiguration
     public static IServiceCollection ConfigureDependencyInjection(this IServiceCollection services)
     {
         services
-            .AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>))
-            .AddScoped<IUnitOfWork, UnitOfWork>()
-            .AddScoped<IUserAccountCommandRepository, UserAccountCommandRepository>()
-            .AddScoped<IUserLoginDataCommandRepository, UserLoginDataCommandRepository>()
-            .AddScoped<IValidator<RegisterUserRequestDto>, RegisterValidator>();
-        
+            .AddSingleton<ISqlConnectionFactory, SqlConnectionFactory>();
+            // .AddTransient<ApplicationDbContextSeed>();
+            
         return services;
     }
 }
