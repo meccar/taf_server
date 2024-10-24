@@ -14,7 +14,8 @@ namespace taf_server.Presentations.Controllers.Authentication;
 
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}/[controller]")]
+[Route("api/v{version:apiVersion}")]
+// [Route("api/v{version:apiVersion}/[controller]")]
 
 public class AuthenticationController
     : ControllerBase

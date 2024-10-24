@@ -39,7 +39,12 @@
     <_ContentIncludedByDefault Remove="testo\Properties\launchSettings.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include=".github\" />
     <Folder Include="Application\Queries\Auth\" />
     <Folder Include="Infrastructure\Repositories\Query\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".github\workflows\main.yml" />
+    <None Include=".github\workflows\build.yml" />
   </ItemGroup>
 </Project>

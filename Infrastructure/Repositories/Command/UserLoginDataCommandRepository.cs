@@ -46,9 +46,9 @@ public class UserLoginDataCommandRepository
     /// </summary>
     /// <param name="loginCredential">The login credential to check, such as an email.</param>
     /// <returns><c>true</c> if the user login data exists; otherwise, <c>false</c>.</returns>
-    public async Task<bool> IsUserLoginDataExisted(string loginCredential)
+    public async Task<bool> IsUserLoginDataExisted(string userLoginData)
     {
-        return await ExistAsync(u => u.Email == loginCredential);
+        return await ExistAsync(u => u.Email == userLoginData);
     }
 
     /// <summary>

@@ -43,7 +43,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     {
         if (await _unitOfWork.UserLoginDataCommandRepository.IsUserLoginDataExisted(request.UserLogin.Email))
             throw new BadRequestException("Email already exists");
-
+        
         if (await _unitOfWork.UserAccountCommandRepository.IsUserAccountDataExisted(request.UserAccount.PhoneNumber))
             throw new BadRequestException("Phone number already exists");
 

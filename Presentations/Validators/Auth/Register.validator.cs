@@ -37,10 +37,12 @@ public class RegisterValidator : AbstractValidator<RegisterUserRequestDto>
             .MaximumLength(255).WithMessage("Last name cannot be more than 255 characters");
 
         RuleFor(x => x.UserAccount.Gender)
-            .NotEmpty().WithMessage("Gender is required")
+            .NotNull().WithMessage("Gender is required")
             // .IsInEnum().WithMessage("Gender has to be either Male or Female.");
-            .Must(i => Enum.IsDefined(typeof(Gender), i))
-            .WithMessage("Gender has to be either Male or Female.");
+            // .Must(i => Enum.IsDefined(typeof(Gender), i))
+            // .WithMessage("Gender has to be either Male or Female.");
+            .Must(x => new string[] { "Male", "Female" }.Contains(x))
+            .WithMessage("Gender can only be Male or Female");
 
         RuleFor(x => x.UserAccount.PhoneNumber)
             .NotEmpty().WithMessage("Phone number is required")
