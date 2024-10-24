@@ -17,20 +17,21 @@ namespace taf_server.Domain.Aggregates;
 /// </remarks>
 public class UserAccountAggregate : IdentityUser, IDateTracking
 {
-    public int Id { get; set; }
-    public string Uuid { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Gender { get; set; }
+    public override int Id { get; set; }
+    public string? Uuid { get; set; }
+    public string FirstName { get; set; } = "";
+    public string LastName { get; set; } = "";
+    public Gender Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Avatar { get; set; }
+    public string PhoneNumber { get; set; } = "";
+
+    public string Avatar { get; set; } = "";
     // public UserAccountStatus Status { get; set; }
     // public int CompanyId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }
-    public UserLoginDataExternalEntity UserLoginDataExternal { get; set; }
+    public required UserLoginDataExternalEntity UserLoginDataExternal { get; set; }
     public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
     // public List<UserTokenModel> Tokens { get; set; }

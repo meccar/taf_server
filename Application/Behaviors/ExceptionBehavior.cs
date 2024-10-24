@@ -5,9 +5,9 @@ namespace taf_server.Application.Behaviors;
 public class ExceptionBehavior<TRequest, TResponse> 
     : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
-    private readonly ILogger<TRequest> _logger;
+    private readonly ILogger<ExceptionBehavior<TRequest, TResponse>> _logger;
 
-    public ExceptionBehavior(ILogger<TRequest> logger)
+    public ExceptionBehavior(ILogger<ExceptionBehavior<TRequest, TResponse>> logger)
     {
         _logger = logger;
     }

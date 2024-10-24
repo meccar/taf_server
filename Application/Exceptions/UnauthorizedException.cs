@@ -6,12 +6,19 @@ namespace taf_server.Application.Exceptions;
 public class UnauthorizedException : HttpResponseException
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="UnauthorizedException"/> class with an optional value.
+    /// Initializes a new instance of the <see cref="UnauthorizedException"/> class without a value.
+    /// </summary>
+    public UnauthorizedException() : base(401, "Unauthorized request")
+    {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnauthorizedException"/> class with a specified value.
     /// </summary>
     /// <param name="value">
-    /// An optional object that provides additional information about the unauthorized request. This value is passed to the base exception class.
+    /// An object that provides additional information about the unauthorized request. This value is passed to the base exception class.
     /// </param>
-    public UnauthorizedException(object value = null) : base(401, value)
+    public UnauthorizedException(object value) : base(401, value)
     {
     }
 }

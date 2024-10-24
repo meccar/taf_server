@@ -14,10 +14,11 @@ public class HttpResponseException : Exception
     /// </summary>
     /// <param name="statusCode">The HTTP status code to be returned.</param>
     /// <param name="value">An optional value to include in the response. This can be any object, such as an error message or additional data.</param>
-    public HttpResponseException(int statusCode, object value = null)
+    public HttpResponseException(int statusCode, object? value = null)
+        : base(value?.ToString() ?? string.Empty)
     {
         StatusCode = statusCode;
-        Message = value?.ToString() ?? "";
+        // Message = value?.ToString() ?? "";
     }
 
     /// <summary>
@@ -29,10 +30,7 @@ public class HttpResponseException : Exception
     public int StatusCode { get; }
 
     /// <summary>
-    /// Gets the optional value associated with the exception.
+    /// Gets a new message that provides additional context.
     /// </summary>
-    /// <value>
-    /// An object representing additional data or an error message to include in the response. This can be null if no value is provided.
-    /// </value>
-    public string Message { get; }
+    public new string Message => base.Message;
 }

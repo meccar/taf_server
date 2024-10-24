@@ -15,10 +15,9 @@ namespace taf_server.Application.Commands.Auth.Register;
 /// It checks for the existence of a user's email and phone number to prevent duplicate accounts.
 /// If the provided email or phone number already exists in the system, a 
 /// <see cref="BadRequestException"/> is thrown with an appropriate message. 
-/// Upon successful validation, it creates a new user account and associated login data.
+/// Upon successful validation, a new user account and associated login data are created.
 /// </remarks>
-/// <typeparam name="RegisterCommand">The command containing user registration details.</typeparam>
-/// <typeparam name="UserAccountModel">The model representing the user account.</typeparam>
+
 public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccountModel>
 {
     private readonly IUnitOfWork _unitOfWork;

@@ -1,6 +1,6 @@
-namespace taf_server.Application.Services;
-
-public class ServiceLifetimeReporter
-{
-    
-}
+// namespace taf_server.Application.Services;
+//
+// public class ServiceLifetimeReporter
+// {
+//     
+// }

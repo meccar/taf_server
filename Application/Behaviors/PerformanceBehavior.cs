@@ -7,9 +7,9 @@ public class PerformanceBehavior<TRequest, TResponse>
     : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly Stopwatch _timer;
-    private readonly ILogger<TRequest> _logger;
+    private readonly ILogger<ExceptionBehavior<TRequest, TResponse>> _logger;
 
-    public PerformanceBehavior(ILogger<TRequest> logger)
+    public PerformanceBehavior(ILogger<ExceptionBehavior<TRequest, TResponse>> logger)
     {
         _timer = new Stopwatch();
         _logger = logger;

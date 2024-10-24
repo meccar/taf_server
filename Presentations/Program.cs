@@ -23,7 +23,7 @@ try
 
     app.UseInfrastructure(AppCors);
 
-    app.Run();
+    await app.RunAsync();
 
 }
 catch (Exception ex)
@@ -36,5 +36,5 @@ catch (Exception ex)
 finally
 {
     Log.Information("Shut down API complete");
-    Log.CloseAndFlush();
+    Log.CloseAndFlushAsync();
 }
