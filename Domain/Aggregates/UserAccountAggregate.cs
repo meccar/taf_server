@@ -17,7 +17,7 @@ namespace taf_server.Domain.Aggregates;
 /// </remarks>
 public class UserAccountAggregate : IdentityUser, IDateTracking
 {
-    public override int Id { get; set; }
+    public int Id { get; set; }
     public string? Uuid { get; set; }
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
