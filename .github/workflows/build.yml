@@ -43,7 +43,7 @@ jobs:
           SONARCLOUD_TOKEN: ${{secrets.SONARCLOUDTOKEN}} 
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"meccar_taf_server" /o:"meccar" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"meccar_taf_server" /o:"meccar" /d:sonar.token="${{ secrets.SONARCLOUDTOKEN }}" /d:sonar.host.url="https://sonarcloud.io"
           dotnet build
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONARCLOUDTOKEN }}"
         

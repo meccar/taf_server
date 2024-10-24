@@ -44,7 +44,6 @@
     <Folder Include="Infrastructure\Repositories\Query\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".github\workflows\main.yml" />
     <None Include=".github\workflows\build.yml" />
   </ItemGroup>
 </Project>
