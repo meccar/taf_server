@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using taf_server.Infrastructure;
+using taf_server.Infrastructure.Data;
 using taf_server.Presentations.Extensions;
 
 var AppCors = "AppCors";
@@ -23,6 +25,13 @@ try
 
     app.UseInfrastructure(AppCors);
 
+    // using (var scope = app.Services.CreateScope())
+    // {
+    //     var services = scope.ServiceProvider;
+    //     var context = services.GetRequiredService<ApplicationDbContext>();
+    //     context.Database.Migrate();
+    // }
+    
     await app.RunAsync();
 
 }

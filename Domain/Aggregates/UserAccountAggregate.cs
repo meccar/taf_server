@@ -17,6 +17,13 @@ namespace taf_server.Domain.Aggregates;
 /// </remarks>
 public class UserAccountAggregate : IdentityUser, IDateTracking
 {
+    // public UserAccountAggregate() : base()
+    // {
+    // }
+    // public UserAccountAggregate(string name) : base(name)
+    // {
+    // }
+    
     public new int Id { get; set; }
     public string Uuid { get; set; } = "";
     public string FirstName { get; set; } = "";

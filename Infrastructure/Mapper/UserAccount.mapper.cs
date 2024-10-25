@@ -26,6 +26,6 @@ public static class UserAccountMapper
         config.CreateMap<UserAccountEntity, UserAccountModel>();
         config.CreateMap<CreateUserAccountDto, UserAccountModel>();
         config.CreateMap<CreateUserAccountDto, UserAccountEntity>();
-        config.CreateMap<UserAccountModel, CreateUserAccountDto>();
+        config.CreateMap<UserAccountModel, RegisterUserResponseDto>();
     }
 }

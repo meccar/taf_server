@@ -39,11 +39,11 @@ public class AuthenticationController
         Description =
             "Registers a new user with the provided details. Returns a sign-in response upon successful registration."
     )]
-    [SwaggerResponse(200, "User successfully registered", typeof(RegisterUserResponseDto))]
+    [SwaggerResponse(201, "User successfully registered", typeof(RegisterUserResponseDto))]
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     //[ApiValidationFilter]
-    public async Task<ActionResult> Register([FromBody] RegisterUserRequestDto registerDto)
+    public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
     {
         _logger.LogInformation("START: SignUp");
         try
@@ -51,8 +51,9 @@ public class AuthenticationController
             var registerResponse = await _mediator.Send(new RegisterCommand(registerDto));
             
             _logger.LogInformation("END: SignUp");
-
-            return Ok(new ApiOkResponse(_mapper.Map<CreateUserAccountDto>(registerResponse)));
+            
+            return Created(registerResponse.Uuid, _mapper.Map<RegisterUserResponseDto>(registerResponse));
+            // return Ok(new ApiOkResponse(_mapper.Map<CreateUserAccountDto>(registerResponse)));
         }
         catch (BadRequestException e)
         {

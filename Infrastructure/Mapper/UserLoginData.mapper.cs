@@ -28,5 +28,6 @@ public static class UserLoginDataMapper
         config.CreateMap<CreateUserLoginDataDto, UserLoginDataModel>();
         config.CreateMap<CreateUserLoginDataDto, UserLoginDataEntity>();
         config.CreateMap<UserLoginDataEntity, UserLoginDataModel>();
+        config.CreateMap<UserLoginDataModel, UserLoginDataResponseDto>();
     }
 }

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using taf_server.Infrastructure.Data;
+using Pomelo.EntityFrameworkCore.MySql;
 
 namespace taf_server.Infrastructure.Configurations;
 
@@ -32,14 +33,18 @@ public static class DbContextConfiguration
         //     return services;
         // }
     {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
+        if (connectionString == null || string.IsNullOrEmpty(connectionString))
+            throw new ArgumentNullException("DefaultConnection is not configured.");
+        
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlServer(
-                configuration.GetConnectionString("DefaultConnection"),
+                connectionString,
                 sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(
-                        maxRetryCount: 3,
+                        maxRetryCount: 10,
                         maxRetryDelay: TimeSpan.FromSeconds(30),
                         errorNumbersToAdd: null);
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
