@@ -1,7 +1,9 @@
 name: SonarCloud
 on:
   workflow_run:
-    workflows: [ ".NET Continuous Deployment" ]
+    workflows:
+      - ".NET Build"
+      - ".NET Continuous Deployment"
     types:
       - completed
 #  push:
