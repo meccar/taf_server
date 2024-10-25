@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using taf_server.Domain.SeedWork.Enums.UserAccount;
 using taf_server.Infrastructure.SeedWork.Constants;
 using taf_server.Presentations.Dtos.Authentication;
+using taf_server.Presentations.Dtos.Authentication.Register;
 
 namespace taf_server.Presentations.Validators.Auth;
 

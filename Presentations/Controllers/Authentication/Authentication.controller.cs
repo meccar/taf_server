@@ -6,6 +6,9 @@ using taf_server.Presentations.Dtos.Authentication;
 using Swashbuckle.AspNetCore.Annotations;
 using taf_server.Application.Commands.Auth.Register;
 using taf_server.Application.Exceptions;
+using taf_server.Application.Queries.Auth.Login;
+using taf_server.Presentations.Dtos.Authentication.Login;
+using taf_server.Presentations.Dtos.Authentication.Register;
 using taf_server.Presentations.Dtos.UserAccount;
 using taf_server.Presentations.HttpResponse;
 using taf_server.Presentations.HttpResponss;
@@ -52,5 +55,26 @@ public class AuthenticationController
         _logger.LogInformation("END: SignUp");
         
         return Created(registerResponse.Uuid, _mapper.Map<RegisterUserResponseDto>(registerResponse));
+    }
+    
+    [HttpGet("login")]
+    [SwaggerOperation(
+        Summary = "Login as a user",
+        Description =
+            "Login as a user with the provided details. Returns a sign-in response upon successful registration."
+    )]
+    [SwaggerResponse(200, "User successfully logined", typeof(LoginUserRequestDto))]
+    [SwaggerResponse(400, "Invalid user input")]
+    [SwaggerResponse(500, "An error occurred while processing the request")]
+    //[ApiValidationFilter]
+    public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
+    {
+        _logger.LogInformation("START: SignUp");
+        
+        var loginResponse = await _mediator.Send(new LoginQuery(loginDto));
+        
+        _logger.LogInformation("END: SignUp");
+        
+        return Ok(_mapper.Map<LoginResponseDto>(loginResponse));
     }
 }

@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore.Storage;
+using taf_server.Domain.Interfaces.Command;
+using taf_server.Domain.Interfaces.Query;
 
 namespace taf_server.Domain.Interfaces;
 
@@ -33,9 +35,17 @@ public interface IUnitOfWork : IDisposable
     /// <returns>A task representing the asynchronous operation.</returns>
     Task RollbackTransactionAsync();
 
-    #region Repository Properties
+    #region Command Repository Properties
 
     IUserAccountCommandRepository UserAccountCommandRepository { get; }
     IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; }
+    
+    #endregion
+    
+    #region Query Repository Properties
+
+    IUserAccountQueryRepository UserAccountQueryRepository { get; }
+    IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; }
+    
     #endregion
 }

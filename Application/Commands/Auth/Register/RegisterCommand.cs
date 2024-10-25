@@ -1,6 +1,7 @@
 ﻿using taf_server.Domain.Model;
 using taf_server.Presentations.Dtos.Authentication;
 using taf_server.Domain.SeedWork.Command;
+using taf_server.Presentations.Dtos.Authentication.Register;
 using taf_server.Presentations.Dtos.UserAccount;
 using taf_server.Presentations.Dtos.UserLoginData;
 
@@ -20,9 +21,8 @@ public class RegisterCommand : ICommand<UserAccountModel>
     /// <param name="dto">
     /// The data transfer object containing the information necessary for user registration.
     /// </param>
-    public RegisterCommand(RegisterUserRequestDto dto)
-        => (UserLogin, UserAccount)
-            = (dto.UserLogin, dto.UserAccount);
+    public RegisterCommand(RegisterUserRequestDto dto) => 
+        (UserLogin, UserAccount) = (dto.UserLogin, dto.UserAccount);
 
     /// <summary>
     /// Gets or sets the user login information for the new account.

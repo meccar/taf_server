@@ -2,6 +2,7 @@ using AutoMapper;
 using taf_server.Domain.Model;
 using taf_server.Infrastructure.Entities;
 using taf_server.Presentations.Dtos.Authentication;
+using taf_server.Presentations.Dtos.Authentication.Register;
 using taf_server.Presentations.Dtos.UserAccount;
 
 namespace taf_server.Infrastructure.Mapper;

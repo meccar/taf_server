@@ -52,7 +52,6 @@
     <Folder Include=".github\" />
     <Folder Include="Application\Queries\Auth\" />
     <Folder Include="Infrastructure\Migrations\" />
-    <Folder Include="Infrastructure\Repositories\Query\" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\sonar-build.yml" />

@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using taf_server.Domain.Aggregates;
 using taf_server.Domain.Interfaces;
+using taf_server.Domain.Interfaces.Command;
 using taf_server.Domain.Model;
 using taf_server.Domain.Repositories;
 using taf_server.Infrastructure.Data;
@@ -38,16 +39,6 @@ public class UserAccountCommandRepository
     {
         _mapper = mapper;
         _userManager = userManager;
-    }
-
-    /// <summary>
-    /// Checks if a user account with the specified data exists.
-    /// </summary>
-    /// <param name="userAccountData">The user account data to check, such as a phone number.</param>
-    /// <returns><c>true</c> if the user account exists; otherwise, <c>false</c>.</returns>
-    public async Task<bool> IsUserAccountDataExisted(string userAccountData)
-    {
-        return await ExistAsync(u => u.PhoneNumber == userAccountData);
     }
 
     /// <summary>

@@ -2,6 +2,8 @@ using taf_server.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using taf_server.Domain.Interfaces;
+using taf_server.Domain.Interfaces.Command;
+using taf_server.Domain.Interfaces.Query;
 using taf_server.Infrastructure.Data;
 
 namespace taf_server.Infrastructure.Repositories;
@@ -24,18 +26,33 @@ public class UnitOfWork : IUnitOfWork
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
     /// </summary>
     /// <param name="context">The database context used for data operations.</param>
+    /// 
     /// <param name="userAccountCommandRepository">The repository for user account commands.</param>
     /// <param name="userLoginDataCommandRepository">The repository for user login data commands.</param>
+    /// 
+    /// <param name="userAccountQueryRepository">The repository for user account queries.</param>
+    /// <param name="userLoginDataQueryRepository">The repository for user login data queries.</param>
+    /// 
     public UnitOfWork(
         ApplicationDbContext context,
+        
         IUserAccountCommandRepository userAccountCommandRepository,
-        IUserLoginDataCommandRepository userLoginDataCommandRepository)
+        IUserLoginDataCommandRepository userLoginDataCommandRepository,
+        
+        IUserAccountQueryRepository userAccountQueryRepository,
+        IUserLoginDataQueryRepository userLoginDataQueryRepository)
     {
         _context = context;
+        
         UserAccountCommandRepository = userAccountCommandRepository;
         UserLoginDataCommandRepository = userLoginDataCommandRepository;
+        
+        UserAccountQueryRepository = userAccountQueryRepository;
+        UserLoginDataQueryRepository = userLoginDataQueryRepository;
     }
 
+    #region Command Repository Properties
+    
     /// <summary>
     /// Gets the repository for user account commands.
     /// </summary>
@@ -45,6 +62,22 @@ public class UnitOfWork : IUnitOfWork
     /// Gets the repository for user login data commands.
     /// </summary>
     public IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; }
+    
+    #endregion
+    
+    #region Query Repository Properties
+    
+    /// <summary>
+    /// Gets the repository for user account queries.
+    /// </summary>
+    public IUserAccountQueryRepository UserAccountQueryRepository { get; }
+    
+    /// <summary>
+    /// Gets the repository for user login data queries.
+    /// </summary>
+    public IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; }
+    
+    #endregion
 
     /// <summary>
     /// Releases the resources used by the <see cref="UnitOfWork"/> class.

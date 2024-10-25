@@ -1,8 +1,6 @@
-using taf_server.Domain.SeedWork.Enums.UserAccount;
-using taf_server.Presentations.Dtos.UserAccount;
 using taf_server.Presentations.Dtos.UserLoginData;
 
-namespace taf_server.Presentations.Dtos.Authentication;
+namespace taf_server.Presentations.Dtos.Authentication.Register;
 
 public class RegisterUserResponseDto
 {

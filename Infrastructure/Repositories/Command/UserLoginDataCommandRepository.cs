@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using taf_server.Domain.Aggregates;
 using taf_server.Domain.Interfaces;
+using taf_server.Domain.Interfaces.Command;
 using taf_server.Domain.Model;
 using taf_server.Domain.Repositories;
 using taf_server.Infrastructure.Data;
@@ -41,15 +42,7 @@ public class UserLoginDataCommandRepository
         _userManager = userManager;
     }
 
-    /// <summary>
-    /// Checks if a user login data with the specified credential exists.
-    /// </summary>
-    /// <param name="userLoginData">The login credential to check, such as an email.</param>
-    /// <returns><c>true</c> if the user login data exists; otherwise, <c>false</c>.</returns>
-    public async Task<bool> IsUserLoginDataExisted(string userLoginData)
-    {
-        return await ExistAsync(u => u.Email == userLoginData);
-    }
+
 
     /// <summary>
     /// Creates a new user login data entry based on the provided DTO.

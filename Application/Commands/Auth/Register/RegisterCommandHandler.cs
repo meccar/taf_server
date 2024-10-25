@@ -40,10 +40,10 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     /// <exception cref="BadRequestException">Thrown when the email or phone number is already in use.</exception>
     public async Task<UserAccountModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        if (await _unitOfWork.UserLoginDataCommandRepository.IsUserLoginDataExisted(request.UserLogin.Email))
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLogin.Email))
             throw new BadRequestException("Email already exists");
         
-        if (await _unitOfWork.UserAccountCommandRepository.IsUserAccountDataExisted(request.UserAccount.PhoneNumber))
+        if (await _unitOfWork.UserAccountQueryRepository.IsUserAccountDataExisted(request.UserAccount.PhoneNumber))
             throw new BadRequestException("Phone number already exists");
 
         var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAsync(request.UserAccount);
