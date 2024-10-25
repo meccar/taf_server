@@ -4,12 +4,6 @@ on:
     workflows: [ ".NET Continuous Deployment" ]
     types:
       - completed
-
-#  push:
-#    branches:
-#      - master
-#  pull_request:
-#    types: [opened, synchronize, reopened]
     
 jobs:
   build:
