@@ -3,7 +3,8 @@ on:
   workflow_run:
     workflows: [ ".NET Build", ".NET Continuous Deployment" ]
     types:
-      - success
+      - completed
+
 #  push:
 #    branches:
 #      - master
@@ -12,7 +13,7 @@ on:
     
 jobs:
   build:
-#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Build and analyze
     runs-on: windows-latest
     steps:

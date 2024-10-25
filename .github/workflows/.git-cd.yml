@@ -29,43 +29,69 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/your-app:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/your-app:${{ github.sha }}
+            ghcr.io/${{ github.repository }}/your-app:latest
+            ghcr.io/${{ github.repository }}/your-app:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/your-app:latest
           cache-to: type=inline
           
-  deploy-dev:
+  create-release:
     needs: build-and-push
     runs-on: ubuntu-latest
-    environment: development
     steps:
-      - name: Login to Azure
-        uses: azure/login@v1
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          tag_name: release-${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          draft: false
+          prerelease: false
 
-      - name: Deploy to Azure Container Apps - Dev
-        uses: azure/container-apps-deploy-action@v1
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
         with:
-          containerAppName: 'your-app-name-dev'
-          resourceGroup: 'your-resource-group'
-          imageToDeploy: your-username/your-app:${{ github.sha }}
-          targetPort: 80
-            
-  deploy-prod:
-    needs: deploy-dev
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: https://your-production-url.com
-    steps:
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Deploy to Azure Container Apps - Prod
-        uses: azure/container-apps-deploy-action@v1
-        with:
-          containerAppName: 'your-app-name-prod'
-          resourceGroup: 'your-resource-group'
-          imageToDeploy: your-username/your-app:${{ github.sha }}
-          targetPort: 80
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./your-app-${{ github.sha }}.tar.gz
+          asset_name: your-app-${{ github.sha }}.tar.gz
+          asset_content_type: application/gzip
+          
+#  deploy-dev:
+#    needs: build-and-push
+#    runs-on: ubuntu-latest
+#    environment: development
+#    steps:
+#      - name: Login to Azure
+#        uses: azure/login@v1
+#        with:
+#          creds: ${{ secrets.AZURE_CREDENTIALS }}
+#
+#      - name: Deploy to Azure Container Apps - Dev
+#        uses: azure/container-apps-deploy-action@v1
+#        with:
+#          containerAppName: 'your-app-name-dev'
+#          resourceGroup: 'your-resource-group'
+#          imageToDeploy: your-username/your-app:${{ github.sha }}
+#          targetPort: 80
+#            
+#  deploy-prod:
+#    needs: deploy-dev
+#    runs-on: ubuntu-latest
+#    environment:
+#      name: production
+#      url: https://your-production-url.com
+#    steps:
+#      - name: Login to Azure
+#        uses: azure/login@v1
+#        with:
+#          creds: ${{ secrets.AZURE_CREDENTIALS }}
+#
+#      - name: Deploy to Azure Container Apps - Prod
+#        uses: azure/container-apps-deploy-action@v1
+#        with:
+#          containerAppName: 'your-app-name-prod'
+#          resourceGroup: 'your-resource-group'
+#          imageToDeploy: your-username/your-app:${{ github.sha }}
+#          targetPort: 80
