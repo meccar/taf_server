@@ -1,5 +1,4 @@
 name: .NET Build
-
 on:
   push:
     branches:

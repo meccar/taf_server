@@ -1,11 +1,9 @@
 name: SonarCloud
 on:
   workflow_run:
-    workflows:
-      - ".NET Build"
-      - ".NET Continuous Deployment"
+    workflows: [ ".NET Build", ".NET Continuous Deployment" ]
     types:
-      - completed
+      - success
 #  push:
 #    branches:
 #      - master
@@ -14,7 +12,7 @@ on:
     
 jobs:
   build:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+#    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     name: Build and analyze
     runs-on: windows-latest
     steps:
