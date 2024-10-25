@@ -14,16 +14,17 @@ public static class InfrastructureServicesConfiguration
         // services.ConfigureAppSettings(configuration);
         // services.ConfigureAuthetication();
         services.ConfigureDependencyInjection();
-        services.ConfigureRepositories();
         services.ConfigureCors(appCors);
-        services.ConfigureMediatR();
-        services.ConfigureSwagger();
+        services.ConfigureApiVersioning();
         services.ConfigureDbContext(configuration);
+        services.ConfigureSwagger();
+        services.ConfigureMediatR();
+        services.ConfigureValidation();
         services.ConfigureIdentity();
+        services.ConfigureRepositories();
         services.ConfigureMapper();
         services.ConfigureControllers();
-        services.ConfigureApiVersioning();
-        services.ConfigureValidation();
+        services.ConfigureExceptions();
 
         return services;
     }
