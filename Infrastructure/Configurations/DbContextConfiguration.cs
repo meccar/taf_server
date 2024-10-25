@@ -37,15 +37,14 @@ public static class DbContextConfiguration
         if (connectionString == null || string.IsNullOrEmpty(connectionString))
             throw new ArgumentNullException("DefaultConnection is not configured.");
         
-        services.ConfigureDbContext<ApplicationDbContext>(options =>
+        services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseMySql(
+            options.UseSqlServer(
                 connectionString,
-                ServerVersion.AutoDetect(connectionString),
                 sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(
-                        maxRetryCount: 3,
+                        maxRetryCount: 10,
                         maxRetryDelay: TimeSpan.FromSeconds(30),
                         errorNumbersToAdd: null);
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
