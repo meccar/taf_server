@@ -46,18 +46,11 @@ public class AuthenticationController
     public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
     {
         _logger.LogInformation("START: SignUp");
-        // try
-        // {
+        
         var registerResponse = await _mediator.Send(new RegisterCommand(registerDto));
         
         _logger.LogInformation("END: SignUp");
         
         return Created(registerResponse.Uuid, _mapper.Map<RegisterUserResponseDto>(registerResponse));
-            // return Ok(new ApiOkResponse(_mapper.Map<CreateUserAccountDto>(registerResponse)));
-        // }
-        // catch (BadRequestException e)
-        // {
-        //     return BadRequest(new ApiBadRequestResponse(e.Message));
-        // }
     }
 }

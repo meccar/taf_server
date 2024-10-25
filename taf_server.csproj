@@ -58,6 +58,7 @@
     <None Include=".github\workflows\build.yml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include=".github\workflows\.git-cd.yml" />
     <Content Include=".github\workflows\main.yml" />
   </ItemGroup>
 </Project>

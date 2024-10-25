@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using taf_server.Application.Exceptions;
+using taf_server.Presentations.HttpResponse;
 
-namespace taf_server.Presentations.HttpResponse;
+namespace taf_server.Infrastructure.Filters;
 
 public class HttpExceptionFilter : IAsyncActionFilter
 {
