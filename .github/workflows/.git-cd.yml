@@ -21,12 +21,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUBTOKEN }}
+#      - name: Login to GitHub Container Registry
+#        uses: docker/login-action@v3
+#        with:
+#          registry: ghcr.io
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUBTOKEN }}
           
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -36,34 +36,34 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/your-app:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/your-app:${{ github.sha }}
-            ghcr.io/${{ github.repository }}/your-app:latest
-            ghcr.io/${{ github.repository }}/your-app:${{ github.sha }}
+#            ghcr.io/${{ github.repository }}/your-app:latest
+#            ghcr.io/${{ github.repository }}/your-app:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/your-app:latest
           cache-to: type=inline
           
-  create-release:
-    needs: build-and-push
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
-        with:
-          tag_name: release-${{ github.sha }}
-          release_name: Release ${{ github.sha }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./your-app-${{ github.sha }}.tar.gz
-          asset_name: your-app-${{ github.sha }}.tar.gz
-          asset_content_type: application/gzip
+#  create-release:
+#    needs: build-and-push
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Create GitHub Release
+#        uses: actions/create-release@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+#        with:
+#          tag_name: release-${{ github.sha }}
+#          release_name: Release ${{ github.sha }}
+#          draft: false
+#          prerelease: false
+#
+#      - name: Upload Release Asset
+#        uses: actions/upload-release-asset@v1
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
+#        with:
+#          upload_url: ${{ steps.create_release.outputs.upload_url }}
+#          asset_path: ./your-app-${{ github.sha }}.tar.gz
+#          asset_name: your-app-${{ github.sha }}.tar.gz
+#          asset_content_type: application/gzip
           
 #  deploy-dev:
 #    needs: build-and-push
