@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using taf_server.Infrastructure.Data;
-using Pomelo.EntityFrameworkCore.MySql;
 
 namespace taf_server.Infrastructure.Configurations;
 

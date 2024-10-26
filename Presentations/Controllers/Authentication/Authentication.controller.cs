@@ -12,6 +12,8 @@ using taf_server.Presentations.Dtos.Authentication.Register;
 using taf_server.Presentations.Dtos.UserAccount;
 using taf_server.Presentations.HttpResponse;
 using taf_server.Presentations.HttpResponss;
+using taf_server.Application.Usecases.Auth;
+using taf_server.Infrastructure.UseCaseProxy;
 
 namespace taf_server.Presentations.Controllers.Authentication;
 
@@ -25,13 +27,16 @@ public class AuthenticationController
 {
     private readonly IMapper _mapper;
     private readonly ILogger<AuthenticationController> _logger;
+    private readonly UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> _registerUseCase;
     private readonly IMediator _mediator;
     public AuthenticationController(
         IMapper mapper,
+        UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> registerUsecase,
         ILogger<AuthenticationController> logger,
         IMediator mediator)
     {
         _mapper = mapper;
+        _registerUseCase = registerUsecase;
         _logger = logger;
         _mediator = mediator;
     }
@@ -46,17 +51,30 @@ public class AuthenticationController
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     //[ApiValidationFilter]
+    //public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
+    //{
+    //    _logger.LogInformation("START: Register");
+
+    //    var registerResponse = await _mediator.Send(new RegisterCommand(registerDto));
+
+    //    _logger.LogInformation("END: Register");
+
+    //    return Created(registerResponse.Uuid, _mapper.Map<RegisterUserResponseDto>(registerResponse));
+    //}
     public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
     {
-        _logger.LogInformation("START: SignUp");
-        
-        var registerResponse = await _mediator.Send(new RegisterCommand(registerDto));
-        
-        _logger.LogInformation("END: SignUp");
-        
-        return Created(registerResponse.Uuid, _mapper.Map<RegisterUserResponseDto>(registerResponse));
+        _logger.LogInformation("START: Register");
+
+        var useCase = _registerUseCase.GetInstance();
+        var response = await useCase.Execute(registerDto);
+
+        _logger.LogInformation("END: Register");
+
+        return Created(response.Uuid, response);
     }
-    
+
+
+
     [HttpGet("login")]
     [SwaggerOperation(
         Summary = "Login as a user",
@@ -69,11 +87,11 @@ public class AuthenticationController
     //[ApiValidationFilter]
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
     {
-        _logger.LogInformation("START: SignUp");
+        _logger.LogInformation("START: Login");
         
         var loginResponse = await _mediator.Send(new LoginQuery(loginDto));
         
-        _logger.LogInformation("END: SignUp");
+        _logger.LogInformation("END: Login");
         
         return Ok(_mapper.Map<LoginResponseDto>(loginResponse));
     }

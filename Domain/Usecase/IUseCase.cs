@@ -1,6 +1,6 @@
 namespace taf_server.Domain.Usecase;
 
-public interface IUseCase<TModel>
+public interface IUseCase<TRequest, TResponse>
 {
-    Task<TModel> Execute(params object[] args);
+    Task<TResponse> Execute(TRequest request);
 }
