@@ -2,16 +2,10 @@ using Asp.Versioning;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using taf_server.Presentations.Dtos.Authentication;
 using Swashbuckle.AspNetCore.Annotations;
-using taf_server.Application.Commands.Auth.Register;
-using taf_server.Application.Exceptions;
 using taf_server.Application.Queries.Auth.Login;
 using taf_server.Presentations.Dtos.Authentication.Login;
 using taf_server.Presentations.Dtos.Authentication.Register;
-using taf_server.Presentations.Dtos.UserAccount;
-using taf_server.Presentations.HttpResponse;
-using taf_server.Presentations.HttpResponss;
 using taf_server.Application.Usecases.Auth;
 using taf_server.Infrastructure.UseCaseProxy;
 
@@ -28,15 +22,18 @@ public class AuthenticationController
     private readonly IMapper _mapper;
     private readonly ILogger<AuthenticationController> _logger;
     private readonly UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> _registerUseCase;
+    private readonly UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> _loginUsecase;
     private readonly IMediator _mediator;
     public AuthenticationController(
         IMapper mapper,
         UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> registerUsecase,
+        UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> loginUsecase,
         ILogger<AuthenticationController> logger,
         IMediator mediator)
     {
         _mapper = mapper;
         _registerUseCase = registerUsecase;
+        _loginUsecase = loginUsecase;
         _logger = logger;
         _mediator = mediator;
     }
@@ -65,8 +62,7 @@ public class AuthenticationController
     {
         _logger.LogInformation("START: Register");
 
-        var useCase = _registerUseCase.GetInstance();
-        var response = await useCase.Execute(registerDto);
+        var response = await _registerUseCase.GetInstance().Execute(registerDto);
 
         _logger.LogInformation("END: Register");
 
@@ -85,14 +81,24 @@ public class AuthenticationController
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     //[ApiValidationFilter]
+    //public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
+    //{
+    //    _logger.LogInformation("START: Login");
+
+    //    var loginResponse = await _mediator.Send(new LoginQuery(loginDto));
+
+    //    _logger.LogInformation("END: Login");
+
+    //    return Ok(_mapper.Map<LoginResponseDto>(loginResponse));
+    //}
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
     {
         _logger.LogInformation("START: Login");
-        
-        var loginResponse = await _mediator.Send(new LoginQuery(loginDto));
-        
+
+        var response = await _loginUsecase.GetInstance().Execute(loginDto);
+
         _logger.LogInformation("END: Login");
-        
-        return Ok(_mapper.Map<LoginResponseDto>(loginResponse));
+
+        return Ok(response);
     }
 }
