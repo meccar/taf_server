@@ -2,8 +2,6 @@
 using taf_server.Application.Exceptions;
 using taf_server.Domain.Interfaces;
 using taf_server.Domain.Model;
-using taf_server.Infrastructure.Repositories;
-using taf_server.Presentations.Dtos.Authentication;
 
 namespace taf_server.Application.Commands.Auth.Register;
 

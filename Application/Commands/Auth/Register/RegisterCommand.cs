@@ -1,5 +1,4 @@
 ﻿using taf_server.Domain.Model;
-using taf_server.Presentations.Dtos.Authentication;
 using taf_server.Domain.SeedWork.Command;
 using taf_server.Presentations.Dtos.Authentication.Register;
 using taf_server.Presentations.Dtos.UserAccount;

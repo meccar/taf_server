@@ -1,5 +1,4 @@
 using System.Security.Authentication;
-using taf_server.Application.Exceptions;
 using taf_server.Domain.Interfaces;
 using taf_server.Domain.Model;
 using taf_server.Domain.SeedWork.Query;
