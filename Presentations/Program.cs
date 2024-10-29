@@ -1,7 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using taf_server.Infrastructure;
-using taf_server.Infrastructure.Data;
 using taf_server.Presentations.Extensions;
 
 var AppCors = "AppCors";

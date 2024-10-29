@@ -3,11 +3,9 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using taf_server.Application.Queries.Auth.Login;
 using taf_server.Presentations.Dtos.Authentication.Login;
 using taf_server.Presentations.Dtos.Authentication.Register;
 using taf_server.Application.Usecases.Auth;
-using taf_server.Domain.Usecase;
 using taf_server.Infrastructure.UseCaseProxy;
 
 namespace taf_server.Presentations.Controllers.Authentication;

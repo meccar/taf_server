@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations;
-using taf_server.Domain.SeedWork.Enums.UserAccount;
 
 namespace taf_server.Presentations.Dtos.UserAccount;
 
 public class CreateUserAccountDto
 {
-    // [Required] 
+    [Key]
+    public Ulid Uuid { get; set; } = Ulid.NewUlid();
+    
+    [Required] 
     [StringLength(255)]
-    public string Uuid { get; set; } = "";
     public string FirstName { get; set; } = "";
     
     [Required] 

@@ -1,5 +1,3 @@
-using taf_server.Domain.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using taf_server.Domain.Interfaces;
 using taf_server.Domain.Interfaces.Command;
@@ -20,7 +18,7 @@ namespace taf_server.Infrastructure.Repositories;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _context;
-    private bool _disposed = false;
+    private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.

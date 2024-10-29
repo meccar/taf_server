@@ -1,5 +1,3 @@
-using FluentValidation;
-using taf_server.Application.Usecases.Auth;
 using taf_server.Domain.Abstractions;
 using taf_server.Domain.Interfaces;
 using taf_server.Domain.Interfaces.Command;
@@ -8,11 +6,6 @@ using taf_server.Domain.Repositories;
 using taf_server.Infrastructure.Repositories;
 using taf_server.Infrastructure.Repositories.Command;
 using taf_server.Infrastructure.Repositories.Query;
-using taf_server.Infrastructure.UseCaseProxy;
-using taf_server.Presentations.Dtos.Authentication;
-using taf_server.Presentations.Dtos.Authentication.Login;
-using taf_server.Presentations.Dtos.Authentication.Register;
-using taf_server.Presentations.Validators.Auth;
 
 namespace taf_server.Infrastructure.Configurations;
 
