@@ -7,6 +7,7 @@ using taf_server.Application.Queries.Auth.Login;
 using taf_server.Presentations.Dtos.Authentication.Login;
 using taf_server.Presentations.Dtos.Authentication.Register;
 using taf_server.Application.Usecases.Auth;
+using taf_server.Domain.Usecase;
 using taf_server.Infrastructure.UseCaseProxy;
 
 namespace taf_server.Presentations.Controllers.Authentication;
@@ -48,16 +49,6 @@ public class AuthenticationController
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     //[ApiValidationFilter]
-    //public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
-    //{
-    //    _logger.LogInformation("START: Register");
-
-    //    var registerResponse = await _mediator.Send(new RegisterCommand(registerDto));
-
-    //    _logger.LogInformation("END: Register");
-
-    //    return Created(registerResponse.Uuid, _mapper.Map<RegisterUserResponseDto>(registerResponse));
-    //}
     public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
     {
         _logger.LogInformation("START: Register");
@@ -69,8 +60,6 @@ public class AuthenticationController
         return Created(response.Uuid, response);
     }
 
-
-
     [HttpGet("login")]
     [SwaggerOperation(
         Summary = "Login as a user",
@@ -81,16 +70,6 @@ public class AuthenticationController
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     //[ApiValidationFilter]
-    //public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
-    //{
-    //    _logger.LogInformation("START: Login");
-
-    //    var loginResponse = await _mediator.Send(new LoginQuery(loginDto));
-
-    //    _logger.LogInformation("END: Login");
-
-    //    return Ok(_mapper.Map<LoginResponseDto>(loginResponse));
-    //}
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
     {
         _logger.LogInformation("START: Login");

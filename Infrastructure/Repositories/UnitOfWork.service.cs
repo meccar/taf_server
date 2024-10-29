@@ -56,12 +56,12 @@ public class UnitOfWork : IUnitOfWork
     /// <summary>
     /// Gets the repository for user account commands.
     /// </summary>
-    public IUserAccountCommandRepository UserAccountCommandRepository { get; }
+    public IUserAccountCommandRepository UserAccountCommandRepository { get; set; }
     
     /// <summary>
     /// Gets the repository for user login data commands.
     /// </summary>
-    public IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; }
+    public IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; set; }
     
     #endregion
     
@@ -70,12 +70,12 @@ public class UnitOfWork : IUnitOfWork
     /// <summary>
     /// Gets the repository for user account queries.
     /// </summary>
-    public IUserAccountQueryRepository UserAccountQueryRepository { get; }
+    public IUserAccountQueryRepository UserAccountQueryRepository { get; set; }
     
     /// <summary>
     /// Gets the repository for user login data queries.
     /// </summary>
-    public IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; }
+    public IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; set; }
     
     #endregion
 

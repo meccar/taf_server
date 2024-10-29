@@ -37,15 +37,15 @@ public interface IUnitOfWork : IDisposable
 
     #region Command Repository Properties
 
-    IUserAccountCommandRepository UserAccountCommandRepository { get; }
-    IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; }
+    IUserAccountCommandRepository UserAccountCommandRepository { get; set; }
+    IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; set; }
     
     #endregion
     
     #region Query Repository Properties
 
-    IUserAccountQueryRepository UserAccountQueryRepository { get; }
-    IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; }
+    IUserAccountQueryRepository UserAccountQueryRepository { get; set;  }
+    IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; set; }
     
     #endregion
 }

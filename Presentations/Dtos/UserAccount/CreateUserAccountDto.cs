@@ -5,7 +5,7 @@ namespace taf_server.Presentations.Dtos.UserAccount;
 
 public class CreateUserAccountDto
 {
-    [Required] 
+    // [Required] 
     [StringLength(255)]
     public string Uuid { get; set; } = "";
     public string FirstName { get; set; } = "";

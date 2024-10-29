@@ -22,6 +22,7 @@ public static class InfrastructureServicesConfiguration
         services.ConfigureValidation();
         services.ConfigureIdentity();
         services.ConfigureRepositories();
+        services.ConfigureUsecases();
         services.ConfigureMapper();
         services.ConfigureControllers();
         services.ConfigureExceptions();
