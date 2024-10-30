@@ -1,4 +1,4 @@
-namespace taf_server.Domain.SeedWork.Enums.UserLoginData;
+namespace Domain.SeedWork.Enums.UserLoginData;
 
 public enum UserPosition
 {

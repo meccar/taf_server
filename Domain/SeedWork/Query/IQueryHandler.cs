@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace taf_server.Domain.SeedWork.Query;
+namespace Domain.SeedWork.Query;
 
 /// <summary>
 /// Defines a handler for processing queries that return a result.

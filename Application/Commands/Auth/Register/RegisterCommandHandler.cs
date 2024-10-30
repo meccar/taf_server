@@ -1,9 +1,10 @@
-﻿using taf_server.Domain.SeedWork.Command;
-using taf_server.Application.Exceptions;
-using taf_server.Domain.Interfaces;
-using taf_server.Domain.Model;
+﻿using Application.Exceptions;
+using AutoMapper;
+using Domain.Interfaces;
+using Domain.Model;
+using Domain.SeedWork.Command;
 
-namespace taf_server.Application.Commands.Auth.Register;
+namespace Application.Commands.Auth.Register;
 
 /// <summary>
 /// Handles the registration process for new user accounts.
@@ -19,14 +20,18 @@ namespace taf_server.Application.Commands.Auth.Register;
 public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccountModel>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
     /// </summary>
     /// <param name="unitOfWork">The unit of work instance to manage data transactions.</param>
-    public RegisterCommandHandler(IUnitOfWork unitOfWork)
+    public RegisterCommandHandler(
+        IUnitOfWork unitOfWork,
+        IMapper mapper)
     {
         _unitOfWork = unitOfWork;
+        _mapper = mapper;
     }
     
     /// <summary>
@@ -44,8 +49,11 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
         if (await _unitOfWork.UserAccountQueryRepository.IsUserAccountDataExisted(request.UserAccount.PhoneNumber))
             throw new BadRequestException("Phone number already exists");
 
-        var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAsync(request.UserAccount);
-        userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginData(request.UserLogin);
+        var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccount);
+        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request.UserLogin);
+        
+        var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAsync(userAccountModel);
+        userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginData(userLoginDataModel);
 
         return userAccount;
     }

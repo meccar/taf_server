@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace taf_server.Presentations.HttpResponss;
+namespace Presentations.HttpResponse;
 public class ApiResponse
 {
     public ApiResponse(int statusCode, string? message = null, object? data = null)

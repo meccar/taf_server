@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace taf_server.Domain.SeedWork.Command;
+namespace Domain.SeedWork.Command;
 
 /// <summary>
 /// Defines a handler for processing commands that return a result.
@@ -8,7 +8,7 @@ namespace taf_server.Domain.SeedWork.Command;
 /// <typeparam name="TCommand">The type of the command to handle. Must implement <see cref="ICommand{TCommandResponse}"/>.</typeparam>
 /// <typeparam name="TCommandResponse">The type of the response returned by the command handler.</typeparam>
 /// <remarks>
-/// This interface inherits from <see cref="IRequestHandler{TCommand, TCommandResponse}"/>, which means it is used
+/// This interface inherits from <see cref="IRequestHandler{TRequest}"/>, which means it is used
 /// to handle commands of type <typeparamref name="TCommand"/> that produce a result of type <typeparamref name="TCommandResponse"/>.
 /// Implementations of this interface are responsible for executing the command and returning a result based on the command's logic.
 /// </remarks>

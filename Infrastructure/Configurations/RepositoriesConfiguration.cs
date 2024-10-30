@@ -1,13 +1,13 @@
-using taf_server.Domain.Abstractions;
-using taf_server.Domain.Interfaces;
-using taf_server.Domain.Interfaces.Command;
-using taf_server.Domain.Interfaces.Query;
-using taf_server.Domain.Repositories;
-using taf_server.Infrastructure.Repositories;
-using taf_server.Infrastructure.Repositories.Command;
-using taf_server.Infrastructure.Repositories.Query;
+using Domain.Abstractions;
+using Domain.Interfaces;
+using Domain.Interfaces.Command;
+using Domain.Interfaces.Query;
+using Infrastructure.Repositories;
+using Infrastructure.Repositories.Command;
+using Infrastructure.Repositories.Query;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace taf_server.Infrastructure.Configurations;
+namespace Infrastructure.Configurations;
 
 public static class RepositoriesConfiguration
 {

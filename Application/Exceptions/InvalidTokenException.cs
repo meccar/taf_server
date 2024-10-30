@@ -1,4 +1,4 @@
-namespace taf_server.Application.Exceptions;
+namespace Application.Exceptions;
 
 /// <summary>
 /// Represents an exception that is thrown when an invalid token is encountered, resulting in an unauthorized request (HTTP 401).

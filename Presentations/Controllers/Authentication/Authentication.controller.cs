@@ -1,14 +1,14 @@
+using Application.Dtos.Authentication.Login;
+using Application.Dtos.Authentication.Register;
+using Application.Usecases.Auth;
 using Asp.Versioning;
 using AutoMapper;
+using Infrastructure.UseCaseProxy;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
-using taf_server.Presentations.Dtos.Authentication.Login;
-using taf_server.Presentations.Dtos.Authentication.Register;
-using taf_server.Application.Usecases.Auth;
-using taf_server.Infrastructure.UseCaseProxy;
 
-namespace taf_server.Presentations.Controllers.Authentication;
+namespace Presentations.Controllers.Authentication;
 
 [ApiController]
 [ApiVersion("1.0")]

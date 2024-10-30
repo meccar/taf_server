@@ -1,6 +1,6 @@
-using taf_server.Infrastructure.SeedWork.Entities;
+using Infrastructure.SeedWork.Entities;
 
-namespace taf_server.Infrastructure.Entities;
+namespace Infrastructure.Entities;
 
 public class CityEntity : BaseEntity
 {

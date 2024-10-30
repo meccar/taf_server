@@ -1,4 +1,4 @@
-namespace taf_server.Infrastructure.SeedWork.Enums;
+namespace Infrastructure.SeedWork.Enums;
 
 public enum UsecasesProxyProvide
 {

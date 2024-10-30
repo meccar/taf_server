@@ -1,8 +1,7 @@
-using taf_server.Domain.Entities;
-using taf_server.Domain.SeedWork.Enums.UserLoginData;
-using taf_server.Infrastructure.SeedWork.Entities;
+using Domain.Entities;
+using Domain.SeedWork.Enums.UserLoginData;
 
-namespace taf_server.Infrastructure.Entities;
+namespace Infrastructure.Entities;
 
 public class UserLoginDataEntity : EntityBase
 {
@@ -19,5 +18,5 @@ public class UserLoginDataEntity : EntityBase
     public string TwoFactorSecret { get; set; } = "";
     public UserPosition? UserPosition { get; set; }
     //public BaseEntity? baseEntity { get; set; }
-    public UserAccountEntity? UserAccount { get; set; }
+    // public UserAccountEntity? UserAccount { get; set; }
 }

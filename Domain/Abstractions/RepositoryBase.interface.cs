@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Linq.Expressions;
-using taf_server.Domain.Entities;
+﻿using System.Linq.Expressions;
+using Domain.Entities;
 
-namespace taf_server.Domain.Abstractions;
+namespace Domain.Abstractions;
 /// <summary>
 /// Defines the contract for a repository that manages entities of type <typeparamref name="T"/>.
 /// </summary>

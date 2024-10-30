@@ -1,11 +1,8 @@
-﻿using taf_server.Domain.Model;
+﻿using Domain.SeedWork.Enums.UserAccount;
+using Domain.SeedWork.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using taf_server.Domain.Entities;
-using taf_server.Domain.SeedWork.Enums.UserAccount;
-using taf_server.Domain.SeedWork.Interfaces;
-using taf_server.Infrastructure.Entities;
 
-namespace taf_server.Domain.Aggregates;
+namespace Domain.Aggregates;
 
 /// <summary>
 /// Represents a user account within the application, extending the IdentityUser class.
@@ -15,7 +12,7 @@ namespace taf_server.Domain.Aggregates;
 /// account status, and associated tokens. It implements the <see cref="IDateTracking"/> 
 /// interface for managing creation and update timestamps.
 /// </remarks>
-public class UserAccountAggregate : IdentityUser, IDateTracking
+public class UserAccountAggregate : IdentityUser<int>, IDateTracking
 {
     public new int Id { get; set; }
     public string Uuid { get; set; } = "";
@@ -31,8 +28,10 @@ public class UserAccountAggregate : IdentityUser, IDateTracking
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }
-    public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
-    public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
+    // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
+    // public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
+    public virtual UserLoginDataAggregate UserLoginData { get; set; }
+
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
     // public List<UserTokenModel> Tokens { get; set; }
     // public List<RoleModel> Roles { get; set; }

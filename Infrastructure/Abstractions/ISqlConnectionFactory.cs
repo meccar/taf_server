@@ -1,6 +1,6 @@
 using System.Data;
 
-namespace taf_server.Infrastructure.Abstractions;
+namespace Infrastructure.Abstractions;
 
 /// <summary>
 /// Defines a factory for creating SQL database connections.

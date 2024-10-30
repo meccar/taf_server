@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+﻿using Application.Commands.Auth.Register;
+using Application.Dtos.Authentication.Register;
+using AutoMapper;
+using Domain.Usecase;
 using MediatR;
-using taf_server.Application.Commands.Auth.Register;
-using taf_server.Domain.Usecase;
-using taf_server.Presentations.Dtos.Authentication.Register;
 
-namespace taf_server.Application.Usecases.Auth;
+namespace Application.Usecases.Auth;
 public class RegisterUsecase : IUseCase<RegisterUserRequestDto, RegisterUserResponseDto>
 {
     private readonly IMediator _mediator;

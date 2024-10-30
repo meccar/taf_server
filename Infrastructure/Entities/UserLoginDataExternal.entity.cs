@@ -1,7 +1,7 @@
-using taf_server.Domain.SeedWork.Enums.UserLoginDataExternal;
-using taf_server.Infrastructure.SeedWork.Entities;
+using Domain.SeedWork.Enums.UserLoginDataExternal;
+using Infrastructure.SeedWork.Entities;
 
-namespace taf_server.Infrastructure.Entities;
+namespace Infrastructure.Entities;
 public class UserLoginDataExternalEntity : BaseEntity
 {
     public int Id { get; set; }

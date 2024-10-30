@@ -51,8 +51,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include=".github\" />
-    <Folder Include="Application\Queries\Auth\" />
-    <Folder Include="Infrastructure\Migrations\" />
+    <Folder Include="Application1\" />
+    <Folder Include="Domain1\" />
+    <Folder Include="Infrastructure1\" />
+    <Folder Include="Presentations1\" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".github\workflows\sonar-build.yml" />

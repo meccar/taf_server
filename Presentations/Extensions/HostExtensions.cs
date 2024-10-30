@@ -1,4 +1,4 @@
-namespace taf_server.Presentations.Extensions;
+namespace Presentations.Extensions;
 
 public static class HostExtensions
 {

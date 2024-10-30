@@ -1,6 +1,8 @@
+using Application;
+using Infrastructure;
+using Presentations;
+using Presentations.Extensions;
 using Serilog;
-using taf_server.Infrastructure;
-using taf_server.Presentations.Extensions;
 
 var AppCors = "AppCors";
 
@@ -15,20 +17,16 @@ try
 
     // Add services to the container.
     builder.Logging.AddConsole();
-    // builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddGrpc();
+    // builder.Services.AddGrpc();
+    
     builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
-
+    builder.Services.ConfigureApplicationServices(builder.Configuration);
+    builder.Services.ConfigurePresentationsServices(builder.Configuration);
+    
     WebApplication? app = builder.Build();
 
     app.UseInfrastructure(AppCors);
-
-    // using (var scope = app.Services.CreateScope())
-    // {
-    //     var services = scope.ServiceProvider;
-    //     var context = services.GetRequiredService<ApplicationDbContext>();
-    //     context.Database.Migrate();
-    // }
+    
     
     await app.RunAsync();
 

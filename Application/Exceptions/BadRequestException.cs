@@ -1,4 +1,6 @@
-﻿namespace taf_server.Application.Exceptions;
+﻿using Application.SeedWork;
+
+namespace Application.Exceptions;
 /// <summary>
 /// Represents an exception that is thrown when a bad request (HTTP 400) occurs.
 /// </summary>

@@ -1,4 +1,4 @@
-namespace taf_server.Presentations.Helper;
+namespace Presentations.Helper;
 
 public class HashHelper
 {

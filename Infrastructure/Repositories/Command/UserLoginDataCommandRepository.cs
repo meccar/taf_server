@@ -1,16 +1,12 @@
 using AutoMapper;
+using Domain.Aggregates;
+using Domain.Interfaces.Command;
+using Domain.Model;
+using Infrastructure.Data;
+using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
-using taf_server.Domain.Aggregates;
-using taf_server.Domain.Interfaces;
-using taf_server.Domain.Interfaces.Command;
-using taf_server.Domain.Model;
-using taf_server.Domain.Repositories;
-using taf_server.Infrastructure.Data;
-using taf_server.Infrastructure.Entities;
-using taf_server.Presentations.Dtos.UserLoginData;
-using taf_server.Presentations.Helper;
 
-namespace taf_server.Infrastructure.Repositories.Command;
+namespace Infrastructure.Repositories.Command;
 
 /// <summary>
 /// Represents the command repository for managing user login data entities and operations.
@@ -49,11 +45,11 @@ public class UserLoginDataCommandRepository
     /// </summary>
     /// <param name="userLoginDataDto">The DTO containing user login data details.</param>
     /// <returns>The created user login data model.</returns>
-    public async Task<UserLoginDataModel> CreateUserLoginData(CreateUserLoginDataDto userLoginDataDto)
+    public async Task<UserLoginDataModel> CreateUserLoginData(UserLoginDataModel userLoginDataDto)
     {
         var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataDto);
 
-        userLoginDataEntity.PasswordHash = HashHelper.Encrypt(userLoginDataDto.Password);
+        // userLoginDataEntity.PasswordHash = HashHelper.Encrypt(userLoginDataDto.Password);
         await CreateAsync(userLoginDataEntity);
 
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);

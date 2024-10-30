@@ -1,10 +1,10 @@
-﻿using taf_server.Domain.Model;
-using taf_server.Domain.SeedWork.Command;
-using taf_server.Presentations.Dtos.Authentication.Register;
-using taf_server.Presentations.Dtos.UserAccount;
-using taf_server.Presentations.Dtos.UserLoginData;
+﻿using Application.Dtos.Authentication.Register;
+using Application.Dtos.UserAccount;
+using Application.Dtos.UserLoginData;
+using Domain.Model;
+using Domain.SeedWork.Command;
 
-namespace taf_server.Application.Commands.Auth.Register;
+namespace Application.Commands.Auth.Register;
 
 /// <summary>
 /// Represents a command to sign up a new user.

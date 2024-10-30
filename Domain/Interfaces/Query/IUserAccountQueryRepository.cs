@@ -1,6 +1,6 @@
-using taf_server.Infrastructure.Entities;
+using Domain.Model;
 
-namespace taf_server.Domain.Interfaces.Query;
+namespace Domain.Interfaces.Query;
 
 public interface IUserAccountQueryRepository
 {
@@ -12,5 +12,5 @@ public interface IUserAccountQueryRepository
     /// a boolean value indicating whether the user account data exists.</returns>
     Task<bool> IsUserAccountDataExisted(string userAccountData);
     
-    Task<UserAccountEntity> FindOneByEmail(string email);
+    Task<UserAccountModel> FindOneByEmail(string email);
 }

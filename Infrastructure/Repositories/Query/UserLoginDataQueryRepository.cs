@@ -1,12 +1,11 @@
 using AutoMapper;
+using Domain.Aggregates;
+using Domain.Interfaces.Query;
+using Infrastructure.Data;
+using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
-using taf_server.Domain.Aggregates;
-using taf_server.Domain.Interfaces.Query;
-using taf_server.Domain.Repositories;
-using taf_server.Infrastructure.Data;
-using taf_server.Infrastructure.Entities;
 
-namespace taf_server.Infrastructure.Repositories.Query;
+namespace Infrastructure.Repositories.Query;
 
 public class UserLoginDataQueryRepository
     : RepositoryBase<UserLoginDataEntity>, IUserLoginDataQueryRepository

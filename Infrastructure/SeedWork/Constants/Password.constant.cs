@@ -1,4 +1,4 @@
-namespace taf_server.Infrastructure.SeedWork.Constants;
+namespace Infrastructure.SeedWork.Constants;
 
 public class PasswordConstants
 {

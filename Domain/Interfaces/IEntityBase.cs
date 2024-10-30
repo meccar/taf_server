@@ -1,6 +1,6 @@
-﻿using taf_server.Domain.SeedWork.Interfaces;
+﻿using Domain.SeedWork.Interfaces;
 
-namespace taf_server.Domain.Interfaces;
+namespace Domain.Interfaces;
 
 /// <summary>
 /// Represents the base interface for entities in the domain, providing common 

@@ -1,7 +1,8 @@
 using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace taf_server.Infrastructure.Configurations;
+namespace Infrastructure.Configurations;
 
 public static class SwaggerConfiguration
 {

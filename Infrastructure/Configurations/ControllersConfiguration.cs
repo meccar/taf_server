@@ -1,7 +1,8 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace taf_server.Infrastructure.Configurations;
+namespace Infrastructure.Configurations;
 
 public static class ControllersConfiguration
 {

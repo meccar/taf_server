@@ -4,3 +4,9 @@
     build:
       context: .
       dockerfile: Dockerfile
+
+  presentations:
+    image: presentations
+    build:
+      context: .
+      dockerfile: Presentations/Dockerfile

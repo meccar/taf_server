@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.Security;
-using taf_server.Domain.SeedWork.Interfaces;
+﻿using Domain.SeedWork.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
-namespace taf_server.Domain.Aggregates;
+namespace Domain.Aggregates;
 public class RoleAggregate : IdentityRole, IDateTracking
 {
     public bool IsDeleted { get; set; } = false;

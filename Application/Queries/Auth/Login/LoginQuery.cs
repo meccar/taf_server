@@ -1,8 +1,8 @@
-using taf_server.Domain.Model;
-using taf_server.Domain.SeedWork.Query;
-using taf_server.Presentations.Dtos.Authentication.Login;
+using Application.Dtos.Authentication.Login;
+using Domain.Model;
+using Domain.SeedWork.Query;
 
-namespace taf_server.Application.Queries.Auth.Login;
+namespace Application.Queries.Auth.Login;
 
 public class LoginQuery : IQuery<UserAccountModel>
 {

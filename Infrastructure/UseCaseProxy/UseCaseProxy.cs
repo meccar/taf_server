@@ -1,6 +1,6 @@
-using taf_server.Domain.Usecase;
+using Domain.Usecase;
 
-namespace taf_server.Infrastructure.UseCaseProxy;
+namespace Infrastructure.UseCaseProxy;
 
 public class UseCaseProxy<T, TRequest, TResponse> where T : IUseCase<TRequest, TResponse>
 {
