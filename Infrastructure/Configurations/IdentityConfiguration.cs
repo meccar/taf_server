@@ -9,7 +9,7 @@ public static class IdentityConfiguration
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<UserAccountAggregate, IdentityRole>(options =>
+            .AddIdentity<UserAccountAggregate, IdentityRole<int>>(options =>
             {
                 // Password settings
                 options.Password.RequireDigit = true;

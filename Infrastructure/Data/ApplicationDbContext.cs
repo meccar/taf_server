@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using Domain.Aggregates;
+using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -29,11 +30,11 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountAggregate, Iden
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserAccountAggregate}"/> for user accounts.
     /// </summary>
-    public DbSet<UserAccountAggregate> UserAccount { get; set; } = null!;
+    public DbSet<UserAccountAggregate> UserAccount { get; set; }
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserLoginDataAggregate}"/> for user login data.
     /// </summary>
-    public DbSet<UserLoginDataAggregate> UserLoginData { get; set; } = null!;
+    public DbSet<UserLoginDataAggregate> UserLoginData { get; set; }
 
     #endregion
     

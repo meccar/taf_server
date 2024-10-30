@@ -2,7 +2,7 @@ using Application.Dtos.Authentication.Register;
 using FluentValidation;
 using Infrastructure.SeedWork.Constants;
 
-namespace Presentations.Validators.Auth;
+namespace Application.Validators.Auth;
 
 public class RegisterValidator : AbstractValidator<RegisterUserRequestDto>
 {

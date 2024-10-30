@@ -33,14 +33,14 @@ public static class DbContextConfiguration
         //     return services;
         // }
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-        if (string.IsNullOrEmpty(connectionString))
-            throw new ArgumentNullException("DefaultConnection is not configured.");
+        // var connectionString = configuration.GetConnectionString("DefaultConnection");
+        // if (string.IsNullOrEmpty(connectionString))
+        //     throw new ArgumentNullException("DefaultConnection is not configured.");
         
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlServer(
-                connectionString,
+                "Server=localhost,14407;Database=master;User Id=sa;Password=Admin@123;MultipleActiveResultSets=True;TrustServerCertificate=True;",
                 sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(

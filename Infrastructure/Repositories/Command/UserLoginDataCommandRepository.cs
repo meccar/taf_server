@@ -38,8 +38,6 @@ public class UserLoginDataCommandRepository
         _userManager = userManager;
     }
 
-
-
     /// <summary>
     /// Creates a new user login data entry based on the provided DTO.
     /// </summary>

@@ -1,7 +1,7 @@
 using Application.Dtos.Authentication.Register;
+using Application.Validators.Auth;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using Presentations.Validators.Auth;
 
 namespace Application.Configurations;
 

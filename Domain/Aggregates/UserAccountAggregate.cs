@@ -14,7 +14,7 @@ namespace Domain.Aggregates;
 /// </remarks>
 public class UserAccountAggregate : IdentityUser<int>, IDateTracking
 {
-    public new int Id { get; set; }
+    public override int Id { get; set; }
     public string Uuid { get; set; } = "";
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";

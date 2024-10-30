@@ -17,7 +17,7 @@ public static class InfrastructureServicesConfiguration
         // services.ConfigureApplication();
         // services.ConfigureAppSettings(configuration);
         // services.ConfigureAuthetication();
-        // services.ConfigureDependencyInjection();
+        services.ConfigureDependencyInjection();
         services.ConfigureCors(appCors);
         services.ConfigureApiVersioning();
         services.ConfigureDbContext(configuration);
