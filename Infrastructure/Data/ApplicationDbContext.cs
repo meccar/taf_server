@@ -15,7 +15,8 @@ namespace Infrastructure.Data;
 /// and login data aggregates, and configuring entity mappings. It also applies configurations 
 /// from the executing assembly.
 /// </remarks>
-public class ApplicationDbContext : IdentityDbContext<UserAccountAggregate, IdentityRole<int>, int>
+public class ApplicationDbContext 
+    : IdentityDbContext<UserAccountAggregate, IdentityRole<int>, int>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
@@ -45,7 +46,9 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountAggregate, Iden
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-     
+
+        builder.Entity<UserAccountAggregate>().ToTable("UserAccounts");
+
         builder.Entity<UserAccountAggregate>()
             .HasOne(u => u.UserLoginData)
             .WithOne(ul => ul.UserAccount)

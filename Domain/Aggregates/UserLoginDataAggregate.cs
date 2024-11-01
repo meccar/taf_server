@@ -13,9 +13,9 @@ namespace Domain.Aggregates;
 /// account association. It implements the <see cref="IDateTracking"/> interface 
 /// for tracking the creation and update timestamps.
 /// </remarks>
-public class UserLoginDataAggregate : IdentityUser<int>, IDateTracking
+public class UserLoginDataAggregate : IDateTracking
 {
-    public override int Id { get; set; }
+    public int Id { get; set; }
     public string Uuid { get; set; } = "";
     public int UserAccountId { get; set; }
     public new string PasswordHash { get; set; } = "";

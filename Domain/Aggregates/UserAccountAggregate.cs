@@ -14,7 +14,6 @@ namespace Domain.Aggregates;
 /// </remarks>
 public class UserAccountAggregate : IdentityUser<int>, IDateTracking
 {
-    public override int Id { get; set; }
     public string Uuid { get; set; } = "";
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
@@ -30,7 +29,7 @@ public class UserAccountAggregate : IdentityUser<int>, IDateTracking
     public DateTime DeletedAt { get; set; }
     // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
     // public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
-    public virtual UserLoginDataAggregate UserLoginData { get; set; }
+    public UserLoginDataAggregate UserLoginData { get; private set; }
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
     // public List<UserTokenModel> Tokens { get; set; }
