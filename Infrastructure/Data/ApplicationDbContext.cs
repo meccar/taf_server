@@ -47,7 +47,8 @@ public class ApplicationDbContext
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<UserAccountAggregate>().ToTable("UserAccounts");
+        builder.Entity<UserAccountAggregate>().ToTable("UserAccount");
+        builder.Entity<UserLoginDataAggregate>().ToTable("UserLoginData");
 
         builder.Entity<UserAccountAggregate>()
             .HasOne(u => u.UserLoginData)
