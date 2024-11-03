@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace taf_server.Infrastructure;
+namespace Infrastructure;
 
 /// <summary>
 /// Provides a reference to the assembly containing the application.
@@ -12,5 +12,5 @@ namespace taf_server.Infrastructure;
 /// </remarks>
 public static class AssemblyReference
 {
-    public static readonly Assembly Assembly = typeof(Application.AssemblyReference).Assembly;
+    public static readonly Assembly Assembly = typeof(Infrastructure.AssemblyReference).Assembly;
 }

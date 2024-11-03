@@ -1,15 +1,12 @@
 using AutoMapper;
+using Domain.Aggregates;
+using Domain.Interfaces.Command;
+using Domain.Model;
+using Infrastructure.Data;
+using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
-using taf_server.Domain.Aggregates;
-using taf_server.Domain.Interfaces;
-using taf_server.Domain.Interfaces.Command;
-using taf_server.Domain.Model;
-using taf_server.Domain.Repositories;
-using taf_server.Infrastructure.Data;
-using taf_server.Infrastructure.Entities;
-using taf_server.Presentations.Dtos.UserAccount;
 
-namespace taf_server.Infrastructure.Repositories.Command;
+namespace Infrastructure.Repositories.Command;
 
 /// <summary>
 /// Represents the command repository for managing user account entities and operations.
@@ -46,7 +43,7 @@ public class UserAccountCommandRepository
     /// </summary>
     /// <param name="createUserAccountDto">The DTO containing user account details.</param>
     /// <returns>The created user account model.</returns>
-    public async Task<UserAccountModel> CreateUserAsync(CreateUserAccountDto createUserAccountDto)
+    public async Task<UserAccountModel> CreateUserAsync(UserAccountModel createUserAccountDto)
     {
         var userAccountEntity = _mapper.Map<UserAccountEntity>(createUserAccountDto);
         

@@ -1,10 +1,10 @@
-﻿using AutoMapper;
+﻿using Application.Dtos.Authentication.Login;
+using Application.Queries.Auth.Login;
+using AutoMapper;
+using Domain.Usecase;
 using MediatR;
-using taf_server.Application.Queries.Auth.Login;
-using taf_server.Domain.Usecase;
-using taf_server.Presentations.Dtos.Authentication.Login;
 
-namespace taf_server.Application.Usecases.Auth;
+namespace Application.Usecases.Auth;
 public class LoginUsecase : IUseCase<LoginUserRequestDto, LoginResponseDto>
 {
     private readonly IMediator _mediator;

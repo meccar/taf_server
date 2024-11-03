@@ -1,4 +1,4 @@
-namespace taf_server.Domain.Usecase;
+namespace Domain.Usecase;
 
 public interface IUseCase<in TRequest, TResponse>
 {

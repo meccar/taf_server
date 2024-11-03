@@ -1,6 +1,4 @@
-using Microsoft.AspNetCore.Diagnostics;
-
-namespace taf_server.Presentations.Extensions;
+namespace Presentations.Extensions;
 
 public static class ApplicationExtensions
 {

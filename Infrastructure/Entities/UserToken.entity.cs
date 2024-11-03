@@ -1,7 +1,7 @@
-using taf_server.Domain.SeedWork.Enums.Token;
-using taf_server.Infrastructure.SeedWork.Entities;
+using Domain.SeedWork.Enums.Token;
+using Infrastructure.SeedWork.Entities;
 
-namespace taf_server.Infrastructure.Entities;
+namespace Infrastructure.Entities;
 
 public class UserTokenEntity : BaseEntity
 {

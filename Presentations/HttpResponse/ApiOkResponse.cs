@@ -1,4 +1,4 @@
-﻿namespace taf_server.Presentations.HttpResponss;
+﻿namespace Presentations.HttpResponse;
 public class ApiOkResponse : ApiResponse
 {
     public ApiOkResponse()

@@ -1,4 +1,4 @@
-namespace taf_server.Domain.SeedWork.Enums.UserLoginDataExternal;
+namespace Domain.SeedWork.Enums.UserLoginDataExternal;
 public enum Provider
 {
     FACEBOOK,

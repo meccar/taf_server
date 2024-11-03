@@ -1,7 +1,6 @@
-using taf_server.Domain.Model;
-using taf_server.Presentations.Dtos.UserLoginData;
+using Domain.Model;
 
-namespace taf_server.Domain.Interfaces.Command;
+namespace Domain.Interfaces.Command;
 
 /// <summary>
 /// Defines the contract for user login data command operations in the repository.
@@ -19,5 +18,5 @@ public interface IUserLoginDataCommandRepository
     /// <param name="userLoginDataDto">The data transfer object containing login data details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// the newly created <see cref="UserLoginDataModel"/>.</returns>
-    Task<UserLoginDataModel> CreateUserLoginData(CreateUserLoginDataDto userLoginDataDto);
+    Task<UserLoginDataModel> CreateUserLoginData(UserLoginDataModel userLoginDataDto);
 }

@@ -1,7 +1,7 @@
-using taf_server.Domain.Model;
-using taf_server.Presentations.Dtos.UserAccount;
+using Domain.Aggregates;
+using Domain.Model;
 
-namespace taf_server.Domain.Interfaces.Command;
+namespace Domain.Interfaces.Command;
 
 /// <summary>
 /// Defines the contract for user account command operations in the repository.
@@ -20,12 +20,12 @@ public interface IUserAccountCommandRepository
     /// <param name="createUserAccountDto">The data transfer object containing user account details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// the newly created <see cref="UserAccountModel"/>.</returns>
-    Task<UserAccountModel> CreateUserAsync(CreateUserAccountDto createUserAccountDto);
+    Task<UserAccountModel> CreateUserAsync(UserAccountModel createUserAccountDto);
     /// <summary>
     /// Adds a user to one or more roles asynchronously.
     /// </summary>
     /// <param name="user">The user account aggregate to be added to roles.</param>
     /// <param name="roles">An enumerable collection of role names to assign to the user.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    Task AddUserToRolesAsync(Domain.Aggregates.UserAccountAggregate user, IEnumerable<string> roles);
+    Task AddUserToRolesAsync(UserAccountAggregate user, IEnumerable<string> roles);
 }

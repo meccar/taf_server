@@ -1,4 +1,6 @@
-namespace taf_server.Infrastructure.Configurations;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Infrastructure.Configurations;
 
 public static class CorsConfiguration
 {

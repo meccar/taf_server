@@ -1,8 +1,8 @@
+using Domain.Interfaces.Command;
+using Domain.Interfaces.Query;
 using Microsoft.EntityFrameworkCore.Storage;
-using taf_server.Domain.Interfaces.Command;
-using taf_server.Domain.Interfaces.Query;
 
-namespace taf_server.Domain.Interfaces;
+namespace Domain.Interfaces;
 
 /// <summary>
 /// Defines the contract for a unit of work that manages database operations and caching.

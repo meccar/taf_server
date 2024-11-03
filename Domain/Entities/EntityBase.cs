@@ -1,6 +1,6 @@
-﻿using taf_server.Domain.Interfaces;
+﻿using Domain.Interfaces;
 
-namespace taf_server.Domain.Entities;
+namespace Domain.Entities;
 
 /// <summary>
 /// Serves as a base class for entities in the domain, providing common properties 

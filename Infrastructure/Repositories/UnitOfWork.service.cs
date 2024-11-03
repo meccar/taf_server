@@ -1,10 +1,10 @@
+using Domain.Interfaces;
+using Domain.Interfaces.Command;
+using Domain.Interfaces.Query;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Storage;
-using taf_server.Domain.Interfaces;
-using taf_server.Domain.Interfaces.Command;
-using taf_server.Domain.Interfaces.Query;
-using taf_server.Infrastructure.Data;
 
-namespace taf_server.Infrastructure.Repositories;
+namespace Infrastructure.Repositories;
 
 /// <summary>
 /// Represents a unit of work for managing database operations across multiple repositories.

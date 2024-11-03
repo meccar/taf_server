@@ -1,7 +1,9 @@
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using taf_server.Infrastructure.Data;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace taf_server.Infrastructure.Configurations;
+namespace Infrastructure.Configurations;
 
 public static class DbContextConfiguration
 {
@@ -32,13 +34,14 @@ public static class DbContextConfiguration
         // }
     {
         var connectionString = configuration.GetConnectionString("DefaultConnection");
-        if (connectionString == null || string.IsNullOrEmpty(connectionString))
+        if (string.IsNullOrEmpty(connectionString))
             throw new ArgumentNullException("DefaultConnection is not configured.");
-        
+
         services.AddDbContext<ApplicationDbContext>(options =>
         {
             options.UseSqlServer(
                 connectionString,
+                //"Server=localhost,14407;Database=master;User Id=sa;Password=Admin@123;MultipleActiveResultSets=True;TrustServerCertificate=True;",
                 sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(

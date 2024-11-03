@@ -1,13 +1,13 @@
 using AutoMapper;
+using Domain.Aggregates;
+using Domain.Interfaces.Query;
+using Domain.Model;
+using Infrastructure.Data;
+using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using taf_server.Domain.Aggregates;
-using taf_server.Domain.Interfaces.Query;
-using taf_server.Domain.Repositories;
-using taf_server.Infrastructure.Data;
-using taf_server.Infrastructure.Entities;
 
-namespace taf_server.Infrastructure.Repositories.Query;
+namespace Infrastructure.Repositories.Query;
 
 public class UserAccountQueryRepository
     : RepositoryBase<UserAccountEntity>, IUserAccountQueryRepository
@@ -36,10 +36,11 @@ public class UserAccountQueryRepository
     }
     
     
-    public async Task<UserAccountEntity> FindOneByEmail(string email)
+    public async Task<UserAccountModel> FindOneByEmail(string email)
     {
         var query = FindByCondition(u => u.UserLoginData!.Email == email);
         var results = await query.ToListAsync();
-        return results.FirstOrDefault()!;
+        var userAccountModel = _mapper.Map<UserAccountModel>(results.Single());
+        return userAccountModel;
     }
 }

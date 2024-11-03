@@ -1,7 +1,7 @@
-using taf_server.Domain.Entities;
-using taf_server.Domain.SeedWork.Enums.UserAccount;
+using Domain.Entities;
+using Domain.SeedWork.Enums.UserAccount;
 
-namespace taf_server.Infrastructure.Entities;
+namespace Infrastructure.Entities;
 public class UserAccountEntity : EntityBase
 {
     public int Id { get; set; }

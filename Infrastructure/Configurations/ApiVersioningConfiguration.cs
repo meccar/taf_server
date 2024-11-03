@@ -1,7 +1,8 @@
 using Asp.Versioning;
 using Asp.Versioning.Conventions;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace taf_server.Infrastructure.Configurations;
+namespace Infrastructure.Configurations;
 
 public static class ApiVersioningConfiguration
 {

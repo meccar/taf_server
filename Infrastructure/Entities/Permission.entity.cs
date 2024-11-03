@@ -1,7 +1,7 @@
-using taf_server.Domain.SeedWork.Enums.Http;
-using taf_server.Infrastructure.SeedWork.Entities;
+using Domain.SeedWork.Enums.Http;
+using Infrastructure.SeedWork.Entities;
 
-namespace taf_server.Infrastructure.Entities;
+namespace Infrastructure.Entities;
 
 public class PermissionEntity : BaseEntity
 {

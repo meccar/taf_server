@@ -1,6 +1,6 @@
 using System.Reflection;
 
-namespace taf_server.Presentations;
+namespace Presentations;
 
 /// <summary>
 /// Provides a reference to the assembly containing the application.
@@ -12,5 +12,5 @@ namespace taf_server.Presentations;
 /// </remarks>
 public static class AssemblyReference
 {
-    public static readonly Assembly Assembly = typeof(Application.AssemblyReference).Assembly;
+    public static readonly Assembly Assembly = typeof(Presentations.AssemblyReference).Assembly;
 }

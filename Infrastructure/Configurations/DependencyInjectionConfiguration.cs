@@ -1,8 +1,8 @@
-using taf_server.Infrastructure.Abstractions;
-using taf_server.Infrastructure.Data;
-using taf_server.Infrastructure.SeedWork.SqlConnection;
+using Infrastructure.Abstractions;
+using Infrastructure.SeedWork.SqlConnection;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace taf_server.Infrastructure.Configurations;
+namespace Infrastructure.Configurations;
 
 public static class DependencyInjectionConfiguration
 {

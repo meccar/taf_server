@@ -1,8 +1,8 @@
 using System.Data;
-using MySqlConnector;
-using taf_server.Infrastructure.Abstractions;
+using Infrastructure.Abstractions;
+using Microsoft.Extensions.Configuration;
 
-namespace taf_server.Infrastructure.SeedWork.SqlConnection;
+namespace Infrastructure.SeedWork.SqlConnection;
 
 public class SqlConnectionFactory : ISqlConnectionFactory
 {
@@ -15,7 +15,7 @@ public class SqlConnectionFactory : ISqlConnectionFactory
 
     public IDbConnection CreateConnection()
     {
-        var connection = new MySqlConnection(_connectionString);
+        var connection = new Microsoft.Data.SqlClient.SqlConnection(_connectionString);
         connection.Open();
         return connection;
     }

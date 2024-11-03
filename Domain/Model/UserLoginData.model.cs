@@ -1,6 +1,6 @@
-using taf_server.Domain.SeedWork.Enums.UserLoginData;
+using Domain.SeedWork.Enums.UserLoginData;
 
-namespace taf_server.Domain.Model;
+namespace Domain.Model;
 
 public class UserLoginDataModel
 {

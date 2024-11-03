@@ -1,7 +1,9 @@
-using taf_server.Domain.SeedWork.Enums.UserAccount;
-using taf_server.Infrastructure.Entities;
+using Domain.SeedWork.Enums.UserAccount;
 
-namespace taf_server.Domain.Model;
+namespace Domain.Model;
+/// <summary>
+/// 
+/// </summary>
 public class UserAccountModel
 {
     public int Id { get; set; }

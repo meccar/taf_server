@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using taf_server.Presentations.HttpResponss;
 
-namespace taf_server.Presentations.HttpResponse;
+namespace Presentations.HttpResponse;
 
 public class ApiNotFoundResponse : ApiResponse
 {

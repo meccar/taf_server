@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Identity;
-using taf_server.Domain.Aggregates;
-using taf_server.Infrastructure.Data;
+﻿using Domain.Aggregates;
+using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace taf_server.Infrastructure.Configurations;
+namespace Infrastructure.Configurations;
 public static class IdentityConfiguration
 {
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<UserAccountAggregate, IdentityRole>(options =>
+            .AddIdentity<UserAccountAggregate, IdentityRole<int>>(options =>
             {
                 // Password settings
                 options.Password.RequireDigit = true;

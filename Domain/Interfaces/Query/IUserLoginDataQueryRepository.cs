@@ -1,6 +1,4 @@
-using taf_server.Domain.Model;
-
-namespace taf_server.Domain.Interfaces.Query;
+namespace Domain.Interfaces.Query;
 
 public interface IUserLoginDataQueryRepository
 {

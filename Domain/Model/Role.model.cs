@@ -1,4 +1,4 @@
-namespace taf_server.Domain.Model;
+namespace Domain.Model;
 
 public class RoleModel
 {

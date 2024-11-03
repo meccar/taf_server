@@ -1,4 +1,4 @@
-namespace taf_server.Infrastructure.SeedWork.Entities;
+namespace Infrastructure.SeedWork.Entities;
 public abstract class BaseEntity
 {
     public DateTime CreatedAt { get; set; }

@@ -1,4 +1,4 @@
-namespace taf_server.Domain.SeedWork.Enums.Http;
+namespace Domain.SeedWork.Enums.Http;
 
 public enum RequestMethod
 {

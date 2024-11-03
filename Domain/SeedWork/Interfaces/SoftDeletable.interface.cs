@@ -1,4 +1,4 @@
-﻿namespace taf_server.Domain.SeedWork.Interfaces;
+﻿namespace Domain.SeedWork.Interfaces;
 public interface ISoftDeletable
 {
     bool IsDeleted { get; set; }

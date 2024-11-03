@@ -1,19 +1,22 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Reflection;
+using Domain.Aggregates;
+using Infrastructure.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using taf_server.Domain.Aggregates;
-using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
-namespace taf_server.Infrastructure.Data;
+namespace Infrastructure.Data;
 
 /// <summary>
-/// Represents the application database context, inheriting from <see cref="IdentityDbContext{TUser}"/>.
+/// Represents the application database context, inheriting from <see cref="IdentityDbContext"/>.
 /// </summary>
 /// <remarks>
 /// This context is responsible for interacting with the database, managing the user account 
 /// and login data aggregates, and configuring entity mappings. It also applies configurations 
 /// from the executing assembly.
 /// </remarks>
-public class ApplicationDbContext : IdentityDbContext<UserAccountAggregate>
+public class ApplicationDbContext 
+    : IdentityDbContext<UserAccountAggregate, IdentityRole<int>, int>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
@@ -28,21 +31,32 @@ public class ApplicationDbContext : IdentityDbContext<UserAccountAggregate>
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserAccountAggregate}"/> for user accounts.
     /// </summary>
-    public DbSet<UserAccountAggregate> UserAccount { set; get; }
+    public DbSet<UserAccountEntity> UserAccount { get; set; }
+    //public DbSet<UserAccountAggregate> UserAccount { get; set; }
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserLoginDataAggregate}"/> for user login data.
     /// </summary>
-    public DbSet<UserLoginDataAggregate> UserLoginData { set; get; }
-
-    #endregion
+    public DbSet<UserLoginDataEntity> UserLoginData { get; set; }
+    //public DbSet<UserLoginDataAggregate> UserLoginData { get; set; }
     
+    #endregion
+
     /// <summary>
     /// Configures the model and applies configurations from the current assembly.
     /// </summary>
     /// <param name="builder">The <see cref="ModelBuilder"/> used to configure the model.</param>
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         base.OnModelCreating(builder);
+
+        //builder.Entity<UserAccountAggregate>().ToTable("UserAccount");
+        //builder.Entity<UserLoginDataAggregate>().ToTable("UserLoginData");
+
+        //builder.Entity<UserAccountAggregate>()
+        //    .HasOne(u => u.UserLoginData)
+        //    .WithOne(ul => ul.UserAccount)
+        //    .HasForeignKey<UserLoginDataAggregate>(ul => ul.UserAccountId);
+        
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }
