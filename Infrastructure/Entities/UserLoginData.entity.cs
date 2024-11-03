@@ -69,5 +69,5 @@ public class UserLoginDataEntity : EntityBase
     public UserPosition? UserPosition { get; set; }
     
     //public BaseEntity? baseEntity { get; set; }
-    // public UserAccountEntity? UserAccount { get; set; }
+    public UserAccountEntity UserAccount { get; set; }
 }

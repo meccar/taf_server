@@ -28,8 +28,8 @@ public class UserAccountAggregate : IdentityUser<int>, IDateTracking
     public DateTime? UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }
     // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
-    // public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
-    public UserLoginDataAggregate UserLoginData { get; private set; }
+    public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
+    //public UserLoginDataAggregate UserLoginData { get; private set; }
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
     // public List<UserTokenModel> Tokens { get; set; }

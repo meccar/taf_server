@@ -27,7 +27,7 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserAccounts",
+                name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -59,7 +59,34 @@ namespace Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserAccounts", x => x.Id);
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserLoginData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Uuid = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserAccountId = table.Column<int>(type: "int", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailStatus = table.Column<int>(type: "int", nullable: true),
+                    PasswordRecoveryToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ConfirmationToken = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsTwoFactoeEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    IsTwoFactorVerified = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorSecret = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserPosition = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserLoginData", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -97,9 +124,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AspNetUserClaims_UserAccounts_UserId",
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "UserAccounts",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -117,9 +144,9 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
                     table.ForeignKey(
-                        name: "FK_AspNetUserLogins_UserAccounts_UserId",
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "UserAccounts",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -141,9 +168,9 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AspNetUserRoles_UserAccounts_UserId",
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "UserAccounts",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -161,15 +188,15 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_AspNetUserTokens", x => new { x.UserId, x.LoginProvider, x.Name });
                     table.ForeignKey(
-                        name: "FK_AspNetUserTokens_UserAccounts_UserId",
+                        name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "UserAccounts",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserLoginData",
+                name: "UserLoginDataAggregate",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -186,17 +213,47 @@ namespace Infrastructure.Migrations
                     UserPosition = table.Column<int>(type: "int", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UserAccountAggregateId = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserLoginData", x => x.Id);
+                    table.PrimaryKey("PK_UserLoginDataAggregate", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserLoginData_UserAccounts_UserAccountId",
-                        column: x => x.UserAccountId,
-                        principalTable: "UserAccounts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_UserLoginDataAggregate_AspNetUsers_UserAccountAggregateId",
+                        column: x => x.UserAccountAggregateId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserAccount",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Uuid = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Avatar = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserLoginDataId = table.Column<int>(type: "int", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeletedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserAccount", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserAccount_UserLoginData_UserLoginDataId",
+                        column: x => x.UserLoginDataId,
+                        principalTable: "UserLoginData",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -228,32 +285,36 @@ namespace Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
-                table: "UserAccounts",
+                table: "AspNetUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
-                table: "UserAccounts",
+                table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserLoginData_ConfirmationToken",
-                table: "UserLoginData",
+                name: "IX_UserAccount_UserLoginDataId",
+                table: "UserAccount",
+                column: "UserLoginDataId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserLoginDataAggregate_ConfirmationToken",
+                table: "UserLoginDataAggregate",
                 column: "ConfirmationToken");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserLoginData_Email",
-                table: "UserLoginData",
+                name: "IX_UserLoginDataAggregate_Email",
+                table: "UserLoginDataAggregate",
                 column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserLoginData_UserAccountId",
-                table: "UserLoginData",
-                column: "UserAccountId",
-                unique: true);
+                name: "IX_UserLoginDataAggregate_UserAccountAggregateId",
+                table: "UserLoginDataAggregate",
+                column: "UserAccountAggregateId");
         }
 
         /// <inheritdoc />
@@ -275,13 +336,19 @@ namespace Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "UserLoginData");
+                name: "UserAccount");
+
+            migrationBuilder.DropTable(
+                name: "UserLoginDataAggregate");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "UserAccounts");
+                name: "UserLoginData");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

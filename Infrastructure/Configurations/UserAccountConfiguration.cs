@@ -1,11 +1,12 @@
 ﻿using Domain.Aggregates;
+using Infrastructure.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations;
-public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountAggregate>
+public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountEntity>
 {
-    public void Configure(EntityTypeBuilder<UserAccountAggregate> builder)
+    public void Configure(EntityTypeBuilder<UserAccountEntity> builder)
     {
         builder
             .Property(x => x.Uuid)
@@ -36,5 +37,10 @@ public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAcco
 
         builder
             .HasQueryFilter(x => !x.IsDeleted);
+
+        builder
+            .HasOne(x => x.UserLoginData)
+            .WithOne(x => x.UserAccount)
+            .HasForeignKey<UserLoginDataEntity>(x => x.UserAccountId);
     }
 }

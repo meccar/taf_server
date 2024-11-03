@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241102041139_InitialCreate")]
+    [Migration("20241103093646_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -130,7 +130,7 @@ namespace Infrastructure.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("UserAccounts", (string)null);
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Aggregates.UserLoginDataAggregate", b =>
@@ -160,6 +160,9 @@ namespace Infrastructure.Migrations
                     b.Property<int>("EmailStatus")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsTwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -177,6 +180,9 @@ namespace Infrastructure.Migrations
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserAccountAggregateId")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserAccountId")
                         .HasColumnType("int");
@@ -196,10 +202,129 @@ namespace Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("UserAccountId")
-                        .IsUnique();
+                    b.HasIndex("UserAccountAggregateId");
 
-                    b.ToTable("UserLoginData", (string)null);
+                    b.ToTable("UserLoginDataAggregate");
+                });
+
+            modelBuilder.Entity("Infrastructure.Entities.UserAccountEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Avatar")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UserLoginDataId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Uuid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserLoginDataId");
+
+                    b.ToTable("UserAccount");
+                });
+
+            modelBuilder.Entity("Infrastructure.Entities.UserLoginDataEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConfirmationToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("EmailStatus")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTwoFactoeEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsTwoFactorVerified")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordRecoveryToken")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TwoFactorSecret")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserPosition")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Uuid")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UserLoginData");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -337,13 +462,18 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Aggregates.UserLoginDataAggregate", b =>
                 {
-                    b.HasOne("Domain.Aggregates.UserAccountAggregate", "UserAccount")
-                        .WithOne("UserLoginData")
-                        .HasForeignKey("Domain.Aggregates.UserLoginDataAggregate", "UserAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("Domain.Aggregates.UserAccountAggregate", null)
+                        .WithMany("UserLoginData")
+                        .HasForeignKey("UserAccountAggregateId");
+                });
 
-                    b.Navigation("UserAccount");
+            modelBuilder.Entity("Infrastructure.Entities.UserAccountEntity", b =>
+                {
+                    b.HasOne("Infrastructure.Entities.UserLoginDataEntity", "UserLoginData")
+                        .WithMany()
+                        .HasForeignKey("UserLoginDataId");
+
+                    b.Navigation("UserLoginData");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -399,8 +529,7 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Aggregates.UserAccountAggregate", b =>
                 {
-                    b.Navigation("UserLoginData")
-                        .IsRequired();
+                    b.Navigation("UserLoginData");
                 });
 #pragma warning restore 612, 618
         }

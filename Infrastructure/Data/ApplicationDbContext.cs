@@ -31,14 +31,16 @@ public class ApplicationDbContext
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserAccountAggregate}"/> for user accounts.
     /// </summary>
-    public DbSet<UserAccountAggregate> UserAccount { get; set; }
+    public DbSet<UserAccountEntity> UserAccount { get; set; }
+    //public DbSet<UserAccountAggregate> UserAccount { get; set; }
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserLoginDataAggregate}"/> for user login data.
     /// </summary>
-    public DbSet<UserLoginDataAggregate> UserLoginData { get; set; }
-
-    #endregion
+    public DbSet<UserLoginDataEntity> UserLoginData { get; set; }
+    //public DbSet<UserLoginDataAggregate> UserLoginData { get; set; }
     
+    #endregion
+
     /// <summary>
     /// Configures the model and applies configurations from the current assembly.
     /// </summary>
@@ -47,13 +49,13 @@ public class ApplicationDbContext
     {
         base.OnModelCreating(builder);
 
-        builder.Entity<UserAccountAggregate>().ToTable("UserAccount");
-        builder.Entity<UserLoginDataAggregate>().ToTable("UserLoginData");
+        //builder.Entity<UserAccountAggregate>().ToTable("UserAccount");
+        //builder.Entity<UserLoginDataAggregate>().ToTable("UserLoginData");
 
-        builder.Entity<UserAccountAggregate>()
-            .HasOne(u => u.UserLoginData)
-            .WithOne(ul => ul.UserAccount)
-            .HasForeignKey<UserLoginDataAggregate>(ul => ul.UserAccountId);
+        //builder.Entity<UserAccountAggregate>()
+        //    .HasOne(u => u.UserLoginData)
+        //    .WithOne(ul => ul.UserAccount)
+        //    .HasForeignKey<UserLoginDataAggregate>(ul => ul.UserAccountId);
         
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
