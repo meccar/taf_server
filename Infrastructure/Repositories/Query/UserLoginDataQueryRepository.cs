@@ -1,8 +1,8 @@
 using AutoMapper;
 using Domain.Aggregates;
+using Domain.Entities;
 using Domain.Interfaces.Query;
 using Infrastructure.Data;
-using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories.Query;

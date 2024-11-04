@@ -1,7 +1,7 @@
 using Application.Dtos.UserLoginData;
 using AutoMapper;
+using Domain.Entities;
 using Domain.Model;
-using Infrastructure.Entities;
 
 namespace Application.Mapper;
 

@@ -1,12 +1,12 @@
 ﻿using Domain.Aggregates;
-using Infrastructure.Entities;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations;
-public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountEntity>
+public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountAggregate>
 {
-    public void Configure(EntityTypeBuilder<UserAccountEntity> builder)
+    public void Configure(EntityTypeBuilder<UserAccountAggregate> builder)
     {
         builder
             .Property(x => x.Uuid)

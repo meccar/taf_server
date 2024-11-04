@@ -7,7 +7,7 @@ namespace Domain.Model;
 public class UserAccountModel
 {
     public int Id { get; set; }
-    public string Uuid { get; set; } = "";
+    public string Uuid { get; set; }
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
     public Gender Gender { get; set; }

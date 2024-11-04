@@ -1,4 +1,7 @@
-﻿using Domain.SeedWork.Enums.UserAccount;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities;
+using Domain.SeedWork.Enums.UserAccount;
 using Domain.SeedWork.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -14,22 +17,22 @@ namespace Domain.Aggregates;
 /// </remarks>
 public class UserAccountAggregate : IdentityUser<int>, IDateTracking
 {
-    public string Uuid { get; set; } = "";
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Ulid Uuid { get; private set; } = Ulid.NewUlid();
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
     public Gender Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
-    public new string PhoneNumber { get; set; } = "";
+    public string PhoneNumber { get; set; } = "";
 
     public string Avatar { get; set; } = "";
     // public UserAccountStatus Status { get; set; }
     // public int CompanyId { get; set; }
-    public DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }
     // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
-    public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
-    //public UserLoginDataAggregate UserLoginData { get; private set; }
+    public virtual UserLoginDataEntity UserLoginData { get; set; }
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
     // public List<UserTokenModel> Tokens { get; set; }

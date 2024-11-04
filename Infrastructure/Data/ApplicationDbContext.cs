@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Domain.Aggregates;
-using Infrastructure.Entities;
+using Domain.Entities;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,22 @@ namespace Infrastructure.Data;
 public class ApplicationDbContext 
     : IdentityDbContext<UserAccountAggregate, IdentityRole<int>, int>
 {
+    
+    private void ConfigureUlidProperties(ModelBuilder builder)
+    {
+        builder.Entity<UserAccountAggregate>()
+            .Property(u => u.Uuid)
+            .HasConversion<UlidToStringConverter>()
+            .IsRequired()
+            .HasMaxLength(26);
+    
+        builder.Entity<UserLoginDataEntity>()
+            .Property(u => u.Uuid)
+            .HasConversion<UlidToStringConverter>()
+            .IsRequired()
+            .HasMaxLength(26);
+    }
+    
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
     /// </summary>
@@ -31,13 +48,11 @@ public class ApplicationDbContext
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserAccountAggregate}"/> for user accounts.
     /// </summary>
-    public DbSet<UserAccountEntity> UserAccount { get; set; }
-    //public DbSet<UserAccountAggregate> UserAccount { get; set; }
+    public DbSet<UserAccountAggregate> UserAccount { get; set; }
     /// <summary>
-    /// Gets or sets the <see cref="DbSet{UserLoginDataAggregate}"/> for user login data.
+    /// Gets or sets the <see cref="DbSet{UserLoginDataEntity}"/> for user login data.
     /// </summary>
     public DbSet<UserLoginDataEntity> UserLoginData { get; set; }
-    //public DbSet<UserLoginDataAggregate> UserLoginData { get; set; }
     
     #endregion
 
@@ -49,13 +64,15 @@ public class ApplicationDbContext
     {
         base.OnModelCreating(builder);
 
-        //builder.Entity<UserAccountAggregate>().ToTable("UserAccount");
-        //builder.Entity<UserLoginDataAggregate>().ToTable("UserLoginData");
-
-        //builder.Entity<UserAccountAggregate>()
-        //    .HasOne(u => u.UserLoginData)
-        //    .WithOne(ul => ul.UserAccount)
-        //    .HasForeignKey<UserLoginDataAggregate>(ul => ul.UserAccountId);
+        ConfigureUlidProperties(builder);
+        
+        // builder.Entity<UserAccountAggregate>().ToTable("Users");
+        // builder.Entity<IdentityRole<int>>().ToTable("Roles");
+        // builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
+        // builder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims");
+        // builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
+        // builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
+        // builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
         
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

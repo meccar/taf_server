@@ -1,26 +1,27 @@
 using AutoMapper;
 using Domain.Aggregates;
+using Domain.Entities;
 using Domain.Interfaces.Query;
 using Domain.Model;
 using Infrastructure.Data;
-using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Query;
 
 public class UserAccountQueryRepository
-    : RepositoryBase<UserAccountEntity>, IUserAccountQueryRepository
+    : IUserAccountQueryRepository
 {
     private readonly IMapper _mapper;
     private readonly UserManager<UserAccountAggregate> _userManager;
-    
+    private readonly ApplicationDbContext _context; 
+        
     public UserAccountQueryRepository(
         ApplicationDbContext context,
         IMapper mapper,
         UserManager<UserAccountAggregate> userManager)
-        : base(context)
     {
+        _context = context;
         _mapper = mapper;
         _userManager = userManager;
     }
@@ -32,15 +33,20 @@ public class UserAccountQueryRepository
     /// <returns><c>true</c> if the user account exists; otherwise, <c>false</c>.</returns>
     public async Task<bool> IsUserAccountDataExisted(string userAccountData)
     {
-        return await ExistAsync(u => u.PhoneNumber == userAccountData);
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(u => u.PhoneNumber == userAccountData);
+        return user != null;
     }
     
     
     public async Task<UserAccountModel> FindOneByEmail(string email)
     {
-        var query = FindByCondition(u => u.UserLoginData!.Email == email);
-        var results = await query.ToListAsync();
-        var userAccountModel = _mapper.Map<UserAccountModel>(results.Single());
+        var query = await _userManager.FindByEmailAsync(email);
+        if (query == null)
+        {
+            return null;
+        }
+        var userAccountModel = _mapper.Map<UserAccountModel>(query);
         return userAccountModel;
     }
 }

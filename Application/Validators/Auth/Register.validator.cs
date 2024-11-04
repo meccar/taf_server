@@ -8,11 +8,12 @@ public class RegisterValidator : AbstractValidator<RegisterUserRequestDto>
 {
     public RegisterValidator()
     {
-        RuleFor(x => x.UserLogin.Email)
+        RuleFor(x => x.UserLoginData.Email)
             .NotEmpty().WithMessage("Email is required")
-            .EmailAddress().WithMessage("Email format is not match");
+            .EmailAddress().WithMessage("Email format is not match")
+            .When(x => x.UserLoginData != null); 
 
-        RuleFor(x => x.UserLogin.Password)
+        RuleFor(x => x.UserLoginData.Password)
             .NotEmpty().WithMessage("Password is required")
             .MinimumLength(8).WithMessage("Password need to have at least 8 characters")
             .Matches(PasswordConstants.Uppercase)
@@ -22,8 +23,8 @@ public class RegisterValidator : AbstractValidator<RegisterUserRequestDto>
             .Matches(PasswordConstants.Digit)
             .WithMessage("Password must contain at least one digit")
             .Matches(PasswordConstants.SpecialCharacter)
-            .WithMessage("Password must contain at least one special character");
-
+            .WithMessage("Password must contain at least one special character")
+            .When(x => x.UserLoginData != null); 
 
         RuleFor(x => x.UserAccount.FirstName)
             .NotEmpty().WithMessage("First name is required")

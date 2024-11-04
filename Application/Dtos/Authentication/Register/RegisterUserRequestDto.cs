@@ -4,13 +4,13 @@ using Application.Dtos.UserLoginData;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Application.Dtos.Authentication.Register;
-public class RegisterUserRequestDto(CreateUserAccountDto userAccount, CreateUserLoginDataDto userLogin)
+public class RegisterUserRequestDto(CreateUserAccountDto userAccount, CreateUserLoginDataDto userLoginData)
 {
-    [Required]
+    // [Required]
     [SwaggerSchema("User account details")]
     public CreateUserAccountDto UserAccount { get; set; } = userAccount;
 
-    [Required]
+    // [Required]
     [SwaggerSchema("User login details")]
-    public CreateUserLoginDataDto UserLogin { get; set; } = userLogin;
+    public CreateUserLoginDataDto UserLoginData { get; set; } = userLoginData;
 }

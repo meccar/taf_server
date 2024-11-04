@@ -1,11 +1,12 @@
 ﻿using Domain.Aggregates;
+using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations;
-public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserLoginDataAggregate>
+public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserLoginDataEntity>
 {
-    public void Configure(EntityTypeBuilder<UserLoginDataAggregate> builder)
+    public void Configure(EntityTypeBuilder<UserLoginDataEntity> builder)
     {
         builder
             .Property(x => x.Uuid)

@@ -1,7 +1,8 @@
-using Domain.Entities;
+using System.ComponentModel.DataAnnotations;
+using Domain.Aggregates;
 using Domain.SeedWork.Enums.UserLoginData;
 
-namespace Infrastructure.Entities;
+namespace Domain.Entities;
 
 /// <summary>
 /// Represents the login data associated with a user account.
@@ -14,9 +15,9 @@ public class UserLoginDataEntity : EntityBase
     public int Id { get; set; }
 
     /// <summary>
-    /// Gets or sets the universally unique identifier (UUID) for the user.
+    /// Gets or sets the universally unique identifier (Ulid) for the user.
     /// </summary>
-    public string Uuid { get; set; } = "";
+    public Ulid Uuid { get; set; } = Ulid.NewUlid();
 
     /// <summary>
     /// Gets or sets the identifier of the associated user account.
@@ -26,7 +27,7 @@ public class UserLoginDataEntity : EntityBase
     /// <summary>
     /// Gets or sets the hashed password for the user.
     /// </summary>
-    public string PasswordHash { get; set; } = "";
+    public string PasswordHash { get; set; } = null!;
 
     /// <summary>
     /// Gets or sets the email address of the user.
@@ -69,5 +70,5 @@ public class UserLoginDataEntity : EntityBase
     public UserPosition? UserPosition { get; set; }
     
     //public BaseEntity? baseEntity { get; set; }
-    public UserAccountEntity UserAccount { get; set; }
+    public UserAccountAggregate UserAccount { get; set; }
 }

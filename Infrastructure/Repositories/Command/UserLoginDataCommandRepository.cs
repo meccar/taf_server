@@ -1,9 +1,9 @@
 using AutoMapper;
 using Domain.Aggregates;
+using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
 using Infrastructure.Data;
-using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories.Command;
@@ -21,7 +21,7 @@ public class UserLoginDataCommandRepository
 {
     private readonly IMapper _mapper;
     private readonly UserManager<UserAccountAggregate> _userManager;
-
+    
     /// <summary>
     /// Initializes a new instance of the <see cref="UserLoginDataCommandRepository"/> class.
     /// </summary>
@@ -43,11 +43,10 @@ public class UserLoginDataCommandRepository
     /// </summary>
     /// <param name="userLoginDataDto">The DTO containing user login data details.</param>
     /// <returns>The created user login data model.</returns>
-    public async Task<UserLoginDataModel> CreateUserLoginData(UserLoginDataModel userLoginDataDto)
+    public async Task<UserLoginDataModel> CreateUserLoginData(UserLoginDataModel request)
     {
-        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataDto);
-
-        // userLoginDataEntity.PasswordHash = HashHelper.Encrypt(userLoginDataDto.Password);
+        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(request);
+        
         await CreateAsync(userLoginDataEntity);
 
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);

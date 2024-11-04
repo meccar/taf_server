@@ -41,7 +41,6 @@ public static class DbContextConfiguration
         {
             options.UseSqlServer(
                 connectionString,
-                //"Server=localhost,14407;Database=master;User Id=sa;Password=Admin@123;MultipleActiveResultSets=True;TrustServerCertificate=True;",
                 sqlOptions =>
                 {
                     sqlOptions.EnableRetryOnFailure(

@@ -1,5 +1,6 @@
 ﻿using Domain.Aggregates;
 using Infrastructure.Data;
+using Infrastructure.Validator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,24 +12,26 @@ public static class IdentityConfiguration
         services
             .AddIdentity<UserAccountAggregate, IdentityRole<int>>(options =>
             {
-                // Password settings
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireNonAlphanumeric = true;
-                options.Password.RequireUppercase = true;
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 1;
-            
+                // // Password settings
+                // options.Password.RequireDigit = true;
+                // options.Password.RequireLowercase = true;
+                // options.Password.RequireNonAlphanumeric = true;
+                // options.Password.RequireUppercase = true;
+                // options.Password.RequiredLength = 6;
+                // options.Password.RequiredUniqueChars = 1;
+                //
                 // Lockout settings
                 options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
                 options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-            
+                // options.Lockout.AllowedForNewUsers = true;
+                
                 // User settings
-                options.User.RequireUniqueEmail = true;
+                options.User.AllowedUserNameCharacters = "";
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddUserValidator<CustomUserValidator>()
             .AddDefaultTokenProviders();
+        
         //.AddTokenProvider<>()
         
         return services;

@@ -1,11 +1,9 @@
-using Infrastructure.SeedWork.Entities;
+namespace Domain.Entities;
 
-namespace Infrastructure.Entities;
-
-public class CompanyEntity : BaseEntity
+public class CompanyEntity : EntityBase
 {
     public int Id { get; set; }
-    public string Uuid { get; set; } = "";
+    public string Ulid { get; set; } = "";
     public string Name { get; set; } = "";
     public string FaxCode { get; set; } = "";
     public string Email { get; set; } = "";
@@ -21,7 +19,7 @@ public class CompanyEntity : BaseEntity
     public int StateId { get; set; }
     public int CityId { get; set; }
     public int DistrictId { get; set; }
-    public UserAccountEntity? UserAccount { get; set; }
+    // public UserAccountEntity? UserAccount { get; set; }
     public RoleEntity? Roles { get; set; }
     public CountryEntity? Country { get; set; }
     public StateEntity? State { get; set; }
@@ -29,6 +27,6 @@ public class CompanyEntity : BaseEntity
     public DistrictEntity? District { get; set; }
     public int CreatedBy { get; set; }
     public int UpdatedBy { get; set; }
-    public UserAccountEntity? CreatedByUser { get; set; }
-    public UserAccountEntity? UpdatedByUser { get; set; }
+    // public UserAccountEntity? CreatedByUser { get; set; }
+    // public UserAccountEntity? UpdatedByUser { get; set; }
 }

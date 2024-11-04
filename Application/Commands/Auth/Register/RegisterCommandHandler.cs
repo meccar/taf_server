@@ -1,4 +1,5 @@
 ﻿using Application.Exceptions;
+using Application.Helper;
 using AutoMapper;
 using Domain.Interfaces;
 using Domain.Model;
@@ -51,6 +52,8 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
 
         var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccount);
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request.UserLogin);
+        
+        userLoginDataModel.PasswordHash = HashHelper.Encrypt(request.UserLogin.Password);
         
         var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAsync(userAccountModel);
         userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginData(userLoginDataModel);

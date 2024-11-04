@@ -1,9 +1,8 @@
 using Domain.SeedWork.Enums.Token;
-using Infrastructure.SeedWork.Entities;
 
-namespace Infrastructure.Entities;
+namespace Domain.Entities;
 
-public class UserTokenEntity : BaseEntity
+public class UserTokenEntity : EntityBase
 {
     public int Id { get; set; }
     public int UserAccountId { get; set; }
@@ -12,6 +11,6 @@ public class UserTokenEntity : BaseEntity
     public string UserAgent { get; set; } = "";
     public string Token { get; set; } = "";
     public DateTime ExpiredAt { get; set; }
-    public UserAccountEntity? User { get; set; }
+    // public UserAccountEntity? User { get; set; }
 
 }

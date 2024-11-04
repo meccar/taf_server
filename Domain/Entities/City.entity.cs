@@ -1,11 +1,9 @@
-using Infrastructure.SeedWork.Entities;
+namespace Domain.Entities;
 
-namespace Infrastructure.Entities;
-
-public class CityEntity : BaseEntity
+public class CityEntity : EntityBase
 {
     public int Id { get; set; }
-    public string Uuid { get; set; } = "";
+    public string Ulid { get; set; } = "";
     public string Name { get; set; } = "";
     public string Initials { get; set; } = "";
     public string Code { get; set; } = "";

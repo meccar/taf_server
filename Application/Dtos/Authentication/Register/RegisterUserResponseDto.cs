@@ -1,9 +1,11 @@
+using Application.Dtos.UserAccount;
 using Application.Dtos.UserLoginData;
 
 namespace Application.Dtos.Authentication.Register;
 
 public class RegisterUserResponseDto
 {
+    // public UserAccountResponseDto UserAccount { get; set; }
     public string Uuid { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
