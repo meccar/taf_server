@@ -17,10 +17,10 @@ namespace Infrastructure.Repositories.Command;
 /// <see cref="UserManager{TUser}"/> for user management tasks.
 /// </remarks>
 public class UserAccountCommandRepository
-    : IUserAccountCommandRepository
+    : RepositoryBase<UserAccountAggregate>, IUserAccountCommandRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly UserManager<UserLoginDataEntity> _userManager;
     // private readonly ApplicationDbContext _context;
 
     /// <summary>
@@ -30,9 +30,11 @@ public class UserAccountCommandRepository
     /// <param name="mapper">The AutoMapper instance for object mapping.</param>
     /// <param name="userManager">The UserManager for managing user accounts.</param>
     public UserAccountCommandRepository(
-        // ApplicationDbContext context,
+        ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserAccountAggregate> userManager)
+        UserManager<UserLoginDataEntity> userManager
+        )
+        : base(context)
     {
         // _context = context;
         _mapper = mapper;
@@ -44,23 +46,14 @@ public class UserAccountCommandRepository
     /// </summary>
     /// <param name="createUserAccountDto">The DTO containing user account details.</param>
     /// <returns>The created user account model.</returns>
-    public async Task<UserAccountModel> CreateUserAsync(UserAccountModel request)
+    public async Task<UserAccountModel> CreateUserAccountAsync(UserAccountModel request)
     {
         var userAccountEntity = _mapper.Map<UserAccountAggregate>(request);
-        userAccountEntity.UserName = request.FirstName;
-        var result = await _userManager.CreateAsync(userAccountEntity);
+
+        await CreateAsync(userAccountEntity);
 
         var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
         return userAccountModel;
     }
 
-    /// <summary>
-    /// Adds the specified user to the provided roles.
-    /// </summary>
-    /// <param name="user">The user account to add roles to.</param>
-    /// <param name="roles">The roles to assign to the user.</param>
-    public async Task AddUserToRolesAsync(UserAccountAggregate user, IEnumerable<string> roles)
-    {
-        await _userManager.AddToRolesAsync(user, roles);
-    }
 }

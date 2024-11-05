@@ -10,20 +10,18 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Repositories.Query;
 
 public class UserAccountQueryRepository
-    : IUserAccountQueryRepository
+    : RepositoryBase<UserAccountAggregate>, IUserAccountQueryRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly ApplicationDbContext _context; 
         
     public UserAccountQueryRepository(
         ApplicationDbContext context,
-        IMapper mapper,
-        UserManager<UserAccountAggregate> userManager)
+        IMapper mapper)
+        : base(context)
     {
         _context = context;
         _mapper = mapper;
-        _userManager = userManager;
     }
     
     /// <summary>
@@ -33,20 +31,6 @@ public class UserAccountQueryRepository
     /// <returns><c>true</c> if the user account exists; otherwise, <c>false</c>.</returns>
     public async Task<bool> IsUserAccountDataExisted(string userAccountData)
     {
-        var user = await _userManager.Users
-            .FirstOrDefaultAsync(u => u.PhoneNumber == userAccountData);
-        return user != null;
-    }
-    
-    
-    public async Task<UserAccountModel> FindOneByEmail(string email)
-    {
-        var query = await _userManager.FindByEmailAsync(email);
-        if (query == null)
-        {
-            return null;
-        }
-        var userAccountModel = _mapper.Map<UserAccountModel>(query);
-        return userAccountModel;
+        return await ExistAsync(u => u.PhoneNumber == userAccountData);
     }
 }

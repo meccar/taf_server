@@ -1,6 +1,6 @@
 ﻿using Domain.Aggregates;
+using Domain.Entities;
 using Infrastructure.Data;
-using Infrastructure.Validator;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +10,7 @@ public static class IdentityConfiguration
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<UserAccountAggregate, IdentityRole<int>>(options =>
+            .AddIdentity<UserLoginDataEntity, IdentityRole<int>>(options =>
             {
                 // // Password settings
                 // options.Password.RequireDigit = true;
@@ -29,7 +29,6 @@ public static class IdentityConfiguration
                 options.User.AllowedUserNameCharacters = "";
             })
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddUserValidator<CustomUserValidator>()
             .AddDefaultTokenProviders();
         
         //.AddTokenProvider<>()

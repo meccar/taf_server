@@ -4,6 +4,7 @@ using Domain.Entities;
 using Domain.SeedWork.Enums.UserAccount;
 using Domain.SeedWork.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Aggregates;
 
@@ -15,10 +16,16 @@ namespace Domain.Aggregates;
 /// account status, and associated tokens. It implements the <see cref="IDateTracking"/> 
 /// interface for managing creation and update timestamps.
 /// </remarks>
-public class UserAccountAggregate : IdentityUser<int>, IDateTracking
+public class UserAccountAggregate : EntityBase
 {
+    
+    /// <summary>
+    /// Gets or sets the unique identifier for the user login data.
+    /// </summary>
+    [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public Ulid Uuid { get; private set; } = Ulid.NewUlid();
+    public int Id { get; set; }
+    public string Uuid { get; set; } = Ulid.NewUlid().ToString();
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
     public Gender Gender { get; set; }
@@ -32,7 +39,8 @@ public class UserAccountAggregate : IdentityUser<int>, IDateTracking
     public DateTime? UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }
     // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
-    public virtual UserLoginDataEntity UserLoginData { get; set; }
+
+    public virtual UserLoginDataEntity UserLoginData { get; set; } = null!;
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
     // public List<UserTokenModel> Tokens { get; set; }

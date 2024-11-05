@@ -17,23 +17,8 @@ namespace Infrastructure.Data;
 /// from the executing assembly.
 /// </remarks>
 public class ApplicationDbContext 
-    : IdentityDbContext<UserAccountAggregate, IdentityRole<int>, int>
+    : IdentityDbContext<UserLoginDataEntity, IdentityRole<int>, int>
 {
-    
-    private void ConfigureUlidProperties(ModelBuilder builder)
-    {
-        builder.Entity<UserAccountAggregate>()
-            .Property(u => u.Uuid)
-            .HasConversion<UlidToStringConverter>()
-            .IsRequired()
-            .HasMaxLength(26);
-    
-        builder.Entity<UserLoginDataEntity>()
-            .Property(u => u.Uuid)
-            .HasConversion<UlidToStringConverter>()
-            .IsRequired()
-            .HasMaxLength(26);
-    }
     
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
@@ -63,8 +48,6 @@ public class ApplicationDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        ConfigureUlidProperties(builder);
         
         // builder.Entity<UserAccountAggregate>().ToTable("Users");
         // builder.Entity<IdentityRole<int>>().ToTable("Roles");

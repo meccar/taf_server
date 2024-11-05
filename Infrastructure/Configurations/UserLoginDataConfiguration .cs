@@ -10,31 +10,33 @@ public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserLoginData
     {
         builder
             .Property(x => x.Uuid)
-            .IsRequired()
-            .HasMaxLength(36);
-
+            // .HasConversion<UlidToStringConverter>()
+            .IsRequired(false);
+        
         builder
             .Property(x => x.Email)
-            .IsRequired()
-            .HasMaxLength(256);
-
+            .IsRequired();
+        
         builder
             .Property(x => x.PasswordRecoveryToken)
-            .HasMaxLength(100);
-
+            .IsRequired(false);
+        
         builder
             .Property(x => x.ConfirmationToken)
-            .IsRequired()
-            .HasMaxLength(100);
-
+            .IsRequired(false);
+        
         builder
-            .Property(x => x.CreatedAt)
-            .IsRequired();
+            .Property(x => x.TwoFactorSecret)
+            .IsRequired(false);
+        
+        //
+        // builder
+        //     .HasIndex(x => x.ConfirmationToken);
 
-        builder
-            .HasIndex(x => x.Email).IsUnique();
-
-        builder
-            .HasIndex(x => x.ConfirmationToken);
+        // builder
+        //     .HasOne(x => x.UserAccount)
+        //     .WithOne(x => x.UserLoginData)
+        //     .HasPrincipalKey<UserLoginDataEntity>(x => x.UserAccountId)
+        //     .HasForeignKey<UserAccountAggregate>(x => x.Id);
     }
 }

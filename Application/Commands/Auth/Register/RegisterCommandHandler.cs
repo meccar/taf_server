@@ -46,17 +46,21 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     {
         if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLogin.Email))
             throw new BadRequestException("Email already exists");
-        
+
         if (await _unitOfWork.UserAccountQueryRepository.IsUserAccountDataExisted(request.UserAccount.PhoneNumber))
             throw new BadRequestException("Phone number already exists");
 
         var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccount);
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request.UserLogin);
         
-        userLoginDataModel.PasswordHash = HashHelper.Encrypt(request.UserLogin.Password);
+        // userLoginDataModel.PasswordHash = HashHelper.Encrypt(request.UserLogin.Password);
+            
+        var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAccountAsync(userAccountModel);
+        userLoginDataModel.UserAccountId = userAccount.Id;
         
-        var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAsync(userAccountModel);
-        userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginData(userLoginDataModel);
+        userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginDataAsync(userLoginDataModel);
+        
+        // await _unitOfWork.CommitAsync();
 
         return userAccount;
     }

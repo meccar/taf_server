@@ -10,33 +10,29 @@ public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAcco
     {
         builder
             .Property(x => x.Uuid)
-            .IsRequired()
-            .HasMaxLength(36);
+            // .HasConversion<UlidToStringConverter>()
+            .IsRequired(false);
 
         builder 
             .Property(x => x.FirstName)
-            .IsRequired()
-            .HasMaxLength(100);
+            .IsRequired();
 
         builder
             .Property(x => x.LastName)
-            .IsRequired()
-            .HasMaxLength(100);
+            .IsRequired();
 
         builder
-            .Property(x => x.PhoneNumber)
-            .HasMaxLength(20);
+            .Property(x => x.PhoneNumber);
 
         builder
-            .Property(x => x.Avatar)
-            .HasMaxLength(255);
-
+            .Property(x => x.Avatar);
         builder
             .Property(x => x.CreatedAt)
             .IsRequired();
 
         builder
             .HasQueryFilter(x => !x.IsDeleted);
+
 
         builder
             .HasOne(x => x.UserLoginData)
