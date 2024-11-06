@@ -52,24 +52,12 @@ public class AuthenticationController
     public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
     {
         _logger.LogInformation("START: Register");
-        try
-        {
-            var response = await _registerUseCase.GetInstance().Execute(registerDto);
 
-            _logger.LogInformation("END: Register");
+        var response = await _registerUseCase.GetInstance().Execute(registerDto);
 
-            return Created(response.Uuid, response);
-        }
+        _logger.LogInformation("END: Register");
 
-        catch (BadRequestException e)
-        {
-            return BadRequest(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
-
+        return Created(response.Uuid, response);
     }
 
     [HttpGet("login")]
@@ -86,23 +74,10 @@ public class AuthenticationController
     {
         _logger.LogInformation("START: Login");
 
-        try
-        {
-            var response = await _loginUsecase.GetInstance().Execute(loginDto);
-            _logger.LogInformation("END: Login");
-            return Ok(response);
-        }
-        catch (NotFoundException e)
-        {
-            return NotFound(new ApiNotFoundResponse(e.Message));
-        }
-        catch (BadRequestException e)
-        {
-            return BadRequest(new ApiBadRequestResponse(e.Message));
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        var response = await _loginUsecase.GetInstance().Execute(loginDto);
+        
+        _logger.LogInformation("END: Login");
+        
+        return Ok(response);
     }
 }

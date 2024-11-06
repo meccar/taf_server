@@ -1,4 +1,3 @@
-using Application.HttpExceptionFilter;
 using Presentations.HttpResponse;
 
 namespace Presentations.Configurations;

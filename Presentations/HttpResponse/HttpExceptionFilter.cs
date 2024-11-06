@@ -1,10 +1,8 @@
 using Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Logging;
-using Presentations.HttpResponse;
 
-namespace Application.HttpExceptionFilter;
+namespace Presentations.HttpResponse;
 
 public class HttpExceptionFilter : IAsyncActionFilter
 {

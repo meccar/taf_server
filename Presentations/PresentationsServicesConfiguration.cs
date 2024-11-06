@@ -9,7 +9,8 @@ public static class PresentationsServicesConfiguration
         IConfiguration configurations)
     {
         services.ConfigureHttpException();
-        
+        services.ConfigureControllers();
+
         return services;
     }
 }

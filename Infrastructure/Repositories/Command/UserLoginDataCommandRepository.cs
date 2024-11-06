@@ -48,7 +48,8 @@ public class UserLoginDataCommandRepository
             userLoginDataEntity.UserName = userLoginDataEntity.Email;
         
         var result = await _userManager.CreateAsync(userLoginDataEntity, request.Password);
-
+        request.Password = null;
+        
         if (result.Succeeded)
         {
             // await _userManager.AddToRoleAsync(userLoginDataEntity, "User");
