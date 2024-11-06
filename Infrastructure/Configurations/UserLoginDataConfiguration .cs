@@ -28,15 +28,5 @@ public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserLoginData
         builder
             .Property(x => x.TwoFactorSecret)
             .IsRequired(false);
-        
-        //
-        // builder
-        //     .HasIndex(x => x.ConfirmationToken);
-
-        // builder
-        //     .HasOne(x => x.UserAccount)
-        //     .WithOne(x => x.UserLoginData)
-        //     .HasPrincipalKey<UserLoginDataEntity>(x => x.UserAccountId)
-        //     .HasForeignKey<UserAccountAggregate>(x => x.Id);
     }
 }

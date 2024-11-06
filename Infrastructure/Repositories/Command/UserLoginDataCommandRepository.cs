@@ -1,9 +1,7 @@
 using AutoMapper;
-using Domain.Aggregates;
 using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories.Command;
@@ -60,7 +58,8 @@ public class UserLoginDataCommandRepository
             return userLoginDataModel;
             
         }
-        throw new InvalidOperationException($"Failed to create user login data: {string.Join(", ", result.Errors)}");
+        var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
+        throw new InvalidOperationException($"Failed to create user login data: {errorMessages}");
     }
     
     

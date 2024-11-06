@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Aggregates;
-public class RoleAggregate : IdentityRole<int>, IDateTracking
+public class RoleAggregate : IdentityRole<Guid>, IDateTracking
 {
     public bool IsDeleted { get; set; } = false;
 

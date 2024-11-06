@@ -22,8 +22,10 @@ public static class UserLoginDataMapper
     /// <param name="config">The AutoMapper configuration expression used to create the mappings.</param>
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<UserLoginDataModel, UserLoginDataEntity>();
-        config.CreateMap<UserLoginDataEntity, UserLoginDataModel>();
+        config.CreateMap<UserLoginDataModel, UserLoginDataEntity>()
+            .ForMember(dest => dest.Uuid, opt => opt.Ignore());
+        config.CreateMap<UserLoginDataEntity, UserLoginDataModel>()
+            .ForMember(dest => dest.Password, opt => opt.Ignore());
         config.CreateMap<CreateUserLoginDataDto, UserLoginDataModel>();
         config.CreateMap<CreateUserLoginDataDto, UserLoginDataEntity>();
         config.CreateMap<UserLoginDataModel, UserLoginDataResponseDto>();

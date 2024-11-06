@@ -17,7 +17,7 @@ namespace Infrastructure.Data;
 /// from the executing assembly.
 /// </remarks>
 public class ApplicationDbContext 
-    : IdentityDbContext<UserLoginDataEntity, IdentityRole<int>, int>
+    : IdentityDbContext<UserLoginDataEntity, IdentityRole<Guid>, Guid>
 {
     
     /// <summary>
@@ -49,13 +49,12 @@ public class ApplicationDbContext
     {
         base.OnModelCreating(builder);
         
-        // builder.Entity<UserAccountAggregate>().ToTable("Users");
-        // builder.Entity<IdentityRole<int>>().ToTable("Roles");
-        // builder.Entity<IdentityUserRole<int>>().ToTable("UserRoles");
-        // builder.Entity<IdentityUserClaim<int>>().ToTable("UserClaims");
-        // builder.Entity<IdentityUserLogin<int>>().ToTable("UserLogins");
-        // builder.Entity<IdentityRoleClaim<int>>().ToTable("RoleClaims");
-        // builder.Entity<IdentityUserToken<int>>().ToTable("UserTokens");
+        builder.Entity<UserLoginDataEntity>()
+            .HasOne(u => u.UserAccount)
+            .WithOne(u => u.UserLoginData)
+            .HasForeignKey<UserLoginDataEntity>(u => u.UserAccountId)
+            .HasPrincipalKey<UserAccountAggregate>(u => u.Id)
+            .IsRequired();
         
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

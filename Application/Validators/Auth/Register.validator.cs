@@ -26,6 +26,11 @@ public class RegisterValidator : AbstractValidator<RegisterUserRequestDto>
             .WithMessage("Password must contain at least one special character")
             .When(x => x.UserLoginData != null); 
 
+        RuleFor(x => x.UserLoginData.PhoneNumber)
+            .NotEmpty().WithMessage("Phone number is required")
+            .MinimumLength(12).WithMessage("Phone number has to be at least 8 characters")
+            .MaximumLength(13).WithMessage("Phone number cannot be more than 13 characters");
+
         RuleFor(x => x.UserAccount.FirstName)
             .NotEmpty().WithMessage("First name is required")
             .MaximumLength(255).WithMessage("First name cannot be more than 255 characters");
@@ -36,16 +41,8 @@ public class RegisterValidator : AbstractValidator<RegisterUserRequestDto>
 
         RuleFor(x => x.UserAccount.Gender)
             .NotNull().WithMessage("Gender is required")
-            // .IsInEnum().WithMessage("Gender has to be either Male or Female.");
-            // .Must(i => Enum.IsDefined(typeof(Gender), i))
-            // .WithMessage("Gender has to be either Male or Female.");
             .Must(x => new string[] { "Male", "Female" }.Contains(x))
             .WithMessage("Gender can only be Male or Female");
-
-        RuleFor(x => x.UserAccount.PhoneNumber)
-            .NotEmpty().WithMessage("Phone number is required")
-            .MinimumLength(12).WithMessage("Phone number has to be at least 8 characters")
-            .MaximumLength(13).WithMessage("Phone number cannot be more than 13 characters");
 
         RuleFor(x => x.UserAccount.DateOfBirth)
             .NotEmpty().WithMessage("Date of birth is required")

@@ -13,4 +13,5 @@ public interface IUserLoginDataQueryRepository
     Task<bool> IsUserLoginDataExisted(string loginCredential);
     Task<UserLoginDataModel> FindOneByEmail(string email);
 
+    Task<bool> IsUserAccountDataExisted(UserLoginDataModel userLoginDataModel);
 }

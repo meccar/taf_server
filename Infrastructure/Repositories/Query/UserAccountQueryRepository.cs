@@ -23,14 +23,4 @@ public class UserAccountQueryRepository
         _context = context;
         _mapper = mapper;
     }
-    
-    /// <summary>
-    /// Checks if a user account with the specified data exists.
-    /// </summary>
-    /// <param name="userAccountData">The user account data to check, such as a phone number.</param>
-    /// <returns><c>true</c> if the user account exists; otherwise, <c>false</c>.</returns>
-    public async Task<bool> IsUserAccountDataExisted(string userAccountData)
-    {
-        return await ExistAsync(u => u.PhoneNumber == userAccountData);
-    }
 }

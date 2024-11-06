@@ -9,6 +9,11 @@ public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAcco
     public void Configure(EntityTypeBuilder<UserAccountAggregate> builder)
     {
         builder
+            .Property(u => u.Id)
+            .ValueGeneratedOnAdd()
+            .HasAnnotation("SqlServer:Identity", "1, 1");
+        
+        builder
             .Property(x => x.Uuid)
             // .HasConversion<UlidToStringConverter>()
             .IsRequired(false);
@@ -22,9 +27,6 @@ public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAcco
             .IsRequired();
 
         builder
-            .Property(x => x.PhoneNumber);
-
-        builder
             .Property(x => x.Avatar);
         builder
             .Property(x => x.CreatedAt)
@@ -32,11 +34,5 @@ public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAcco
 
         builder
             .HasQueryFilter(x => !x.IsDeleted);
-
-
-        builder
-            .HasOne(x => x.UserLoginData)
-            .WithOne(x => x.UserAccount)
-            .HasForeignKey<UserLoginDataEntity>(x => x.UserAccountId);
     }
 }

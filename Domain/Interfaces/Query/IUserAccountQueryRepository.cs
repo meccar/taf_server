@@ -10,5 +10,4 @@ public interface IUserAccountQueryRepository
     /// <param name="userAccountData">The user account data to check (e.g., email or phone number).</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// a boolean value indicating whether the user account data exists.</returns>
-    Task<bool> IsUserAccountDataExisted(string userAccountData);
 }

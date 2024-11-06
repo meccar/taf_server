@@ -10,7 +10,7 @@ public static class IdentityConfiguration
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<UserLoginDataEntity, IdentityRole<int>>(options =>
+            .AddIdentity<UserLoginDataEntity, IdentityRole<Guid>>(options =>
             {
                 // // Password settings
                 // options.Password.RequireDigit = true;

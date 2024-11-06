@@ -44,4 +44,12 @@ public class UserLoginDataQueryRepository
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(query);
         return userLoginDataModel;
     }
+    
+    public async Task<bool> IsUserAccountDataExisted(UserLoginDataModel userLoginDataModel)
+    {
+        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataModel);
+
+        var result = await _userManager.GetPhoneNumberAsync(userLoginDataEntity);
+        return result != null;
+    }
 }

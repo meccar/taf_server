@@ -1,11 +1,13 @@
 using Application.Dtos.Authentication.Login;
 using Application.Dtos.Authentication.Register;
+using Application.Exceptions;
 using Application.Usecases.Auth;
 using Asp.Versioning;
 using AutoMapper;
 using Infrastructure.UseCaseProxy;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Presentations.HttpResponse;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Presentations.Controllers.Authentication;
@@ -50,12 +52,24 @@ public class AuthenticationController
     public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
     {
         _logger.LogInformation("START: Register");
+        try
+        {
+            var response = await _registerUseCase.GetInstance().Execute(registerDto);
 
-        var response = await _registerUseCase.GetInstance().Execute(registerDto);
+            _logger.LogInformation("END: Register");
 
-        _logger.LogInformation("END: Register");
+            return Created(response.Uuid, response);
+        }
 
-        return Created(response.Uuid, response);
+        catch (BadRequestException e)
+        {
+            return BadRequest(new ApiBadRequestResponse(e.Message));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+
     }
 
     [HttpGet("login")]
@@ -72,10 +86,23 @@ public class AuthenticationController
     {
         _logger.LogInformation("START: Login");
 
-        var response = await _loginUsecase.GetInstance().Execute(loginDto);
-
-        _logger.LogInformation("END: Login");
-
-        return Ok(response);
+        try
+        {
+            var response = await _loginUsecase.GetInstance().Execute(loginDto);
+            _logger.LogInformation("END: Login");
+            return Ok(response);
+        }
+        catch (NotFoundException e)
+        {
+            return NotFound(new ApiNotFoundResponse(e.Message));
+        }
+        catch (BadRequestException e)
+        {
+            return BadRequest(new ApiBadRequestResponse(e.Message));
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 }
