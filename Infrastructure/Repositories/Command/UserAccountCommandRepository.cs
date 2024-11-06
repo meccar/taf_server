@@ -1,9 +1,9 @@
 using AutoMapper;
 using Domain.Aggregates;
+using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
 using Infrastructure.Data;
-using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories.Command;
@@ -16,11 +16,12 @@ namespace Infrastructure.Repositories.Command;
 /// and checking for existing user account data. It leverages AutoMapper for object mapping and 
 /// <see cref="UserManager{TUser}"/> for user management tasks.
 /// </remarks>
-public class UserAccountCommandRepository 
-    : RepositoryBase<UserAccountEntity>, IUserAccountCommandRepository
+public class UserAccountCommandRepository
+    : RepositoryBase<UserAccountAggregate>, IUserAccountCommandRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly UserManager<UserLoginDataEntity> _userManager;
+    // private readonly ApplicationDbContext _context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserAccountCommandRepository"/> class.
@@ -31,9 +32,11 @@ public class UserAccountCommandRepository
     public UserAccountCommandRepository(
         ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserAccountAggregate> userManager)
-            : base(context)
+        UserManager<UserLoginDataEntity> userManager
+        )
+        : base(context)
     {
+        // _context = context;
         _mapper = mapper;
         _userManager = userManager;
     }
@@ -43,23 +46,14 @@ public class UserAccountCommandRepository
     /// </summary>
     /// <param name="createUserAccountDto">The DTO containing user account details.</param>
     /// <returns>The created user account model.</returns>
-    public async Task<UserAccountModel> CreateUserAsync(UserAccountModel createUserAccountDto)
+    public async Task<UserAccountModel> CreateUserAccountAsync(UserAccountModel request)
     {
-        var userAccountEntity = _mapper.Map<UserAccountEntity>(createUserAccountDto);
-        
+        var userAccountEntity = _mapper.Map<UserAccountAggregate>(request);
+
         await CreateAsync(userAccountEntity);
-        
+
         var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
         return userAccountModel;
     }
 
-    /// <summary>
-    /// Adds the specified user to the provided roles.
-    /// </summary>
-    /// <param name="user">The user account to add roles to.</param>
-    /// <param name="roles">The roles to assign to the user.</param>
-    public async Task AddUserToRolesAsync(UserAccountAggregate user, IEnumerable<string> roles)
-    {
-        await _userManager.AddToRolesAsync(user, roles);
-    }
 }

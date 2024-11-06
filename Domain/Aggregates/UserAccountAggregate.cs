@@ -1,6 +1,9 @@
-﻿using Domain.SeedWork.Enums.UserAccount;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Domain.Entities;
+using Domain.SeedWork.Enums.UserAccount;
 using Domain.SeedWork.Interfaces;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Aggregates;
 
@@ -12,28 +15,52 @@ namespace Domain.Aggregates;
 /// account status, and associated tokens. It implements the <see cref="IDateTracking"/> 
 /// interface for managing creation and update timestamps.
 /// </remarks>
-public class UserAccountAggregate : IdentityUser<int>, IDateTracking
+public class UserAccountAggregate : EntityBase
 {
-    public string Uuid { get; set; } = "";
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    
+    [Required]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public string Uuid { get; set; } = Ulid.NewUlid().ToString();
+    
+    [Required]
     public string FirstName { get; set; } = "";
+    
+    [Required]
     public string LastName { get; set; } = "";
+    
+    [Required]
     public Gender Gender { get; set; }
-    public DateTime DateOfBirth { get; set; }
-    public new string PhoneNumber { get; set; } = "";
 
+    [Required]
+    public DateTime DateOfBirth { get; set; }
+
+    [Required]
     public string Avatar { get; set; } = "";
+    
     // public UserAccountStatus Status { get; set; }
+    
     // public int CompanyId { get; set; }
-    public DateTime CreatedAt { get; set; }
+    
+    [Required]
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
     public DateTime? UpdatedAt { get; set; }
+    
     public DateTime DeletedAt { get; set; }
+    public bool IsDeleted { get; set; } = false;
+    
     // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
-    public virtual ICollection<UserLoginDataAggregate> UserLoginData { get; set; } = new List<UserLoginDataAggregate>();
-    //public UserLoginDataAggregate UserLoginData { get; private set; }
+
+    public virtual UserLoginDataEntity UserLoginData { get; set; } = null!;
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
+    
     // public List<UserTokenModel> Tokens { get; set; }
+    
     // public List<RoleModel> Roles { get; set; }
+    
     // public CompanyModel Company { get; set; }
-    public bool IsDeleted { get; set; } = false;
 }

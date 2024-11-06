@@ -1,4 +1,4 @@
-namespace Presentations.Helper;
+namespace Application.Helper;
 
 public class HashHelper
 {

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Domain.Aggregates;
-using Infrastructure.Entities;
+using Domain.Entities;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,9 @@ namespace Infrastructure.Data;
 /// from the executing assembly.
 /// </remarks>
 public class ApplicationDbContext 
-    : IdentityDbContext<UserAccountAggregate, IdentityRole<int>, int>
+    : IdentityDbContext<UserLoginDataEntity, IdentityRole<Guid>, Guid>
 {
+    
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
     /// </summary>
@@ -31,13 +33,11 @@ public class ApplicationDbContext
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserAccountAggregate}"/> for user accounts.
     /// </summary>
-    public DbSet<UserAccountEntity> UserAccount { get; set; }
-    //public DbSet<UserAccountAggregate> UserAccount { get; set; }
+    public DbSet<UserAccountAggregate> UserAccount { get; set; }
     /// <summary>
-    /// Gets or sets the <see cref="DbSet{UserLoginDataAggregate}"/> for user login data.
+    /// Gets or sets the <see cref="DbSet{UserLoginDataEntity}"/> for user login data.
     /// </summary>
     public DbSet<UserLoginDataEntity> UserLoginData { get; set; }
-    //public DbSet<UserLoginDataAggregate> UserLoginData { get; set; }
     
     #endregion
 
@@ -48,14 +48,13 @@ public class ApplicationDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
-        //builder.Entity<UserAccountAggregate>().ToTable("UserAccount");
-        //builder.Entity<UserLoginDataAggregate>().ToTable("UserLoginData");
-
-        //builder.Entity<UserAccountAggregate>()
-        //    .HasOne(u => u.UserLoginData)
-        //    .WithOne(ul => ul.UserAccount)
-        //    .HasForeignKey<UserLoginDataAggregate>(ul => ul.UserAccountId);
+        
+        builder.Entity<UserLoginDataEntity>()
+            .HasOne(u => u.UserAccount)
+            .WithOne(u => u.UserLoginData)
+            .HasForeignKey<UserLoginDataEntity>(u => u.UserAccountId)
+            .HasPrincipalKey<UserAccountAggregate>(u => u.Id)
+            .IsRequired();
         
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

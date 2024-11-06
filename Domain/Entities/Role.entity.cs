@@ -1,11 +1,9 @@
-using Infrastructure.SeedWork.Entities;
+namespace Domain.Entities;
 
-namespace Infrastructure.Entities;
-
-public class RoleEntity : BaseEntity
+public class RoleEntity : EntityBase
 {
     public int Id { get; set; }
-    public string Uuid { get; set; } = "";
+    public string Ulid { get; set; } = "";
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";
     public bool IsActive { get; set; }
@@ -13,6 +11,6 @@ public class RoleEntity : BaseEntity
     public PermissionEntity[] Permissions { get; set; } = [];
     public int CreatedBy { get; set; }
     public int UpdatedBy { get; set; }
-    public UserAccountEntity? CreatedByUser { get; set; }
-    public UserAccountEntity? UpdatedByUser { get; set; }
+    // public UserAccountEntity? CreatedByUser { get; set; }
+    // public UserAccountEntity? UpdatedByUser { get; set; }
 }

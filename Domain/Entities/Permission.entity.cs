@@ -1,12 +1,11 @@
 using Domain.SeedWork.Enums.Http;
-using Infrastructure.SeedWork.Entities;
 
-namespace Infrastructure.Entities;
+namespace Domain.Entities;
 
-public class PermissionEntity : BaseEntity
+public class PermissionEntity : EntityBase
 {
     public int Id { get; set; }
-    public string Uuid { get; set; } = "";
+    public string Ulid { get; set; } = "";
     public string Slug { get; set; } = "";
     public string Description { get; set; } = "";
     public RequestMethod? Method { get; set; }

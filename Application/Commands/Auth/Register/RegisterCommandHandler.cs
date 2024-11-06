@@ -1,8 +1,10 @@
 ﻿using Application.Exceptions;
+using Application.Helper;
 using AutoMapper;
 using Domain.Interfaces;
 using Domain.Model;
 using Domain.SeedWork.Command;
+using Infrastructure.Data;
 
 namespace Application.Commands.Auth.Register;
 
@@ -21,6 +23,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMapper _mapper;
+    private readonly ApplicationDbContext _context;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
@@ -28,10 +31,12 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     /// <param name="unitOfWork">The unit of work instance to manage data transactions.</param>
     public RegisterCommandHandler(
         IUnitOfWork unitOfWork,
+        ApplicationDbContext context,
         IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
+        _context = context;
     }
     
     /// <summary>
@@ -43,17 +48,25 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     /// <exception cref="BadRequestException">Thrown when the email or phone number is already in use.</exception>
     public async Task<UserAccountModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
+        // using var transaction = await _context.Database.BeginTransactionAsync();
+        
         if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLogin.Email))
             throw new BadRequestException("Email already exists");
-        
-        if (await _unitOfWork.UserAccountQueryRepository.IsUserAccountDataExisted(request.UserAccount.PhoneNumber))
-            throw new BadRequestException("Phone number already exists");
 
         var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccount);
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request.UserLogin);
         
-        var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAsync(userAccountModel);
-        userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginData(userLoginDataModel);
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserAccountDataExisted(userLoginDataModel))
+            throw new BadRequestException("Phone number already exists");
+        
+        // userLoginDataModel.PasswordHash = HashHelper.Encrypt(request.UserLogin.Password);
+            
+        var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAccountAsync(userAccountModel);
+        userLoginDataModel.UserAccountId = userAccount.Id;
+        
+        userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginDataAsync(userLoginDataModel);
+        
+        // await _unitOfWork.CommitAsync();
 
         return userAccount;
     }

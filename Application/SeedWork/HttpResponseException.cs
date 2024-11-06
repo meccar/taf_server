@@ -18,7 +18,7 @@ public class HttpResponseException : Exception
         : base(value?.ToString() ?? string.Empty)
     {
         StatusCode = statusCode;
-        // Message = value?.ToString() ?? "";
+        Message = value?.ToString() ?? "";
     }
 
     /// <summary>
@@ -32,5 +32,5 @@ public class HttpResponseException : Exception
     /// <summary>
     /// Gets a new message that provides additional context.
     /// </summary>
-    public new string Message => base.Message;
+    public string Message { get; }
 }

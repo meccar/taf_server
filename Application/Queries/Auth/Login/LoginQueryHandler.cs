@@ -16,7 +16,7 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, UserAccountModel>
 
     public async Task<UserAccountModel> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        var userAccountModel = _unitOfWork.UserAccountQueryRepository.FindOneByEmail(request.Email);
+        var userAccountModel = _unitOfWork.UserLoginDataQueryRepository.FindOneByEmail(request.Email);
         if (userAccountModel == null)
         {
             throw new InvalidCredentialException("Invalid credentials");

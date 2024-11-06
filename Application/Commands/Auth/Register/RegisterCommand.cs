@@ -21,7 +21,7 @@ public class RegisterCommand : ICommand<UserAccountModel>
     /// The data transfer object containing the information necessary for user registration.
     /// </param>
     public RegisterCommand(RegisterUserRequestDto dto) => 
-        (UserLogin, UserAccount) = (dto.UserLogin, dto.UserAccount);
+        (UserLogin, UserAccount) = (dto.UserLoginData, dto.UserAccount);
 
     /// <summary>
     /// Gets or sets the user login information for the new account.

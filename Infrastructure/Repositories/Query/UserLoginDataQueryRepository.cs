@@ -1,23 +1,24 @@
 using AutoMapper;
 using Domain.Aggregates;
+using Domain.Entities;
 using Domain.Interfaces.Query;
+using Domain.Model;
 using Infrastructure.Data;
-using Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Query;
 
 public class UserLoginDataQueryRepository
-    : RepositoryBase<UserLoginDataEntity>, IUserLoginDataQueryRepository
+    : IUserLoginDataQueryRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly UserManager<UserLoginDataEntity> _userManager;
 
     public UserLoginDataQueryRepository(
         ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserAccountAggregate> userManager)
-        : base(context)
+        UserManager<UserLoginDataEntity> userManager)
     {
         _mapper = mapper;
         _userManager = userManager;
@@ -30,7 +31,25 @@ public class UserLoginDataQueryRepository
     /// <returns><c>true</c> if the user login data exists; otherwise, <c>false</c>.</returns>
     public async Task<bool> IsUserLoginDataExisted(string userLoginData)
     {
-        return await ExistAsync(u => u.Email == userLoginData);
+        var user = await _userManager.FindByEmailAsync(userLoginData);
+        return user != null;
     }
+    public async Task<UserLoginDataModel> FindOneByEmail(string email)
+    {
+        var query = await _userManager.FindByEmailAsync(email);
+        if (query == null)
+        {
+            return null;
+        }
+        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(query);
+        return userLoginDataModel;
+    }
+    
+    public async Task<bool> IsUserAccountDataExisted(UserLoginDataModel userLoginDataModel)
+    {
+        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataModel);
 
+        var result = await _userManager.GetPhoneNumberAsync(userLoginDataEntity);
+        return result != null;
+    }
 }

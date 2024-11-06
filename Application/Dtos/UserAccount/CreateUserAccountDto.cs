@@ -4,9 +4,6 @@ namespace Application.Dtos.UserAccount;
 
 public class CreateUserAccountDto
 {
-    [Key]
-    public Ulid Uuid { get; set; } = Ulid.NewUlid();
-    
     [Required] 
     [StringLength(255)]
     public string FirstName { get; set; } = "";
@@ -20,8 +17,4 @@ public class CreateUserAccountDto
     
     [Required]
     public string DateOfBirth { get; set; } = "";
-    
-    [Required] 
-    [Phone] 
-    public string PhoneNumber { get; set; } = "";
 }
