@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Presentations.HttpResponse;
 
-public class ApiUnauthorizedResponse : ApiResponse
+public class ApiServerErrorResponse : ApiResponse
 {
-    public ApiUnauthorizedResponse(ModelStateDictionary modelState)
-        : base(401)
+    public ApiServerErrorResponse(ModelStateDictionary modelState)
+        : base(500)
     {
         if (modelState.IsValid) throw new ArgumentException("ModelState must be invalid", nameof(modelState));
 
@@ -16,15 +16,15 @@ public class ApiUnauthorizedResponse : ApiResponse
                 .Select(x => x.ErrorMessage));
     }
 
-    public ApiUnauthorizedResponse(IdentityResult identityResult)
-        : base(401)
+    public ApiServerErrorResponse(IdentityResult identityResult)
+        : base(500)
     {
         Errors = Enumerable.ToArray<string>(identityResult.Errors
             .Select(x => x.Code + " - " + x.Description));
     }
 
-    public ApiUnauthorizedResponse(string message)
-        : base(401, message)
+    public ApiServerErrorResponse(string message)
+        : base(500, message)
     {
     }
 }

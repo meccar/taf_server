@@ -1,15 +1,18 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.Extensions.DependencyInjection;
+using Presentations.Controllers.Exceptions;
 
-namespace Infrastructure.Configurations;
+namespace Presentations.Configurations;
 
 public static class ControllersConfiguration
 {
     public static IServiceCollection ConfigureControllers(this IServiceCollection services)
     {
         services
-            .AddControllers()
+            .AddControllers(options =>
+            {
+                options.Filters.Add<ExceptionsController>();
+            })
             .AddJsonOptions(options =>
             {
                 // options.JsonSerializerOptions.WriteIndented = true;

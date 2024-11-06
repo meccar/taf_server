@@ -59,15 +59,11 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
         if (await _unitOfWork.UserLoginDataQueryRepository.IsUserAccountDataExisted(userLoginDataModel))
             throw new BadRequestException("Phone number already exists");
         
-        // userLoginDataModel.PasswordHash = HashHelper.Encrypt(request.UserLogin.Password);
-            
         var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAccountAsync(userAccountModel);
         userLoginDataModel.UserAccountId = userAccount.Id;
         
         userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginDataAsync(userLoginDataModel);
         
-        // await _unitOfWork.CommitAsync();
-
         return userAccount;
     }
 }
