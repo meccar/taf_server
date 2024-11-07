@@ -1,6 +1,7 @@
 ﻿using Application.Commands.Auth.Register;
 using Application.Dtos.Authentication.Register;
 using AutoMapper;
+using Domain.Model;
 using Domain.Usecase;
 using MediatR;
 
@@ -18,7 +19,11 @@ public class RegisterUsecase : IUseCase<RegisterUserRequestDto, RegisterUserResp
 
     public async Task<RegisterUserResponseDto> Execute(RegisterUserRequestDto request)
     {
-        var registerResponse = await _mediator.Send(new RegisterCommand(request));
+        var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccount);
+        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request.UserLoginData);
+        
+        var registerResponse = await _mediator.Send(new RegisterCommand(userAccountModel, userLoginDataModel));
+        
         return _mapper.Map<RegisterUserResponseDto>(registerResponse);
     }
 }

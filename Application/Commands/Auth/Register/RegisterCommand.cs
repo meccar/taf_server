@@ -20,8 +20,8 @@ public class RegisterCommand : ICommand<UserAccountModel>
     /// <param name="dto">
     /// The data transfer object containing the information necessary for user registration.
     /// </param>
-    public RegisterCommand(RegisterUserRequestDto dto) => 
-        (UserLogin, UserAccount) = (dto.UserLoginData, dto.UserAccount);
+    public RegisterCommand(UserAccountModel userAccountModel, UserLoginDataModel userLoginDataModel) => 
+        (UserAccountModel, UserLoginDataModel) = (userAccountModel, userLoginDataModel);
 
     /// <summary>
     /// Gets or sets the user login information for the new account.
@@ -29,7 +29,7 @@ public class RegisterCommand : ICommand<UserAccountModel>
     /// <value>
     /// An instance of <see cref="CreateUserLoginDataDto"/> representing the user's login details.
     /// </value>
-    public CreateUserLoginDataDto UserLogin { get; set; }
+    public UserAccountModel UserAccountModel { get; set; }
 
     /// <summary>
     /// Gets or sets the user account information for the new account.
@@ -37,5 +37,5 @@ public class RegisterCommand : ICommand<UserAccountModel>
     /// <value>
     /// An instance of <see cref="CreateUserAccountDto"/> representing the user's account details.
     /// </value>
-    public CreateUserAccountDto UserAccount { get; set; }
+    public UserLoginDataModel UserLoginDataModel { get; set; }
 }

@@ -22,21 +22,15 @@ namespace Application.Commands.Auth.Register;
 public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccountModel>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ApplicationDbContext _context;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
     /// </summary>
     /// <param name="unitOfWork">The unit of work instance to manage data transactions.</param>
     public RegisterCommandHandler(
-        IUnitOfWork unitOfWork,
-        ApplicationDbContext context,
-        IMapper mapper)
+        IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _context = context;
     }
     
     /// <summary>
@@ -50,23 +44,20 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     {
         // using var transaction = await _context.Database.BeginTransactionAsync();
         
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLogin.Email))
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel.Email))
             throw new BadRequestException("Email already exists");
-
-        var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccount);
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request.UserLogin);
         
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLogin.PhoneNumber))
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel.PhoneNumber))
             throw new BadRequestException("Phone number already exists");
         
         var userAccount = await _unitOfWork
             .UserAccountCommandRepository
-            .CreateUserAccountAsync(userAccountModel);
-        userLoginDataModel.UserAccountId = userAccount.Id;
+            .CreateUserAccountAsync(request.UserAccountModel);
+        request.UserLoginDataModel.UserAccountId = userAccount.Id;
         
         userAccount.UserLoginData = await _unitOfWork
             .UserLoginDataCommandRepository
-            .CreateUserLoginDataAsync(userLoginDataModel);
+            .CreateUserLoginDataAsync(request.UserLoginDataModel);
         
         return userAccount;
     }
