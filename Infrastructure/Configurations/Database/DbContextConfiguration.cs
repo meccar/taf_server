@@ -1,3 +1,4 @@
+using Infrastructure.Configurations.Environment;
 using Infrastructure.Data;
 using Infrastructure.Decorators;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ namespace Infrastructure.Configurations.Database;
 
 public static class DbContextConfiguration
 {
-    public static IServiceCollection ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureDbContext(this IServiceCollection services, EnvironmentConfiguration configuration)
         // {
         //     // services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
         //     // services.AddSingleton<DateTrackingInterceptor>();
@@ -34,9 +35,12 @@ public static class DbContextConfiguration
         //     return services;
         // }
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-        if (string.IsNullOrEmpty(connectionString))
-            throw new ArgumentNullException("DefaultConnection is not configured.");
+        // var connectionString = configuration.GetConnectionString("DefaultConnection");
+        
+        var connectionString = BuildConnectionString(configuration);
+        
+        // if (string.IsNullOrEmpty(connectionString))
+        //     throw new ArgumentNullException("DefaultConnection is not configured.");
 
         services.AddDbContextPool<ApplicationDbContext>(options =>
         {
@@ -69,5 +73,19 @@ public static class DbContextConfiguration
         services.AddScoped<TransactionDecorator>();
         
         return services;
+    }
+    
+    private static string BuildConnectionString(EnvironmentConfiguration configuration)
+    {
+        var host = configuration.GetDatabaseHost();
+        var port = configuration.GetDatabasePort();
+        var dbName = configuration.GetDatabaseName();
+        var user = configuration.GetDatabaseUserId();
+        var password = configuration.GetDatabasePassword();
+        var mars = configuration.GetMultipleActiveResultSets();
+        var trustServerCertificate = configuration.GetTrustServerCertificate();
+
+        return $"Server={host},{port};Database={dbName};User Id={user};Password={password};" +
+               $"MultipleActiveResultSets={mars};TrustServerCertificate={trustServerCertificate};";
     }
 }

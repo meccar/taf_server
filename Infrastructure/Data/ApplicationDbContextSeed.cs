@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using Domain.Entities;
+using Infrastructure.SeedWork.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Data;
@@ -55,14 +57,30 @@ public class ApplicationDbContextSeed
 
     private async Task SeedRoleAsync()
     {
-        var roles = new[] { "Admin", "CompanyManager", "CompanyUser", "User", "Guest" };
-        
-        foreach (var roleName in roles)
+        var roles = new[]
         {
-            if (!await _roleManager.RoleExistsAsync(roleName))
+            new { Name = "Admin", Claims = new[] { new Claim(EClaimTypes.Permission, "projects.view") } },
+            new { Name = "CompanyManager", Claims = new Claim[0] },
+            new { Name = "CompanyUser", Claims = new Claim[0] },
+            new { Name = "User", Claims = new Claim[0] },
+            new { Name = "Guest", Claims = new Claim[0] }
+        };
+        
+        foreach (var role in roles)
+        {
+            if (!await _roleManager.RoleExistsAsync(role.Name))
             {
-                await _roleManager.CreateAsync(new IdentityRole<Guid>(roleName));
+                var newRole = new IdentityRole<Guid>(role.Name);
+                await _roleManager.CreateAsync(newRole);
                 
+                if (role.Claims.Length > 0)
+                {
+                    var createdRole = await _roleManager.FindByNameAsync(role.Name);
+                    foreach (var claim in role.Claims)
+                    {
+                        await _roleManager.AddClaimAsync(createdRole, claim);
+                    }
+                }
             }
         }
     }

@@ -5,6 +5,7 @@ using Asp.Versioning;
 using AutoMapper;
 using Infrastructure.UseCaseProxy;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -46,6 +47,7 @@ public class AuthenticationController
     [SwaggerResponse(201, "User successfully registered", typeof(RegisterUserResponseDto))]
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
+    [AllowAnonymous]
     //[ApiValidationFilter]
     public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
     {
@@ -67,6 +69,7 @@ public class AuthenticationController
     [SwaggerResponse(200, "User successfully logined", typeof(LoginUserRequestDto))]
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
+    [AllowAnonymous]
     //[ApiValidationFilter]
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
     {
