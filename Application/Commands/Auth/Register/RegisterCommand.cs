@@ -1,5 +1,4 @@
-﻿using Application.Dtos.Authentication.Register;
-using Application.Dtos.UserAccount;
+﻿using Application.Dtos.UserAccount;
 using Application.Dtos.UserLoginData;
 using Domain.Model;
 using Domain.SeedWork.Command;
@@ -20,9 +19,11 @@ public class RegisterCommand : ICommand<UserAccountModel>
     /// <param name="dto">
     /// The data transfer object containing the information necessary for user registration.
     /// </param>
+    // public RegisterCommand(UserAccountModel userAccountModel, UserLoginDataModel userLoginDataModel) => 
+    //     (UserAccountModel, UserLoginDataModel) = (userAccountModel, userLoginDataModel);
+
     public RegisterCommand(UserAccountModel userAccountModel, UserLoginDataModel userLoginDataModel) => 
         (UserAccountModel, UserLoginDataModel) = (userAccountModel, userLoginDataModel);
-
     /// <summary>
     /// Gets or sets the user login information for the new account.
     /// </summary>

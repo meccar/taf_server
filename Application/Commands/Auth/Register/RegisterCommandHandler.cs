@@ -1,10 +1,9 @@
 ﻿using Application.Exceptions;
-using Application.Helper;
-using AutoMapper;
 using Domain.Interfaces;
 using Domain.Model;
 using Domain.SeedWork.Command;
-using Infrastructure.Data;
+using Infrastructure.SeedWork.Decorators;
+using System.Data;
 
 namespace Application.Commands.Auth.Register;
 
@@ -40,6 +39,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     /// <param name="cancellationToken">A cancellation token to signal cancellation of the operation.</param>
     /// <returns>A task that represents the asynchronous operation, containing the created <see cref="UserAccountModel"/>.</returns>
     /// <exception cref="BadRequestException">Thrown when the email or phone number is already in use.</exception>
+    [Transactional(IsolationLevel = IsolationLevel.Serializable, Replication = true)]
     public async Task<UserAccountModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         // using var transaction = await _context.Database.BeginTransactionAsync();

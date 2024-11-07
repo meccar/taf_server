@@ -51,7 +51,7 @@ public class UserAccountCommandRepository
         var userAccountEntity = _mapper.Map<UserAccountAggregate>(request);
 
         await CreateAsync(userAccountEntity);
-        await CommitAsync();
+        // await CommitAsync();
 
         var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
         return userAccountModel;
