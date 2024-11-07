@@ -20,7 +20,12 @@ public class ApplicationDbContext
     : IdentityDbContext<
         UserLoginDataEntity,
         IdentityRole<Guid>,
-        Guid>
+        Guid,
+        IdentityUserClaim<Guid>,
+        IdentityUserRole<Guid>,
+        IdentityUserLogin<Guid>,
+        IdentityRoleClaim<Guid>,
+        IdentityUserToken<Guid>>
 {
     
     /// <summary>
