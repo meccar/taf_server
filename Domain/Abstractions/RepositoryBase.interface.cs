@@ -60,6 +60,8 @@ public interface IRepositoryBase<T> where T : EntityBase
 
     #endregion
 
+    Task<int> CommitAsync();
+    
     #region Existence Methods
 
     /// <summary>

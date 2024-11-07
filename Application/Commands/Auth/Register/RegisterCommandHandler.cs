@@ -56,13 +56,17 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
         var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccount);
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request.UserLogin);
         
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserAccountDataExisted(userLoginDataModel))
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLogin.PhoneNumber))
             throw new BadRequestException("Phone number already exists");
         
-        var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAccountAsync(userAccountModel);
+        var userAccount = await _unitOfWork
+            .UserAccountCommandRepository
+            .CreateUserAccountAsync(userAccountModel);
         userLoginDataModel.UserAccountId = userAccount.Id;
         
-        userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginDataAsync(userLoginDataModel);
+        userAccount.UserLoginData = await _unitOfWork
+            .UserLoginDataCommandRepository
+            .CreateUserLoginDataAsync(userLoginDataModel);
         
         return userAccount;
     }

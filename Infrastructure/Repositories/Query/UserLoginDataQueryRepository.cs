@@ -31,8 +31,9 @@ public class UserLoginDataQueryRepository
     /// <returns><c>true</c> if the user login data exists; otherwise, <c>false</c>.</returns>
     public async Task<bool> IsUserLoginDataExisted(string userLoginData)
     {
-        var user = await _userManager.FindByEmailAsync(userLoginData);
-        return user != null;
+        var result = await _userManager.Users
+            .AnyAsync(u => u.Email == userLoginData || u.PhoneNumber == userLoginData);
+        return result;
     }
     public async Task<UserLoginDataModel> FindOneByEmail(string email)
     {
