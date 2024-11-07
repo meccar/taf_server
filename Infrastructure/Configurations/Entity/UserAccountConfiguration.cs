@@ -1,9 +1,8 @@
 ﻿using Domain.Aggregates;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Entity;
 public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountAggregate>
 {
     public void Configure(EntityTypeBuilder<UserAccountAggregate> builder)

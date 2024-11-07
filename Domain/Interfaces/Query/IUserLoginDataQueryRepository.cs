@@ -11,7 +11,6 @@ public interface IUserLoginDataQueryRepository
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// a boolean value indicating whether the user login data exists.</returns>
     Task<bool> IsUserLoginDataExisted(string loginCredential);
-    Task<UserLoginDataModel> FindOneByEmail(string email);
-
-    Task<bool> IsUserAccountDataExisted(UserLoginDataModel userLoginDataModel);
+    Task<UserLoginDataModel?> FindOneByEmail(string email);
+    Task<bool> IsPasswordMatch(string email, string password);
 }

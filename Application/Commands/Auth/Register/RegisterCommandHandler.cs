@@ -1,10 +1,9 @@
 ﻿using Application.Exceptions;
-using Application.Helper;
-using AutoMapper;
 using Domain.Interfaces;
 using Domain.Model;
 using Domain.SeedWork.Command;
-using Infrastructure.Data;
+using System.Data;
+using Infrastructure.Decorators;
 
 namespace Application.Commands.Auth.Register;
 
@@ -22,21 +21,15 @@ namespace Application.Commands.Auth.Register;
 public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccountModel>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
-    private readonly ApplicationDbContext _context;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
     /// </summary>
     /// <param name="unitOfWork">The unit of work instance to manage data transactions.</param>
     public RegisterCommandHandler(
-        IUnitOfWork unitOfWork,
-        ApplicationDbContext context,
-        IMapper mapper)
+        IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
-        _context = context;
     }
     
     /// <summary>
@@ -46,23 +39,23 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     /// <param name="cancellationToken">A cancellation token to signal cancellation of the operation.</param>
     /// <returns>A task that represents the asynchronous operation, containing the created <see cref="UserAccountModel"/>.</returns>
     /// <exception cref="BadRequestException">Thrown when the email or phone number is already in use.</exception>
+    [Transactional(IsolationLevel = IsolationLevel.Serializable, Replication = true)]
     public async Task<UserAccountModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        // using var transaction = await _context.Database.BeginTransactionAsync();
-        
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLogin.Email))
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel.Email))
             throw new BadRequestException("Email already exists");
-
-        var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccount);
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request.UserLogin);
         
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserAccountDataExisted(userLoginDataModel))
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel.PhoneNumber))
             throw new BadRequestException("Phone number already exists");
         
-        var userAccount = await _unitOfWork.UserAccountCommandRepository.CreateUserAccountAsync(userAccountModel);
-        userLoginDataModel.UserAccountId = userAccount.Id;
+        var userAccount = await _unitOfWork
+            .UserAccountCommandRepository
+            .CreateUserAccountAsync(request.UserAccountModel);
+        request.UserLoginDataModel.UserAccountId = userAccount.Id;
         
-        userAccount.UserLoginData = await _unitOfWork.UserLoginDataCommandRepository.CreateUserLoginDataAsync(userLoginDataModel);
+        userAccount.UserLoginData = await _unitOfWork
+            .UserLoginDataCommandRepository
+            .CreateUserLoginDataAsync(request.UserLoginDataModel);
         
         return userAccount;
     }

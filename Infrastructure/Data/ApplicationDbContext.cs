@@ -17,7 +17,10 @@ namespace Infrastructure.Data;
 /// from the executing assembly.
 /// </remarks>
 public class ApplicationDbContext 
-    : IdentityDbContext<UserLoginDataEntity, IdentityRole<Guid>, Guid>
+    : IdentityDbContext<
+        UserLoginDataEntity,
+        IdentityRole<Guid>,
+        Guid>
 {
     
     /// <summary>

@@ -1,9 +1,10 @@
 using Infrastructure.Data;
+using Infrastructure.Decorators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Database;
 
 public static class DbContextConfiguration
 {
@@ -37,7 +38,7 @@ public static class DbContextConfiguration
         if (string.IsNullOrEmpty(connectionString))
             throw new ArgumentNullException("DefaultConnection is not configured.");
 
-        services.AddDbContext<ApplicationDbContext>(options =>
+        services.AddDbContextPool<ApplicationDbContext>(options =>
         {
             options.UseSqlServer(
                 connectionString,
@@ -50,6 +51,22 @@ public static class DbContextConfiguration
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                 });
         });
+        
+        services.AddPooledDbContextFactory<ApplicationDbContext>(options =>
+        {
+            options.UseSqlServer(
+                connectionString,
+                sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                        maxRetryCount: 10,
+                        maxRetryDelay: TimeSpan.FromSeconds(30),
+                        errorNumbersToAdd: null);
+                    sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                });
+        });
+        
+        services.AddScoped<TransactionDecorator>();
         
         return services;
     }

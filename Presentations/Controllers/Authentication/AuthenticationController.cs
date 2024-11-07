@@ -1,13 +1,11 @@
 using Application.Dtos.Authentication.Login;
 using Application.Dtos.Authentication.Register;
-using Application.Exceptions;
 using Application.Usecases.Auth;
 using Asp.Versioning;
 using AutoMapper;
 using Infrastructure.UseCaseProxy;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Presentations.HttpResponse;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Presentations.Controllers.Authentication;

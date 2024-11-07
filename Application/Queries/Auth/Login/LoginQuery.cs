@@ -8,7 +8,7 @@ public class LoginQuery : IQuery<UserAccountModel>
 {
     public string Email { get; set; }
     public string Password { get; set; }
-    public LoginQuery(LoginUserRequestDto dto) =>
-        (Email, Password) = (dto.Email, dto.Password);
+    public LoginQuery(UserLoginDataModel userLoginDataModel) =>
+        (Email, Password) = (userLoginDataModel.Email, userLoginDataModel.Password);
     
 }

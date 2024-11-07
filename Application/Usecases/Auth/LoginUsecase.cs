@@ -1,6 +1,7 @@
 ﻿using Application.Dtos.Authentication.Login;
 using Application.Queries.Auth.Login;
 using AutoMapper;
+using Domain.Model;
 using Domain.Usecase;
 using MediatR;
 
@@ -18,7 +19,10 @@ public class LoginUsecase : IUseCase<LoginUserRequestDto, LoginResponseDto>
 
     public async Task<LoginResponseDto> Execute(LoginUserRequestDto request)
     {
-        var loginResponse = await _mediator.Send(new LoginQuery(request));
+        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request);
+        
+        var loginResponse = await _mediator.Send(new LoginQuery(userLoginDataModel));
+        
         return _mapper.Map<LoginResponseDto>(loginResponse);
     }
 }

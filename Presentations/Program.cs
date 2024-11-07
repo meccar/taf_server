@@ -1,5 +1,6 @@
 using Application;
 using Infrastructure;
+using Infrastructure.Data;
 using Presentations;
 using Presentations.Extensions;
 using Serilog;
@@ -27,8 +28,10 @@ try
 
     app.UseInfrastructure(AppCors);
     
+    await SeedDatabaseAsync(app);
     
     await app.RunAsync();
+
 
 }
 catch (Exception ex)
@@ -42,4 +45,12 @@ finally
 {
     Log.Information("Shut down API complete");
     await Log.CloseAndFlushAsync();
+}
+
+async Task SeedDatabaseAsync(WebApplication app)
+{
+    using var scope = app.Services.CreateScope();
+    var serviceProvider = scope.ServiceProvider;
+    var dbContextSeed = serviceProvider.GetRequiredService<ApplicationDbContextSeed>();
+    await dbContextSeed.SeedAsync();
 }

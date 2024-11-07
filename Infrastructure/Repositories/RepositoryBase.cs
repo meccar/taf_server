@@ -80,6 +80,10 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
                 current.Include(includeProperty));
         return items;
     }
+    public Task<int> CommitAsync()
+    {
+        return _context.SaveChangesAsync();
+    }
     /// <summary>
     /// Checks if an entity with the specified identifier exists asynchronously.
     /// </summary>

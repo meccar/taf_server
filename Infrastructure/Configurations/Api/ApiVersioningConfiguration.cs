@@ -2,7 +2,7 @@ using Asp.Versioning;
 using Asp.Versioning.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Api;
 
 public static class ApiVersioningConfiguration
 {

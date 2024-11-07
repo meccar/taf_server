@@ -2,7 +2,7 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Api;
 
 public static class SwaggerConfiguration
 {
