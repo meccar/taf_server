@@ -34,22 +34,23 @@ public class UserLoginDataQueryRepository
             .AnyAsync(u => u.Email == userLoginData || u.PhoneNumber == userLoginData);
         return result;
     }
-    public async Task<UserLoginDataModel> FindOneByEmail(string email)
+    public async Task<UserLoginDataModel?> FindOneByEmail(string email)
     {
         var query = await _userManager.FindByEmailAsync(email);
+        
         if (query == null)
         {
             return null;
         }
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(query);
-        return userLoginDataModel;
+        
+        return _mapper.Map<UserLoginDataModel>(query);
     }
-    
-    public async Task<bool> IsUserAccountDataExisted(UserLoginDataModel userLoginDataModel)
-    {
-        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataModel);
 
-        var result = await _userManager.GetPhoneNumberAsync(userLoginDataEntity);
-        return result != null;
+    public async Task<bool> IsPasswordMatch(string email, string password)
+    {
+        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>
+            (await _userManager.FindByEmailAsync(email));
+        
+        return await _userManager.CheckPasswordAsync(userLoginDataEntity, password);
     }
 }

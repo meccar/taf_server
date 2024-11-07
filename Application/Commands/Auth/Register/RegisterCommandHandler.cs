@@ -2,8 +2,8 @@
 using Domain.Interfaces;
 using Domain.Model;
 using Domain.SeedWork.Command;
-using Infrastructure.SeedWork.Decorators;
 using System.Data;
+using Infrastructure.Decorators;
 
 namespace Application.Commands.Auth.Register;
 
@@ -42,8 +42,6 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     [Transactional(IsolationLevel = IsolationLevel.Serializable, Replication = true)]
     public async Task<UserAccountModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        // using var transaction = await _context.Database.BeginTransactionAsync();
-        
         if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel.Email))
             throw new BadRequestException("Email already exists");
         

@@ -1,10 +1,9 @@
-﻿using Domain.Aggregates;
-using Domain.Entities;
+﻿using Domain.Entities;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Identity;
 public static class IdentityConfiguration
 {
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
@@ -28,6 +27,8 @@ public static class IdentityConfiguration
                 // User settings
                 options.User.AllowedUserNameCharacters = "";
             })
+            .AddRoles<IdentityRole<Guid>>()
+            .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
         

@@ -1,4 +1,7 @@
-using Infrastructure.Configurations;
+using Infrastructure.Configurations.Api;
+using Infrastructure.Configurations.Database;
+using Infrastructure.Configurations.Identity;
+using Infrastructure.Configurations.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,7 +26,6 @@ public static class InfrastructureServicesConfiguration
         services.ConfigureApiVersioning();
         services.ConfigureDbContext(configuration);
         services.ConfigureSwagger();
-        services.ConfigureValidation();
         services.ConfigureIdentity();
         services.ConfigureRepositories();
 

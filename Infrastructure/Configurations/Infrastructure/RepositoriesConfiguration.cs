@@ -7,7 +7,7 @@ using Infrastructure.Repositories.Command;
 using Infrastructure.Repositories.Query;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Infrastructure;
 
 public static class RepositoriesConfiguration
 {

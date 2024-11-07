@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.Aggregates;
 using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
@@ -19,6 +20,7 @@ public class UserLoginDataCommandRepository
 {
     private readonly IMapper _mapper;
     private readonly UserManager<UserLoginDataEntity> _userManager;
+    // private readonly RoleManager<IdentityRole> _roleManager;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="UserLoginDataCommandRepository"/> class.
@@ -29,10 +31,13 @@ public class UserLoginDataCommandRepository
     public UserLoginDataCommandRepository(
         // ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserLoginDataEntity> userManager)
+        UserManager<UserLoginDataEntity> userManager
+        // RoleManager<IdentityRole> roleManager
+        )
     {
         _mapper = mapper;
         _userManager = userManager;
+        // _roleManager = roleManager;
     }
 
     /// <summary>
@@ -47,19 +52,34 @@ public class UserLoginDataCommandRepository
         if (string.IsNullOrEmpty(userLoginDataEntity.UserName))
             userLoginDataEntity.UserName = userLoginDataEntity.Email;
         
-        var result = await _userManager.CreateAsync(userLoginDataEntity, request.Password);
+        // var roleCreationResult = await _roleManager.CreateAsync(new IdentityRole("User"));
+        //
+        // if (!roleCreationResult.Succeeded)
+        // {
+        //     var roleErrors = string.Join(", ", roleCreationResult.Errors.Select(e => e.Description));
+        //     throw new InvalidOperationException($"Failed to create role: {roleErrors}");
+        // }
+        
+        var userAccountCreationResult = await _userManager.CreateAsync(userLoginDataEntity, request.Password);
         request.Password = null;
         
-        if (result.Succeeded)
+        
+        if (userAccountCreationResult.Succeeded)
         {
-            // await _userManager.AddToRoleAsync(userLoginDataEntity, "User");
+            var roleCreationResult = await _userManager.AddToRoleAsync(userLoginDataEntity, "User");
+            if (!roleCreationResult.Succeeded)
+            {
+                var roleErrors = string.Join(", ", roleCreationResult.Errors.Select(e => e.Description));
+                throw new InvalidOperationException($"Failed to assign role to user: {roleErrors}");
+            }
             
             var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
             
             return userLoginDataModel;
             
         }
-        var errorMessages = string.Join(", ", result.Errors.Select(e => e.Description));
+        
+        var errorMessages = string.Join(", ", userAccountCreationResult.Errors.Select(e => e.Description));
         throw new InvalidOperationException($"Failed to create user login data: {errorMessages}");
     }
     

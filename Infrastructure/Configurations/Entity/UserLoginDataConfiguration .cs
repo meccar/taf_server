@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Entity;
 public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserLoginDataEntity>
 {
     public void Configure(EntityTypeBuilder<UserLoginDataEntity> builder)

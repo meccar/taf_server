@@ -1,10 +1,10 @@
 using Infrastructure.Data;
-using Infrastructure.SeedWork.Decorators;
+using Infrastructure.Decorators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Configurations.Database;
 
 public static class DbContextConfiguration
 {
