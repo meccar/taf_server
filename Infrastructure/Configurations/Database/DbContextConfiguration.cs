@@ -37,7 +37,14 @@ public static class DbContextConfiguration
     {
         // var connectionString = configuration.GetConnectionString("DefaultConnection");
         
-        var connectionString = BuildConnectionString(configuration);
+        var connectionString = 
+            $"Server={configuration.GetDatabaseHost()}," +
+            $"{configuration.GetDatabasePort()};" +
+            $"Database={configuration.GetDatabaseName()};" +
+            $"User Id={configuration.GetDatabaseUserId()};" +
+            $"Password={configuration.GetDatabasePassword()};" +
+            $"MultipleActiveResultSets={configuration.GetMultipleActiveResultSets()};" +
+            $"TrustServerCertificate={configuration.GetTrustServerCertificate()};";
         
         // if (string.IsNullOrEmpty(connectionString))
         //     throw new ArgumentNullException("DefaultConnection is not configured.");
@@ -73,19 +80,5 @@ public static class DbContextConfiguration
         services.AddScoped<TransactionDecorator>();
         
         return services;
-    }
-    
-    private static string BuildConnectionString(EnvironmentConfiguration configuration)
-    {
-        var host = configuration.GetDatabaseHost();
-        var port = configuration.GetDatabasePort();
-        var dbName = configuration.GetDatabaseName();
-        var user = configuration.GetDatabaseUserId();
-        var password = configuration.GetDatabasePassword();
-        var mars = configuration.GetMultipleActiveResultSets();
-        var trustServerCertificate = configuration.GetTrustServerCertificate();
-
-        return $"Server={host},{port};Database={dbName};User Id={user};Password={password};" +
-               $"MultipleActiveResultSets={mars};TrustServerCertificate={trustServerCertificate};";
     }
 }

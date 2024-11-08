@@ -21,11 +21,11 @@ public class ApplicationDbContext
         UserLoginDataEntity,
         IdentityRole<Guid>,
         Guid,
-        IdentityUserClaim<Guid>,
+        IdentityUserClaim<Guid>, //ToDo when jwt is created 
         IdentityUserRole<Guid>,
         IdentityUserLogin<Guid>,
         IdentityRoleClaim<Guid>,
-        IdentityUserToken<Guid>>
+        IdentityUserToken<Guid>> //ToDo
 {
     
     /// <summary>

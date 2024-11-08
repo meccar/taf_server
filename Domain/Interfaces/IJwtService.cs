@@ -5,5 +5,6 @@ namespace Domain.Interfaces;
 
 public interface IJwtService
 {
-    Task<string> ResponseAuthWithAccessTokenAndRefreshTokenCookie(UserAccountModel userAccountModel , bool hasVerify2FA);
+    Task<string> ResponseAuthWithAccessTokenAndRefreshTokenCookie(UserLoginDataModel user);
+    
 }

@@ -18,7 +18,6 @@ try
 
     // Add services to the container.
     builder.Logging.AddConsole();
-    // builder.Services.AddGrpc();
     
     builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
     builder.Services.ConfigureApplicationServices(builder.Configuration);

@@ -10,6 +10,56 @@ public class ApplicationDbContextSeed
     private readonly ApplicationDbContext _context;
     private readonly UserManager<UserLoginDataEntity> _userManager;
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+
+    private static readonly IReadOnlyDictionary<string, IReadOnlyCollection<string>> DefaultPermissions = 
+        new Dictionary<string, IReadOnlyCollection<string>>
+        {
+            { 
+                ERole.Admin, 
+                new[] 
+                {
+                    EClaimValue.View,
+                    EClaimValue.Read,
+                    EClaimValue.Update,
+                    EClaimValue.Delete
+                }
+            },
+            { 
+                ERole.CompanyManager, 
+                new[] 
+                {
+                    EClaimValue.View,
+                    EClaimValue.Read,
+                    EClaimValue.Update
+                }
+            },
+            { 
+                ERole.CompanyUser, 
+                new[] 
+                {
+                    EClaimValue.View,
+                    EClaimValue.Read,
+                    EClaimValue.Update
+                }
+            },
+            { 
+                ERole.User, 
+                new[] 
+                {
+                    EClaimValue.View,
+                    EClaimValue.Read,
+                    EClaimValue.Update
+                }
+            },
+            { 
+                ERole.Guest, 
+                new[] 
+                {
+                    EClaimValue.View,
+                    EClaimValue.Read
+                }
+            }
+        };
     
     public ApplicationDbContextSeed(
         ApplicationDbContext context,
@@ -23,64 +73,91 @@ public class ApplicationDbContextSeed
 
     public async Task SeedAsync()
     {
-        // SeedUserLoginDataEntityAsync().Wait();
-        if (!_context.Roles.Any())
-            await SeedRoleAsync();
+        await SeedRolesAsync();
     }
 
-    // private async Task SeedUserLoginDataEntityAsync()
-    // {
-    //     if (!_userManager.Users.Any())
-    //     {
-    //         var admin = new UserLoginDataEntity
-    //         {
-    //             FirstName = "Testo",
-    //             LastName = "Testla",
-    //             Gender = Gender.Male,
-    //             DateOfBirth = DateTime.Now,
-    //             PhoneNumber = "088888888888",
-    //             Avatar = "avatar.jpg",
-    //             CreatedAt = DateTime.Now,
-    //         };
-    //         
-    //         var result = await _userManager.CreateAsync(admin, "Admin@123456789");
-    //         if (!result.Succeeded)
-    //         {
-    //             var user = await _userManager.FindByEmailAsync(admin);
-    //             if(user != null)
-    //                 await _userManager.AddToRoleAsync(user, "Admin");
-    //         }
-    //     }
-    //     
-    //     await _context.SaveChangesAsync();
-    // }
-
-    private async Task SeedRoleAsync()
+    private async Task SeedRolesAsync()
     {
-        var roles = new[]
+            
+        foreach (var (roleName, permissions) in DefaultPermissions)
         {
-            new { Name = "Admin", Claims = new[] { new Claim(EClaimTypes.Permission, "projects.view") } },
-            new { Name = "CompanyManager", Claims = new Claim[0] },
-            new { Name = "CompanyUser", Claims = new Claim[0] },
-            new { Name = "User", Claims = new Claim[0] },
-            new { Name = "Guest", Claims = new Claim[0] }
-        };
-        
-        foreach (var role in roles)
-        {
-            if (!await _roleManager.RoleExistsAsync(role.Name))
+            var role = await CreateRoleAsync(roleName);
+            if (role != null)
             {
-                var newRole = new IdentityRole<Guid>(role.Name);
-                await _roleManager.CreateAsync(newRole);
-                
-                if (role.Claims.Length > 0)
-                {
-                    var createdRole = await _roleManager.FindByNameAsync(role.Name);
-                    foreach (var claim in role.Claims)
-                    {
-                        await _roleManager.AddClaimAsync(createdRole, claim);
-                    }
-                }
+                await UpdateRoleClaimsAsync(role, permissions);
+            }
+        }
+    }
+    
+    private async Task<IdentityRole<Guid>?> CreateRoleAsync(string roleName)
+    {
+        var existingRole = await _roleManager.FindByNameAsync(roleName);
+        if (existingRole != null)
+        {
+            return existingRole;
+        }
+
+        var newRole = new IdentityRole<Guid>(roleName);
+        var result = await _roleManager.CreateAsync(newRole);
+
+        if (!result.Succeeded)
+        {
+            throw new InvalidOperationException(
+                $"Failed to create role {roleName}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        }
+
+        return newRole;
+    }
+    
+    private async Task UpdateRoleClaimsAsync(
+        IdentityRole<Guid> role,
+        IEnumerable<string> permissions)
+    {
+        var existingClaims = await _roleManager.GetClaimsAsync(role);
+        var desiredClaims = permissions.Select(p => new Claim(EClaimTypes.Permission, p));
+
+        await RemoveOutdatedClaimsAsync(role, existingClaims, desiredClaims);
+        await AddNewClaimsAsync(role, existingClaims, desiredClaims);
+    }
+    
+    private async Task RemoveOutdatedClaimsAsync(
+        IdentityRole<Guid> role,
+        IList<Claim> existingClaims,
+        IEnumerable<Claim> desiredClaims)
+    {
+        var claimsToRemove = existingClaims
+            .Where(claim => !desiredClaims.Any(c =>
+                c.Type == claim.Type && c.Value == claim.Value))
+            .ToList();
+
+        foreach (var claim in claimsToRemove)
+        {
+            var result = await _roleManager.RemoveClaimAsync(role, claim);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    $"Failed to remove claim {claim.Value} from role {role.Name}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            }
+        }
+    }
+    
+    private async Task AddNewClaimsAsync(
+        IdentityRole<Guid> role,
+        IList<Claim> existingClaims,
+        IEnumerable<Claim> desiredClaims)
+    {
+        var claimsToAdd = desiredClaims
+            .Where(claim => !existingClaims.Any(c =>
+                c.Type == claim.Type && c.Value == claim.Value))
+            .ToList();
+
+        foreach (var claim in claimsToAdd)
+        {
+            var result = await _roleManager.AddClaimAsync(role, claim);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    $"Failed to add claim {claim.Value} to role {role.Name}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
             }
         }
     }

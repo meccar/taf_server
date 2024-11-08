@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Configurations.Environment;
 
-public class EnvironmentConfiguration : IDatabaseConfig
+public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
 {
     private readonly IConfiguration _configuration;
     public EnvironmentConfiguration(IConfiguration configuration)
@@ -61,5 +61,46 @@ public class EnvironmentConfiguration : IDatabaseConfig
     {
         return _configuration.GetValue<bool>("TypeORMSettings:MigrationsRun");
     }
+    #endregion
+    
+    #region JWT
+    
+    public string GetJwtSecret()
+    {
+        return _configuration.GetValue<string>("TokenSettings:ACCESS_TOKEN_SECRET");
+    }
+    public DateTime GetJwtExpirationTime()
+    {
+        return _configuration.GetValue<DateTime>("TokenSettings:ACCESS_TOKEN_EXPIRES_IN");
+    }
+    public string GetJwtRefreshSecret()
+    {
+        return _configuration.GetValue<string>("TokenSettings:REFRESH_TOKEN_SECRET");
+    }
+    public string GetJwtRefreshCookieKey()
+    {
+        return _configuration.GetValue<string>("TokenSettings:REFRESH_TOKEN_COOKIE_KEY");
+    }
+    public DateTime GetJwtRefreshExpirationTime()
+    {
+        return _configuration.GetValue<DateTime>("TokenSettings:REFRESH_TOKEN_EXPIRES_IN");
+    }
+    public string GetJwtRefreshTokenCookieMaxAge()
+    {
+        return _configuration.GetValue<string>("TokenSettings:REFRESH_TOKEN_COOKIE_MAX_AGE");
+    }
+    public string GetJwtType()
+    {
+        return _configuration.GetValue<string>("TokenSettings:TOKEN_TYPE");
+    }
+    public DateTime GetJwtPasswordExpirationTime()
+    {
+        return _configuration.GetValue<DateTime>("TokenSettings:RESET_PASSWORD_LINK_EXPIRES_IN");
+    }
+    public string GetJwtPasswordSecret()
+    {
+        return _configuration.GetValue<string>("TokenSettings:RESET_PASSWORD_SECRET");
+    }
+    
     #endregion
 }

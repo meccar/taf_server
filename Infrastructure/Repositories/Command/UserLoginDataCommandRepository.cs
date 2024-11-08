@@ -1,8 +1,9 @@
+using System.Security.Claims;
 using AutoMapper;
-using Domain.Aggregates;
 using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
+using Infrastructure.SeedWork.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Repositories.Command;
@@ -66,12 +67,27 @@ public class UserLoginDataCommandRepository
         
         if (userAccountCreationResult.Succeeded)
         {
-            var roleCreationResult = await _userManager.AddToRoleAsync(userLoginDataEntity, "User");
+            var roleCreationResult = await _userManager.AddToRoleAsync(userLoginDataEntity, ERole.User);
             if (!roleCreationResult.Succeeded)
             {
                 var roleErrors = string.Join(", ", roleCreationResult.Errors.Select(e => e.Description));
                 throw new InvalidOperationException($"Failed to assign role to user: {roleErrors}");
             }
+            
+            // var userClaims = ERoleWithClaims.RoleClaims[ERole.User];
+            //
+            // foreach (var claim in userClaims)
+            // {
+            //     var claimToAdd = new Claim(EClaimTypes.Permission, claim.ToString());
+            //
+            //     await _userManager.AddClaimAsync(userLoginDataEntity, claimToAdd);
+            // }
+            //
+            // if (!claimResult.Succeeded)
+            // {
+            //     var claimErrors = string.Join(", ", claimResult.Errors.Select(e => e.Description));
+            //     throw new InvalidOperationException($"Failed to add claim to user: {claimErrors}");
+            // }
             
             var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
             

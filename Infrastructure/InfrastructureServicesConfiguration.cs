@@ -16,6 +16,7 @@ public static class InfrastructureServicesConfiguration
         string appCors)
     {
         var config = new EnvironmentConfiguration(configuration);
+        
         // services.ConfigureRedis(configuration);
         // services.ConfigureQuartz();
         // services.ConfigureHangfireServices();
