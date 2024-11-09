@@ -1,6 +1,8 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace Domain.Model;
 
-public class TokenModel
+public class TokenModel : IdentityUserToken<Guid>
 {
     public string TokenType  { get; set; }
     public string AccessToken { get; set; } 

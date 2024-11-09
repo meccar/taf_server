@@ -51,12 +51,23 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
         var userAccount = await _unitOfWork
             .UserAccountCommandRepository
             .CreateUserAccountAsync(request.UserAccountModel);
+
+        if (userAccount == null)
+        {
+            throw new BadRequestException("An error occurred. Please try again");
+        }
+
         request.UserLoginDataModel.UserAccountId = userAccount.Id;
         
-        userAccount.UserLoginData = await _unitOfWork
+        var userLoginData = await _unitOfWork
             .UserLoginDataCommandRepository
             .CreateUserLoginDataAsync(request.UserLoginDataModel);
-        
+
+        if (userLoginData == null)
+            throw new BadRequestException("An error occurred. Please try again");
+
+        userAccount.UserLoginData = userLoginData;
+
         return userAccount;
     }
 }

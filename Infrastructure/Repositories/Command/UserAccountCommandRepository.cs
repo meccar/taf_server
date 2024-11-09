@@ -46,15 +46,23 @@ public class UserAccountCommandRepository
     /// </summary>
     /// <param name="createUserAccountDto">The DTO containing user account details.</param>
     /// <returns>The created user account model.</returns>
-    public async Task<UserAccountModel> CreateUserAccountAsync(UserAccountModel request)
+    public async Task<UserAccountModel?> CreateUserAccountAsync(UserAccountModel request)
     {
         var userAccountEntity = _mapper.Map<UserAccountAggregate>(request);
 
-        await CreateAsync(userAccountEntity);
-        // await CommitAsync();
+        try
+        {
+            await CreateAsync(userAccountEntity);
+            // await CommitAsync();
+        
+            var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
+            return userAccountModel;
+        }
+        catch (Exception)
+        {
+            return null;
 
-        var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
-        return userAccountModel;
+        }
     }
 
 }

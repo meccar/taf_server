@@ -11,21 +11,30 @@ namespace Infrastructure.Services.JwtToken;
 public class JwtService : IJwtService
 {
     private readonly EnvironmentConfiguration _environmentConfiguration;
-    public JwtService(EnvironmentConfiguration environmentConfiguration)
+    private readonly IUnitOfWork _unitOfWork;
+
+    public JwtService(
+        EnvironmentConfiguration environmentConfiguration,
+        IUnitOfWork unitOfWork
+        )
     {
+        _unitOfWork = unitOfWork;
         _environmentConfiguration = environmentConfiguration;
     }
-    private async Task<(string tokenType, SecurityToken accessToken, DateTime accessTokenExpires, SecurityToken refreshToken, DateTime refreshTokenExpires)> GenerateTokens(UserLoginDataModel user)
+    private async Task<(
+            string tokenType, 
+            SecurityToken accessToken, 
+            DateTime accessTokenExpires, 
+            SecurityToken refreshToken, 
+            DateTime refreshTokenExpires)>
+        GenerateTokens(UserLoginDataModel user)
     {
-        
-
         var payload = GenerateClaims(user);
         var tokenType = _environmentConfiguration.GetJwtType();
         var accessTokenExpires = _environmentConfiguration.GetJwtExpirationTime();
         var refreshTokenExpires = _environmentConfiguration.GetJwtRefreshExpirationTime();
         var accessToken = await GenerateJwtToken(payload, accessTokenExpires);
         var refreshToken = await GenerateJwtRefreshToken(payload, refreshTokenExpires);
-            
             
         return (
             tokenType,
@@ -36,7 +45,9 @@ public class JwtService : IJwtService
         );
     }
     
-    private static ClaimsIdentity GenerateClaims(UserLoginDataModel user)
+    private static ClaimsIdentity 
+        GenerateClaims
+        (UserLoginDataModel user)
     {
         var ci = new ClaimsIdentity();
 
@@ -48,7 +59,9 @@ public class JwtService : IJwtService
         return ci;
     }
 
-    private async Task<SecurityToken> GenerateJwtToken(ClaimsIdentity payload, DateTime accessTokenExpires)
+    private async Task<SecurityToken>
+        GenerateJwtToken
+        (ClaimsIdentity payload, DateTime accessTokenExpires)
     {
         var handler = new JwtSecurityTokenHandler();
         
@@ -68,7 +81,9 @@ public class JwtService : IJwtService
         return handler.CreateToken(tokenDescriptor);
     }
 
-    private async Task<SecurityToken> GenerateJwtRefreshToken(ClaimsIdentity payload, DateTime refreshTokenExpires)
+    private async Task<SecurityToken> 
+        GenerateJwtRefreshToken
+        (ClaimsIdentity payload, DateTime refreshTokenExpires)
     {
         var handler = new JwtSecurityTokenHandler();
         
@@ -88,12 +103,16 @@ public class JwtService : IJwtService
         return handler.CreateToken(tokenDescriptor);
     }
 
-    private async Task UpdateOrCreateTokens(UserLoginDataModel user, TokenModel token)
+    private async Task 
+        UpdateOrCreateTokens
+        (UserLoginDataModel user, TokenModel token)
     {
-        
+        await _unitOfWork.UserTokenCommandRepository.CreateUserTokenAsync(token);
     }
     
-    public async Task<string> ResponseAuthWithAccessTokenAndRefreshTokenCookie(UserLoginDataModel user)
+    public async Task<string> 
+        ResponseAuthWithAccessTokenAndRefreshTokenCookie
+        (UserLoginDataModel user)
     {
         var token = await GenerateTokens(user);
         return null;

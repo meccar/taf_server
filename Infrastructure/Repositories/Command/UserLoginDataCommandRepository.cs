@@ -46,7 +46,7 @@ public class UserLoginDataCommandRepository
     /// </summary>
     /// <param name="userLoginDataDto">The DTO containing user login data details.</param>
     /// <returns>The created user login data model.</returns>
-    public async Task<UserLoginDataModel> CreateUserLoginDataAsync(UserLoginDataModel request)
+    public async Task<UserLoginDataModel?> CreateUserLoginDataAsync(UserLoginDataModel request)
     {
         var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(request);
         
@@ -70,8 +70,7 @@ public class UserLoginDataCommandRepository
             var roleCreationResult = await _userManager.AddToRoleAsync(userLoginDataEntity, ERole.User);
             if (!roleCreationResult.Succeeded)
             {
-                var roleErrors = string.Join(", ", roleCreationResult.Errors.Select(e => e.Description));
-                throw new InvalidOperationException($"Failed to assign role to user: {roleErrors}");
+                return null;
             }
             
             // var userClaims = ERoleWithClaims.RoleClaims[ERole.User];
@@ -94,9 +93,7 @@ public class UserLoginDataCommandRepository
             return userLoginDataModel;
             
         }
-        
-        var errorMessages = string.Join(", ", userAccountCreationResult.Errors.Select(e => e.Description));
-        throw new InvalidOperationException($"Failed to create user login data: {errorMessages}");
+        return null;
     }
     
     
