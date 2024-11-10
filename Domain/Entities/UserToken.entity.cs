@@ -11,11 +11,11 @@ public class UserTokenEntity : IdentityUserToken<Guid>
 {
     [Required]
     public required string UserAccountId { get; set; }
-    public UserTokenType Type { get; set; }
+    //public UserTokenType Type { get; set; }
     public string IpAddress { get; set; } = "";
     public string UserAgent { get; set; } = "";
-    public string Token { get; set; } = "";
-    public DateTime ExpiredAt { get; set; }
+    //public string Token { get; set; } = "";
+    //public DateTime ExpiredAt { get; set; }
 
     [ForeignKey("UserAccountId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]

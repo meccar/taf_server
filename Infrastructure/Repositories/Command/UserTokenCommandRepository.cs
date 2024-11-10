@@ -28,7 +28,6 @@ public class UserTokenCommandRepository
 
         var query = await _context.UserTokens.AddAsync(userTokenEntity);
 
-
         if (query == null)
         {
             return null;

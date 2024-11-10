@@ -105,9 +105,11 @@ public class JwtService : IJwtService
 
     private async Task 
         UpdateOrCreateTokens
-        (UserLoginDataModel user, TokenModel token)
+        (UserLoginDataModel user, UserTokenModel token)
     {
-        await _unitOfWork.UserTokenCommandRepository.CreateUserTokenAsync(token);
+        var result = await _unitOfWork.UserTokenCommandRepository.CreateUserTokenAsync(token);
+        //if (result == null)
+        //    throw new 
     }
     
     public async Task<string> 
