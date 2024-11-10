@@ -48,7 +48,7 @@ public class UserAccountAggregate : EntityBase
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public DateTime? UpdatedAt { get; set; }
-    
+   
     public DateTime DeletedAt { get; set; }
     public bool IsDeleted { get; set; } = false;
     
@@ -58,9 +58,9 @@ public class UserAccountAggregate : EntityBase
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
     
-    // public List<UserTokenModel> Tokens { get; set; }
-    
+     public virtual UserTokenEntity UserToken { get; set; } = null!;
+
     // public List<RoleModel> Roles { get; set; }
-    
+
     // public CompanyModel Company { get; set; }
 }

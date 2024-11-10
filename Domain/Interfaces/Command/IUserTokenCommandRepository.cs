@@ -4,5 +4,5 @@ namespace Domain.Interfaces.Command;
 
 public interface IUserTokenCommandRepository
 {
-    Task<UserLoginDataModel?> CreateUserTokenAsync(UserTokenModel token);
+    Task<UserTokenModel?> CreateUserTokenAsync(UserTokenModel request);
 }

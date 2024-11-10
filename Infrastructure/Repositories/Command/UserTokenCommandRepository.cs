@@ -1,4 +1,6 @@
 using AutoMapper;
+using Azure.Core;
+using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
 using Infrastructure.Data;
@@ -12,16 +14,19 @@ public class UserTokenCommandRepository
     private readonly ApplicationDbContext _context;
 
     public UserTokenCommandRepository(
-    ApplicationDbContext context,
-    IMapper mapper)
+        ApplicationDbContext context,
+        IMapper mapper
+        )
     {
         _mapper = mapper;
         _context = context;
     }
 
-    public async Task<UserLoginDataModel?> CreateUserTokenAsync(UserTokenModel token)
+    public async Task<UserTokenModel?> CreateUserTokenAsync(UserTokenModel request)
     {
-        var query = await _context.UserTokens.AddAsync(token);
+        var userTokenEntity = _mapper.Map<UserTokenEntity>(request);
+
+        var query = await _context.UserTokens.AddAsync(userTokenEntity);
 
 
         if (query == null)
@@ -31,6 +36,6 @@ public class UserTokenCommandRepository
 
         await _context.SaveChangesAsync();
 
-        return _mapper.Map<UserLoginDataModel>(query);
+        return _mapper.Map<UserTokenModel>(query);
     }
 }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Model;
 
-public class UserTokenModel : IdentityUserToken<Guid>
+public class UserTokenModel
 {
     public string TokenType { get; set; }
     public string AccessToken { get; set; }

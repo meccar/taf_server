@@ -36,7 +36,7 @@ public class UnitOfWork : IUnitOfWork
         
         IUserAccountCommandRepository userAccountCommandRepository,
         IUserLoginDataCommandRepository userLoginDataCommandRepository,
-        IUserTokenCommandRepository UserTokenCommandRepository,
+        IUserTokenCommandRepository userTokenCommandRepository,
 
     IUserAccountQueryRepository userAccountQueryRepository,
         IUserLoginDataQueryRepository userLoginDataQueryRepository)
@@ -45,7 +45,9 @@ public class UnitOfWork : IUnitOfWork
         
         UserAccountCommandRepository = userAccountCommandRepository;
         UserLoginDataCommandRepository = userLoginDataCommandRepository;
-        
+        UserTokenCommandRepository  = userTokenCommandRepository;
+
+
         UserAccountQueryRepository = userAccountQueryRepository;
         UserLoginDataQueryRepository = userLoginDataQueryRepository;
     }
