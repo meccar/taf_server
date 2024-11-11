@@ -34,8 +34,7 @@ public class UserAccountCommandRepository
         ApplicationDbContext context,
         IMapper mapper,
         UserManager<UserLoginDataEntity> userManager
-        )
-        : base(context)
+        ) : base(context)
     {
         // _context = context;
         _mapper = mapper;

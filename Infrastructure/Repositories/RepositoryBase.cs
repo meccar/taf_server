@@ -3,6 +3,7 @@ using Domain.Abstractions;
 using Domain.Entities;
 using Domain.SeedWork.Interfaces;
 using Infrastructure.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
