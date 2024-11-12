@@ -1,3 +1,5 @@
+using Domain.SeedWork.Enums.Token;
+using Domain.SeedWork.Enums.UserLoginDataExternal;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain.Model;

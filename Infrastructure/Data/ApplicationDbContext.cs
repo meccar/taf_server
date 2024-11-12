@@ -20,7 +20,7 @@ public class ApplicationDbContext
         UserLoginDataEntity,
         IdentityRole<Guid>,
         Guid,
-        IdentityUserClaim<Guid>, //ToDo when jwt is created 
+        IdentityUserClaim<Guid>,
         IdentityUserRole<Guid>,
         IdentityUserLogin<Guid>,
         IdentityRoleClaim<Guid>,

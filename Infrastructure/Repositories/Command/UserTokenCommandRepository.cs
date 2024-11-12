@@ -3,6 +3,8 @@ using Azure.Core;
 using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
+using Domain.SeedWork.Enums.Token;
+using Domain.SeedWork.Enums.UserLoginDataExternal;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,11 +33,10 @@ public class UserTokenCommandRepository
     public async Task<UserTokenModel?> CreateUserTokenAsync(UserTokenModel request)
     {
         var userLoginDataEntity = await _userManager.Users.FirstOrDefaultAsync(u => u.UserAccountId == request.UserId);
-
         
         var result = await _userManager.SetAuthenticationTokenAsync(
             userLoginDataEntity,
-            request.LoginProvider,
+            request.LoginProvider.ToString(),
             request.Name.ToString(),
             request.Value          
             );
@@ -52,26 +53,49 @@ public class UserTokenCommandRepository
     
     public async Task<bool> UpdateUserTokenAsync(UserTokenModel request)
     {
-        var userTokenEntity = _mapper.Map<IdentityUserToken<Guid>>(request);
+        var userLoginDataEntity = await _userManager.Users.FirstOrDefaultAsync(u => u.UserAccountId == request.UserId);
+        
+        var result = await _userManager.SetAuthenticationTokenAsync(
+            userLoginDataEntity,
+            request.LoginProvider.ToString(),
+            request.Name.ToString(),
+            request.Value          
+        );
 
-        _context.UserTokens.Update(userTokenEntity);
+        if (!result.Succeeded)
+        {
+            return false;
+        }
 
-        var result = await _context.SaveChangesAsync();
+        await _context.SaveChangesAsync();
 
-        return result > 0;
+        return true;
     }
 
-    public async Task<List<UserTokenModel>?> GetUserTokensByUserAccountId(string userAccountId)
+    public async Task<List<UserTokenModel>?> TokenExistsAsync(string userId, TokenModel token)
     {
-        Guid.TryParse(userAccountId, out Guid newUserAccountId);
+        Guid.TryParse(userId, out Guid newUserAccountId);
         
-        var userToken = await _context.UserTokens
-            .Where(ut => ut.UserId == newUserAccountId)
-            .FirstOrDefaultAsync();
+        // var userToken = await _context.UserTokens
+        //     .FirstOrDefaultAsync(ut => ut.UserId == newUserAccountId);
+        var user = await _userManager.Users
+            .FirstOrDefaultAsync(u => u.UserAccountId == userId);
+        
+        var accessToken = await _userManager.GetAuthenticationTokenAsync(
+            user,
+            EProvider.PASSWORD.ToString(), //ToDo inset EProvider from JwtService instead of using enum 
+            ETokenName.ACCESS.ToString()
+        );
 
-        if (userToken == null)
+        var refreshToken = await _userManager.GetAuthenticationTokenAsync(
+            user,
+            EProvider.PASSWORD.ToString(),
+            ETokenName.REFRESH.ToString()
+        );
+        
+        if (accessToken == null || refreshToken == null)
             return null;
         
-        return _mapper.Map<List<UserTokenModel>>(userToken);
+        return _mapper.Map<List<UserTokenModel>>(token);
     }
 }

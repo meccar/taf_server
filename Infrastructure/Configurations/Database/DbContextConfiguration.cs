@@ -2,7 +2,6 @@ using Infrastructure.Configurations.Environment;
 using Infrastructure.Data;
 using Infrastructure.Decorators;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Configurations.Database;

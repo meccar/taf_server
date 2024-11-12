@@ -4,6 +4,7 @@ using System.Text;
 using Domain.Interfaces;
 using Domain.Model;
 using Domain.SeedWork.Enums.Token;
+using Domain.SeedWork.Enums.UserLoginDataExternal;
 using Infrastructure.Configurations.Environment;
 using Microsoft.IdentityModel.Tokens;
 
@@ -102,14 +103,14 @@ public class JwtService : IJwtService
         
         return handler.WriteToken(handler.CreateToken(tokenDescriptor));
     }
-
+    
     private async Task 
         UpdateOrCreateTokens
         (UserLoginDataModel user, TokenModel token)
     {
         var userToken = await _unitOfWork
             .UserTokenCommandRepository
-            .GetUserTokensByUserAccountId(user.UserAccountId);
+            .TokenExistsAsync(user.Id, token);
         
         if (userToken == null)
         {
@@ -118,8 +119,8 @@ public class JwtService : IJwtService
                 .CreateUserTokenAsync(
                     new UserTokenModel(
                         user.UserAccountId,
-                        UserTokenType.Access,
-                        "JWT", 
+                        ETokenName.ACCESS,
+                        EProvider.PASSWORD, 
                         token.AccessToken
                         )
                     );
@@ -129,8 +130,8 @@ public class JwtService : IJwtService
                 .CreateUserTokenAsync(
                     new UserTokenModel(
                         user.UserAccountId,
-                        UserTokenType.Refresh,
-                        "JWT",
+                        ETokenName.REFRESH,
+                        EProvider.PASSWORD,
                         token.RefreshToken
                         )
                     );
@@ -151,8 +152,8 @@ public class JwtService : IJwtService
                 .UpdateUserTokenAsync(
                     new UserTokenModel(
                         user.UserAccountId,
-                        UserTokenType.Access,
-                        "JWT", 
+                        ETokenName.ACCESS,
+                        EProvider.PASSWORD, 
                         token.AccessToken
                     )
                 );
@@ -162,8 +163,8 @@ public class JwtService : IJwtService
                 .UpdateUserTokenAsync(
                     new UserTokenModel(
                         user.UserAccountId,
-                        UserTokenType.Refresh,
-                        "JWT",
+                        ETokenName.REFRESH,
+                        EProvider.PASSWORD,
                         token.RefreshToken
                     )
                 );

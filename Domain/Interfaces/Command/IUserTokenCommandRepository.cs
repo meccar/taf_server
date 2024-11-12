@@ -6,5 +6,5 @@ public interface IUserTokenCommandRepository
 {
     Task<UserTokenModel?> CreateUserTokenAsync(UserTokenModel request);
     Task<bool> UpdateUserTokenAsync(UserTokenModel request);
-    Task<List<UserTokenModel>?> GetUserTokensByUserAccountId(string userAccountId);
+    Task<List<UserTokenModel>?> TokenExistsAsync(string userId, TokenModel token);
 }
