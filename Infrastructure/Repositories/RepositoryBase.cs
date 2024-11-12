@@ -80,10 +80,6 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
                 current.Include(includeProperty));
         return items;
     }
-    public Task<int> CommitAsync()
-    {
-        return _context.SaveChangesAsync();
-    }
     /// <summary>
     /// Checks if an entity with the specified identifier exists asynchronously.
     /// </summary>
@@ -130,9 +126,11 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="entity">The entity to create.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task CreateAsync(T entity)
+    public async Task<bool> CreateAsync(T entity)
     {
         await _context.Set<T>().AddAsync(entity);
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
     }
     /// <summary>
     /// Creates a list of entities asynchronously.

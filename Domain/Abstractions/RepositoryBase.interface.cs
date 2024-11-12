@@ -59,8 +59,6 @@ public interface IRepositoryBase<T> where T : EntityBase
         params Expression<Func<T, object>>[] includeProperties);
 
     #endregion
-
-    Task<int> CommitAsync();
     
     #region Existence Methods
 
@@ -106,7 +104,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="entity">The entity to create.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task CreateAsync(T entity);
+    Task<bool> CreateAsync(T entity);
 
     /// <summary>
     /// Asynchronously creates a list of new entities.

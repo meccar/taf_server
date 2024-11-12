@@ -38,7 +38,7 @@ public class UnitOfWork : IUnitOfWork
         IUserLoginDataCommandRepository userLoginDataCommandRepository,
         IUserTokenCommandRepository userTokenCommandRepository,
 
-    IUserAccountQueryRepository userAccountQueryRepository,
+        IUserAccountQueryRepository userAccountQueryRepository,
         IUserLoginDataQueryRepository userLoginDataQueryRepository)
     {
         _context = context;

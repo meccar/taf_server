@@ -3,6 +3,7 @@ using Domain.Aggregates;
 using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
+using Domain.SeedWork.Results;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 
@@ -46,23 +47,16 @@ public class UserAccountCommandRepository
     /// </summary>
     /// <param name="createUserAccountDto">The DTO containing user account details.</param>
     /// <returns>The created user account model.</returns>
-    public async Task<UserAccountModel?> CreateUserAccountAsync(UserAccountModel request)
+    public async Task<UserAccountResult> CreateUserAccountAsync(UserAccountModel request)
     {
         var userAccountEntity = _mapper.Map<UserAccountAggregate>(request);
-
-        try
-        {
-            await CreateAsync(userAccountEntity);
-            // await CommitAsync();
         
-            var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
-            return userAccountModel;
-        }
-        catch (Exception)
-        {
-            return null;
-
-        }
+        var created = await CreateAsync(userAccountEntity);
+        if(!created)
+            return UserAccountResult.Failure("Failed to create user account. Please try again.");
+    
+        var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
+        return UserAccountResult.Success(userAccountModel);
     }
 
 }

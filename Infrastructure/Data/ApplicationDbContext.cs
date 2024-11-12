@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Domain.Aggregates;
 using Domain.Entities;
-using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +24,7 @@ public class ApplicationDbContext
         IdentityUserRole<Guid>,
         IdentityUserLogin<Guid>,
         IdentityRoleClaim<Guid>,
-        IdentityUserToken<Guid>> //ToDo
+        UserTokenEntity>
 {
     
     /// <summary>
@@ -46,7 +45,9 @@ public class ApplicationDbContext
     /// Gets or sets the <see cref="DbSet{UserLoginDataEntity}"/> for user login data.
     /// </summary>
     public DbSet<UserLoginDataEntity> UserLoginData { get; set; }
-    
+
+    public DbSet<UserTokenEntity> UserToken { get; set; }
+
     #endregion
 
     /// <summary>
@@ -63,6 +64,11 @@ public class ApplicationDbContext
             .HasForeignKey<UserLoginDataEntity>(u => u.UserAccountId)
             .HasPrincipalKey<UserAccountAggregate>(u => u.Id)
             .IsRequired();
+
+        builder.Entity<UserAccountAggregate>()
+            .HasMany(u => u.UserToken)
+            .WithOne()
+            .HasForeignKey(u => u.UserAccountId);
         
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

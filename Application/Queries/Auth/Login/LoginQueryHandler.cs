@@ -7,20 +7,25 @@ using Domain.SeedWork.Query;
 
 namespace Application.Queries.Auth.Login;
 
-public class LoginQueryHandler : IQueryHandler<LoginQuery, UserAccountModel>
+public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IJwtService _jwtTokenService;
 
-    public LoginQueryHandler(IUnitOfWork unitOfWork)
+    public LoginQueryHandler(
+        IUnitOfWork unitOfWork,
+        IJwtService jwtTokenService
+        )
     {
         _unitOfWork = unitOfWork;
+        _jwtTokenService = jwtTokenService;
     }
 
-    public async Task<UserAccountModel> Handle(LoginQuery request, CancellationToken cancellationToken)
+    public async Task<TokenModel> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        var userAccountModel = await _unitOfWork.UserLoginDataQueryRepository.FindOneByEmail(request.Email);
+        var userLoginDataModel = await _unitOfWork.UserLoginDataQueryRepository.FindOneByEmail(request.Email);
         
-        if (userAccountModel == null)
+        if (userLoginDataModel == null)
             throw new InvalidCredentialException("Invalid credentials");
         
         bool isPasswordMatch = await _unitOfWork.UserLoginDataQueryRepository.IsPasswordMatch(request.Email, request.Password);
@@ -29,12 +34,12 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, UserAccountModel>
             throw new InvalidCredentialException("Invalid credentials");
         request.Password = null;
         
-        if (userAccountModel.UserAccount.Status == UserAccountStatus.Blocked)
+        if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Blocked)
             throw new BadRequestException();
         
-        if (userAccountModel.UserAccount.Status == UserAccountStatus.Inactive)
+        if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Inactive)
             throw new BadRequestException();
-        
-        return null;
+
+        return await _jwtTokenService.ResponseAuthWithAccessTokenAndRefreshTokenCookie(userLoginDataModel);
     }
 }

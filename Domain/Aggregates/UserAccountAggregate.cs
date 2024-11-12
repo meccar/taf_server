@@ -57,8 +57,8 @@ public class UserAccountAggregate : EntityBase
     public virtual UserLoginDataEntity UserLoginData { get; set; } = null!;
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
-    
-     public virtual UserTokenEntity UserToken { get; set; } = null!;
+
+    public List<UserTokenEntity> UserToken { get; set; } = new List<UserTokenEntity>();
 
     // public List<RoleModel> Roles { get; set; }
 

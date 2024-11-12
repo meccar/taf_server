@@ -3,12 +3,12 @@ namespace Domain.Interfaces;
 public interface IJWTConfig
 {
     string GetJwtSecret();
-    DateTime GetJwtExpirationTime();
+    string GetJwtExpirationTime();
     string GetJwtRefreshSecret();
     string GetJwtRefreshCookieKey();
-    DateTime GetJwtRefreshExpirationTime();
+    string GetJwtRefreshExpirationTime();
     string GetJwtRefreshTokenCookieMaxAge();
     string GetJwtType();
-    DateTime GetJwtPasswordExpirationTime();
+    string GetJwtPasswordExpirationTime();
     string GetJwtPasswordSecret();
 }

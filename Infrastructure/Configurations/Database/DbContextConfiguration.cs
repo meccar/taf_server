@@ -35,8 +35,6 @@ public static class DbContextConfiguration
         //     return services;
         // }
     {
-        // var connectionString = configuration.GetConnectionString("DefaultConnection");
-        
         var connectionString = 
             $"Server={configuration.GetDatabaseHost()}," +
             $"{configuration.GetDatabasePort()};" +
@@ -45,9 +43,6 @@ public static class DbContextConfiguration
             $"Password={configuration.GetDatabasePassword()};" +
             $"MultipleActiveResultSets={configuration.GetMultipleActiveResultSets()};" +
             $"TrustServerCertificate={configuration.GetTrustServerCertificate()};";
-        
-        // if (string.IsNullOrEmpty(connectionString))
-        //     throw new ArgumentNullException("DefaultConnection is not configured.");
 
         services.AddDbContextPool<ApplicationDbContext>(options =>
         {

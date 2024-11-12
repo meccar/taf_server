@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces.Command;
 using Domain.Model;
+using Domain.SeedWork.Results;
 using Infrastructure.SeedWork.Enums;
 using Microsoft.AspNetCore.Identity;
 
@@ -41,69 +42,80 @@ public class UserLoginDataCommandRepository
         // _roleManager = roleManager;
     }
 
+    private async Task<(UserLoginDataEntity User, IdentityResult Result)> CreateUserAccountAsync(
+        UserLoginDataModel request)
+    {
+        var userEntity = _mapper.Map<UserLoginDataEntity>(request);
+        userEntity.UserName ??= userEntity.Email;
+
+        var result = await _userManager.CreateAsync(userEntity, request.Password);
+        request.Password = null;
+
+        return (userEntity, result);
+    }
+    
+    private async Task<IdentityResult> AssignRoleAsync(UserLoginDataEntity user)
+    {
+        return await _userManager.AddToRoleAsync(user, ERole.User);
+    }
+    
+    private async Task<IdentityResult> AssignUserClaimsAsync(UserLoginDataEntity user)
+    {
+        var claims = new List<Claim>();
+
+        claims.AddRange(ERoleWithClaims.RoleClaims[ERole.User]
+            .Select(claim => new Claim(EClaimTypes.Permission, claim.ToString())));
+
+        claims.AddRange(new[]
+        {
+            new Claim(EClaimTypes.Email, user.Email),
+            new Claim(EClaimTypes.Role, ERole.User)
+        });
+
+        var results = new List<IdentityResult>();
+        foreach (var claim in claims)
+        {
+            var result = await _userManager.AddClaimAsync(user, claim);
+            results.Add(result);
+        }
+
+        return results.All(r => r.Succeeded) 
+            ? IdentityResult.Success 
+            : IdentityResult.Failed(results
+                .SelectMany(r => r.Errors)
+                .ToArray());
+    }
+
+
     /// <summary>
     /// Creates a new user login data entry based on the provided DTO.
     /// </summary>
     /// <param name="userLoginDataDto">The DTO containing user login data details.</param>
     /// <returns>The created user login data model.</returns>
-    public async Task<UserLoginDataModel?> CreateUserLoginDataAsync(UserLoginDataModel request)
+    public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserLoginDataModel request)
     {
-        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(request);
-        
-        if (string.IsNullOrEmpty(userLoginDataEntity.UserName))
-            userLoginDataEntity.UserName = userLoginDataEntity.Email;
-        
-        // var roleCreationResult = await _roleManager.CreateAsync(new IdentityRole("User"));
-        //
-        // if (!roleCreationResult.Succeeded)
-        // {
-        //     var roleErrors = string.Join(", ", roleCreationResult.Errors.Select(e => e.Description));
-        //     throw new InvalidOperationException($"Failed to create role: {roleErrors}");
-        // }
-        
-        var userAccountCreationResult = await _userManager.CreateAsync(userLoginDataEntity, request.Password);
-        request.Password = null;
-        
-        
-        if (userAccountCreationResult.Succeeded)
+        var (userLoginDataEntity, createResult) = await CreateUserAccountAsync(request);
+        if (!createResult.Succeeded)
         {
-            var roleCreationResult = await _userManager.AddToRoleAsync(userLoginDataEntity, ERole.User);
-            if (!roleCreationResult.Succeeded)
-            {
-                return null;
-            }
-            
-            // var userClaims = ERoleWithClaims.RoleClaims[ERole.User];
-            //
-            // foreach (var claim in userClaims)
-            // {
-            //     var claimToAdd = new Claim(EClaimTypes.Permission, claim.ToString());
-            //
-            //     await _userManager.AddClaimAsync(userLoginDataEntity, claimToAdd);
-            // }
-            //
-            // if (!claimResult.Succeeded)
-            // {
-            //     var claimErrors = string.Join(", ", claimResult.Errors.Select(e => e.Description));
-            //     throw new InvalidOperationException($"Failed to add claim to user: {claimErrors}");
-            // }
-            
-            var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
-            
-            return userLoginDataModel;
-            
+            return UserLoginDataResult.Failure(
+                createResult.Errors.Select(e => e.Description).ToArray());
         }
-        return null;
-    }
-    
-    
-    /// <summary>
-    /// Adds the specified user to the provided roles.
-    /// </summary>
-    /// <param name="user">The user account to add roles to.</param>
-    /// <param name="roles">The roles to assign to the user.</param>
-    public async Task AddUserToRolesAsync(UserLoginDataEntity user, IEnumerable<string> roles)
-    {
-        await _userManager.AddToRolesAsync(user, roles);
+        
+        var roleResult = await AssignRoleAsync(userLoginDataEntity);
+        if (!roleResult.Succeeded)
+        {
+            return UserLoginDataResult.Failure(
+                roleResult.Errors.Select(e => e.Description).ToArray());
+        }
+        
+        var claimsResult = await AssignUserClaimsAsync(userLoginDataEntity);
+        if (!claimsResult.Succeeded)
+        {
+            return UserLoginDataResult.Failure(
+                claimsResult.Errors.Select(e => e.Description).ToArray());
+        }
+        
+        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
+        return UserLoginDataResult.Success(userLoginDataModel);
     }
 }

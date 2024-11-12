@@ -57,7 +57,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
             throw new BadRequestException("An error occurred. Please try again");
         }
 
-        request.UserLoginDataModel.UserAccountId = userAccount.Id;
+        request.UserLoginDataModel.UserAccountId = userAccount.UserData.Id;
         
         var userLoginData = await _unitOfWork
             .UserLoginDataCommandRepository
@@ -66,8 +66,8 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
         if (userLoginData == null)
             throw new BadRequestException("An error occurred. Please try again");
 
-        userAccount.UserLoginData = userLoginData;
+        userAccount.UserData.UserLoginData = userLoginData.UserData;
 
-        return userAccount;
+        return userAccount.UserData;
     }
 }

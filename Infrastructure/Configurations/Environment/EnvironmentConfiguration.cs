@@ -11,6 +11,13 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
         _configuration = configuration;
     }
     
+    // #region JWT
+    // public string GetJwtSecret()
+    // {
+    //     return _configuration.GetValue<string>("TokenSettings:ACCESS_TOKEN_SECRET");
+    // }
+    // #endregion
+    
     #region Database
     public string GetDatabaseHost()
     {
@@ -69,9 +76,9 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
     {
         return _configuration.GetValue<string>("TokenSettings:ACCESS_TOKEN_SECRET");
     }
-    public DateTime GetJwtExpirationTime()
+    public string GetJwtExpirationTime()
     {
-        return _configuration.GetValue<DateTime>("TokenSettings:ACCESS_TOKEN_EXPIRES_IN");
+        return _configuration.GetValue<string>("TokenSettings:ACCESS_TOKEN_EXPIRES_IN");
     }
     public string GetJwtRefreshSecret()
     {
@@ -79,11 +86,11 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
     }
     public string GetJwtRefreshCookieKey()
     {
-        return _configuration.GetValue<string>("TokenSettings:REFRESH_TOKEN_COOKIE_KEY");
+        return _configuration.GetValue<string>("FrontEnd:REFRESH_TOKEN_COOKIE_KEY");
     }
-    public DateTime GetJwtRefreshExpirationTime()
+    public string GetJwtRefreshExpirationTime()
     {
-        return _configuration.GetValue<DateTime>("TokenSettings:REFRESH_TOKEN_EXPIRES_IN");
+        return _configuration.GetValue<string>("TokenSettings:REFRESH_TOKEN_EXPIRES_IN");
     }
     public string GetJwtRefreshTokenCookieMaxAge()
     {
@@ -93,9 +100,9 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
     {
         return _configuration.GetValue<string>("TokenSettings:TOKEN_TYPE");
     }
-    public DateTime GetJwtPasswordExpirationTime()
+    public string GetJwtPasswordExpirationTime()
     {
-        return _configuration.GetValue<DateTime>("TokenSettings:RESET_PASSWORD_LINK_EXPIRES_IN");
+        return _configuration.GetValue<string>("TokenSettings:RESET_PASSWORD_LINK_EXPIRES_IN");
     }
     public string GetJwtPasswordSecret()
     {

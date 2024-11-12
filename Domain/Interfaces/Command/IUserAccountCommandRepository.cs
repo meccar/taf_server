@@ -1,5 +1,6 @@
 using Domain.Aggregates;
 using Domain.Model;
+using Domain.SeedWork.Results;
 
 namespace Domain.Interfaces.Command;
 
@@ -20,6 +21,6 @@ public interface IUserAccountCommandRepository
     /// <param name="createUserAccountDto">The data transfer object containing user account details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// the newly created <see cref="UserAccountModel"/>.</returns>
-    Task<UserAccountModel?> CreateUserAccountAsync(UserAccountModel createUserAccountDto);
+    Task<UserAccountResult> CreateUserAccountAsync(UserAccountModel createUserAccountDto);
 
 }

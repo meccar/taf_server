@@ -14,4 +14,11 @@ public class UserTokenModel
     public string Value { get; set; }
     public UserAccountModel UserAccount { get; set; }
 
+    public UserTokenModel(string userAccountId, UserTokenType name, string loginProvider, string value)
+    {
+        UserAccountId = userAccountId;
+        Name = name;
+        LoginProvider = loginProvider;
+        Value = value;
+    }
 }
