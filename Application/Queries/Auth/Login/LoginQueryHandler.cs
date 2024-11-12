@@ -26,19 +26,19 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
         var userLoginDataModel = await _unitOfWork.UserLoginDataQueryRepository.FindOneByEmail(request.Email);
         
         if (userLoginDataModel == null)
-            throw new InvalidCredentialException("Invalid credentials");
+            throw new UnauthorizedException("Invalid credentials");
         
         bool isPasswordMatch = await _unitOfWork.UserLoginDataQueryRepository.IsPasswordMatch(request.Email, request.Password);
         
         if (!isPasswordMatch)
-            throw new InvalidCredentialException("Invalid credentials");
+            throw new UnauthorizedException("Invalid credentials");
         request.Password = null;
         
-        if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Blocked)
-            throw new BadRequestException();
-        
-        if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Inactive)
-            throw new BadRequestException();
+        // if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Blocked)
+        //     throw new BadRequestException();
+        //
+        // if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Inactive)
+        //     throw new BadRequestException();
 
         return await _jwtTokenService.ResponseAuthWithAccessTokenAndRefreshTokenCookie(userLoginDataModel);
     }

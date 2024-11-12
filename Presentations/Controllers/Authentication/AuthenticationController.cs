@@ -60,7 +60,7 @@ public class AuthenticationController
         return Created(response.Uuid, response);
     }
 
-    [HttpGet("login")]
+    [HttpPost("login")]
     [SwaggerOperation(
         Summary = "Login as a user",
         Description =

@@ -28,31 +28,31 @@ public class UserTokenCommandRepository
 
     }
 
-    public async Task<UserTokenModel?> CreateUserTokenAsync(UserTokenModel request, UserLoginDataModel userLoginDataModel)
+    public async Task<UserTokenModel?> CreateUserTokenAsync(UserTokenModel request)
     {
-        var userTokenEntity = _mapper.Map<UserTokenEntity>(request);
-        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataModel);
+        var userLoginDataEntity = await _userManager.Users.FirstOrDefaultAsync(u => u.UserAccountId == request.UserId);
 
-        var query = await _userManager.SetAuthenticationTokenAsync(
+        
+        var result = await _userManager.SetAuthenticationTokenAsync(
             userLoginDataEntity,
             request.LoginProvider,
             request.Name.ToString(),
             request.Value          
             );
 
-        if (query == null)
+        if (!result.Succeeded)
         {
             return null;
         }
 
         await _context.SaveChangesAsync();
 
-        return _mapper.Map<UserTokenModel>(query);
+        return request;
     }
     
     public async Task<bool> UpdateUserTokenAsync(UserTokenModel request)
     {
-        var userTokenEntity = _mapper.Map<UserTokenEntity>(request);
+        var userTokenEntity = _mapper.Map<IdentityUserToken<Guid>>(request);
 
         _context.UserTokens.Update(userTokenEntity);
 

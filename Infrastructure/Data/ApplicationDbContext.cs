@@ -24,7 +24,7 @@ public class ApplicationDbContext
         IdentityUserRole<Guid>,
         IdentityUserLogin<Guid>,
         IdentityRoleClaim<Guid>,
-        UserTokenEntity>
+        IdentityUserToken<Guid>>
 {
     
     /// <summary>
@@ -46,8 +46,6 @@ public class ApplicationDbContext
     /// </summary>
     public DbSet<UserLoginDataEntity> UserLoginData { get; set; }
 
-    public DbSet<UserTokenEntity> UserToken { get; set; }
-
     #endregion
 
     /// <summary>
@@ -65,10 +63,10 @@ public class ApplicationDbContext
             .HasPrincipalKey<UserAccountAggregate>(u => u.Id)
             .IsRequired();
 
-        builder.Entity<UserAccountAggregate>()
+        builder.Entity<UserLoginDataEntity>()
             .HasMany(u => u.UserToken)
             .WithOne()
-            .HasForeignKey(u => u.UserAccountId);
+            .HasForeignKey(u => u.UserId);
         
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

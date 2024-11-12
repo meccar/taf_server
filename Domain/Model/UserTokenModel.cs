@@ -4,7 +4,7 @@ namespace Domain.Model;
 
 public class UserTokenModel
 {
-    public string UserAccountId { get; set; }
+    public string UserId { get; set; }
     public UserTokenType Name { get; set; }
     //public string AccessToken { get; set; }
     //public string AccessTokenExpires { get; set; }
@@ -14,9 +14,9 @@ public class UserTokenModel
     public string Value { get; set; }
     public UserAccountModel UserAccount { get; set; }
 
-    public UserTokenModel(string userAccountId, UserTokenType name, string loginProvider, string value)
+    public UserTokenModel(string userId, UserTokenType name, string loginProvider, string value)
     {
-        UserAccountId = userAccountId;
+        UserId = userId;
         Name = name;
         LoginProvider = loginProvider;
         Value = value;

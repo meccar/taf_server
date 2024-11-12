@@ -17,12 +17,7 @@ public static class UserAccountMapper
     {
         config.CreateMap<UserAccountAggregate, UserAccountModel>()
             .ForMember(dest => dest.UserLoginData, opt => opt.MapFrom(src => src.UserLoginData));
-        config.CreateMap<CreateUserAccountDto, UserAccountModel>();
-        config.CreateMap<CreateUserAccountDto, UserAccountAggregate>();
         config.CreateMap<UserAccountModel, UserAccountAggregate>()
             .ForMember(dest => dest.Uuid, opt => opt.Ignore());
-        // .ForMember(dest => dest.UserLoginData, opt => opt.Ignore());
-        config.CreateMap<UserAccountModel, RegisterUserResponseDto>();
-        // config.CreateMap<UserAccountModel, UserAccountResponseDto>();
     }
 }

@@ -28,18 +28,20 @@ public class JwtService : IJwtService
     {
         var payload = GenerateClaims(user);
         var tokenType = _environmentConfiguration.GetJwtType();
-        var accessTokenExpires = _environmentConfiguration.GetJwtExpirationTime();
-        var refreshTokenExpires = _environmentConfiguration.GetJwtRefreshExpirationTime();
+        
+        var accessTokenExpires = TimeSpan.FromHours(_environmentConfiguration.GetJwtExpirationTime());
         var accessToken = await GenerateJwtAccessToken(payload, accessTokenExpires);
+        
+        var refreshTokenExpires = TimeSpan.FromHours(_environmentConfiguration.GetJwtRefreshExpirationTime());
         var refreshToken = await GenerateJwtRefreshToken(payload, refreshTokenExpires);
 
         return new TokenModel
         (
             tokenType,
             accessToken,
-            accessTokenExpires,
+            accessTokenExpires.ToString(),
             refreshToken,
-            refreshTokenExpires
+            refreshTokenExpires.ToString()
         );
     }
     
@@ -49,17 +51,17 @@ public class JwtService : IJwtService
     {
         var ci = new ClaimsIdentity();
 
-        ci.AddClaim(new Claim("id", user.Id.ToString()));
+        ci.AddClaim(new Claim("id", user.UserAccountId));
         ci.AddClaim(new Claim(ClaimTypes.Email, user.Email));
-        ci.AddClaim(new Claim(ClaimTypes.GivenName, user.UserAccount.FirstName));
-        ci.AddClaim(new Claim(ClaimTypes.Surname, user.UserAccount.LastName));
+        // ci.AddClaim(new Claim(ClaimTypes.GivenName, user.UserAccount.FirstName));
+        // ci.AddClaim(new Claim(ClaimTypes.Surname, user.UserAccount.LastName));
     
         return ci;
     }
 
     private async Task<string>
         GenerateJwtAccessToken
-        (ClaimsIdentity payload, string accessTokenExpires)
+        (ClaimsIdentity payload, TimeSpan accessTokenExpires)
     {
         var handler = new JwtSecurityTokenHandler();
         
@@ -67,14 +69,12 @@ public class JwtService : IJwtService
 
         var accessTokenCredentials = new SigningCredentials(
             new SymmetricSecurityKey(accessTokenSecret),
-            SecurityAlgorithms.HmacSha512);
-        
-        DateTime.TryParse(accessTokenExpires, out var datetimeTokenExpires);
+            SecurityAlgorithms.HmacSha256);
         
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             SigningCredentials = accessTokenCredentials,
-            Expires = datetimeTokenExpires,
+            Expires = DateTime.Now.Add(accessTokenExpires),
             Subject = payload
         };
         
@@ -83,7 +83,7 @@ public class JwtService : IJwtService
 
     private async Task<string> 
         GenerateJwtRefreshToken
-        (ClaimsIdentity payload, string refreshTokenExpires)
+        (ClaimsIdentity payload, TimeSpan refreshTokenExpires)
     {
         var handler = new JwtSecurityTokenHandler();
         
@@ -91,14 +91,12 @@ public class JwtService : IJwtService
         
         var accessTokenCredentials = new SigningCredentials(
             new SymmetricSecurityKey(refreshTokenSecret),
-            SecurityAlgorithms.HmacSha512);
+            SecurityAlgorithms.HmacSha256);
         
-        DateTime.TryParse(refreshTokenExpires, out var datetimeTokenExpires);
-
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             SigningCredentials = accessTokenCredentials,
-            Expires = datetimeTokenExpires,
+            Expires = DateTime.Now.Add(refreshTokenExpires),
             Subject = payload
         };
         
@@ -123,7 +121,7 @@ public class JwtService : IJwtService
                         UserTokenType.Access,
                         "JWT", 
                         token.AccessToken
-                        ), user
+                        )
                     );
             
             var refreshToken = await _unitOfWork
@@ -134,7 +132,7 @@ public class JwtService : IJwtService
                         UserTokenType.Refresh,
                         "JWT",
                         token.RefreshToken
-                        ), user
+                        )
                     );
 
             if (accessToken == null || refreshToken == null)

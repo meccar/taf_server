@@ -58,7 +58,6 @@ public class UserAccountAggregate : EntityBase
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
 
-    public List<UserTokenEntity> UserToken { get; set; } = new List<UserTokenEntity>();
 
     // public List<RoleModel> Roles { get; set; }
 

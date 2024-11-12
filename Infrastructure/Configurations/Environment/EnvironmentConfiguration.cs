@@ -76,9 +76,9 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
     {
         return _configuration.GetValue<string>("TokenSettings:ACCESS_TOKEN_SECRET");
     }
-    public string GetJwtExpirationTime()
+    public int GetJwtExpirationTime()
     {
-        return _configuration.GetValue<string>("TokenSettings:ACCESS_TOKEN_EXPIRES_IN");
+        return _configuration.GetValue<int>("TokenSettings:ACCESS_TOKEN_EXPIRES_IN");
     }
     public string GetJwtRefreshSecret()
     {
@@ -88,9 +88,9 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
     {
         return _configuration.GetValue<string>("FrontEnd:REFRESH_TOKEN_COOKIE_KEY");
     }
-    public string GetJwtRefreshExpirationTime()
+    public int GetJwtRefreshExpirationTime()
     {
-        return _configuration.GetValue<string>("TokenSettings:REFRESH_TOKEN_EXPIRES_IN");
+        return _configuration.GetValue<int>("TokenSettings:REFRESH_TOKEN_EXPIRES_IN");
     }
     public string GetJwtRefreshTokenCookieMaxAge()
     {
