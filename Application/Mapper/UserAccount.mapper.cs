@@ -7,14 +7,6 @@ using Domain.Model;
 
 namespace Application.Mapper;
 
-/// <summary>
-/// Provides mapping configurations for user account-related entities and data transfer objects (DTOs).
-/// </summary>
-/// <remarks>
-/// This class is responsible for defining the mappings between <see cref="UserAccountModel"/> and <see cref="UserAccountEntity"/> 
-/// as well as between <see cref="CreateUserAccountDto"/> and other models. It utilizes AutoMapper to facilitate object-to-object 
-/// mapping, enabling seamless transformation between different representations of user account data.
-/// </remarks>
 public static class UserAccountMapper
 {
     /// <summary>
@@ -25,12 +17,7 @@ public static class UserAccountMapper
     {
         config.CreateMap<UserAccountAggregate, UserAccountModel>()
             .ForMember(dest => dest.UserLoginData, opt => opt.MapFrom(src => src.UserLoginData));
-        config.CreateMap<CreateUserAccountDto, UserAccountModel>();
-        config.CreateMap<CreateUserAccountDto, UserAccountAggregate>();
         config.CreateMap<UserAccountModel, UserAccountAggregate>()
             .ForMember(dest => dest.Uuid, opt => opt.Ignore());
-            // .ForMember(dest => dest.UserLoginData, opt => opt.Ignore());
-        config.CreateMap<UserAccountModel, RegisterUserResponseDto>();
-        // config.CreateMap<UserAccountModel, UserAccountResponseDto>();
     }
 }

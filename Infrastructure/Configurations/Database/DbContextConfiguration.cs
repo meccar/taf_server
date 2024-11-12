@@ -1,14 +1,14 @@
+using Infrastructure.Configurations.Environment;
 using Infrastructure.Data;
 using Infrastructure.Decorators;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Configurations.Database;
 
 public static class DbContextConfiguration
 {
-    public static IServiceCollection ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureDbContext(this IServiceCollection services, EnvironmentConfiguration configuration)
         // {
         //     // services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();
         //     // services.AddSingleton<DateTrackingInterceptor>();
@@ -34,9 +34,14 @@ public static class DbContextConfiguration
         //     return services;
         // }
     {
-        var connectionString = configuration.GetConnectionString("DefaultConnection");
-        if (string.IsNullOrEmpty(connectionString))
-            throw new ArgumentNullException("DefaultConnection is not configured.");
+        var connectionString = 
+            $"Server={configuration.GetDatabaseHost()}," +
+            $"{configuration.GetDatabasePort()};" +
+            $"Database={configuration.GetDatabaseName()};" +
+            $"User Id={configuration.GetDatabaseUserId()};" +
+            $"Password={configuration.GetDatabasePassword()};" +
+            $"MultipleActiveResultSets={configuration.GetMultipleActiveResultSets()};" +
+            $"TrustServerCertificate={configuration.GetTrustServerCertificate()};";
 
         services.AddDbContextPool<ApplicationDbContext>(options =>
         {

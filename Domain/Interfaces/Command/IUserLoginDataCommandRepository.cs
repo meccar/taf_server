@@ -1,5 +1,6 @@
 using Domain.Entities;
 using Domain.Model;
+using Domain.SeedWork.Results;
 
 namespace Domain.Interfaces.Command;
 
@@ -19,13 +20,5 @@ public interface IUserLoginDataCommandRepository
     /// <param name="userLoginDataDto">The data transfer object containing login data details.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// the newly created <see cref="UserLoginDataModel"/>.</returns>
-    Task<UserLoginDataModel> CreateUserLoginDataAsync(UserLoginDataModel userLoginDataDto);
-    
-    /// <summary>
-    /// Adds a user to one or more roles asynchronously.
-    /// </summary>
-    /// <param name="user">The user account aggregate to be added to roles.</param>
-    /// <param name="roles">An enumerable collection of role names to assign to the user.</param>
-    /// <returns>A task that represents the asynchronous operation.</returns>
-    Task AddUserToRolesAsync(UserLoginDataEntity user, IEnumerable<string> roles);
+    Task<UserLoginDataResult> CreateUserLoginDataAsync(UserLoginDataModel userLoginDataDto);
 }

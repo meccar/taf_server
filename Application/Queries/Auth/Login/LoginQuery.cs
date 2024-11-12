@@ -4,7 +4,7 @@ using Domain.SeedWork.Query;
 
 namespace Application.Queries.Auth.Login;
 
-public class LoginQuery : IQuery<UserAccountModel>
+public class LoginQuery : IQuery<TokenModel>
 {
     public string Email { get; set; }
     public string Password { get; set; }

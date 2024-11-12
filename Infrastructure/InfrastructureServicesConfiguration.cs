@@ -1,5 +1,6 @@
 using Infrastructure.Configurations.Api;
 using Infrastructure.Configurations.Database;
+using Infrastructure.Configurations.Environment;
 using Infrastructure.Configurations.Identity;
 using Infrastructure.Configurations.Infrastructure;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +15,8 @@ public static class InfrastructureServicesConfiguration
         IConfiguration configuration,
         string appCors)
     {
+        var config = new EnvironmentConfiguration(configuration);
+        
         // services.ConfigureRedis(configuration);
         // services.ConfigureQuartz();
         // services.ConfigureHangfireServices();
@@ -24,7 +27,7 @@ public static class InfrastructureServicesConfiguration
         services.ConfigureCors(appCors);
         // services.ConfigureTransaction();
         services.ConfigureApiVersioning();
-        services.ConfigureDbContext(configuration);
+        services.ConfigureDbContext(config);
         services.ConfigureSwagger();
         services.ConfigureIdentity();
         services.ConfigureRepositories();

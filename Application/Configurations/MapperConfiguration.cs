@@ -11,6 +11,8 @@ public static class MapperConfiguration
         {
             UserAccountMapper.CreateMap(config);
             UserLoginDataMapper.CreateMap(config);
+            UserTokenMapper.CreateMap(config);
+            AuthMapper.CreateMap(config);
         });
         
         return services;

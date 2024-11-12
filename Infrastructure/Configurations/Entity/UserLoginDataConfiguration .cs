@@ -9,7 +9,6 @@ public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserLoginData
     {
         builder
             .Property(x => x.Uuid)
-            // .HasConversion<UlidToStringConverter>()
             .IsRequired(false);
         
         builder

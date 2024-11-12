@@ -10,6 +10,7 @@ public class UserLoginDataModel
     public string PhoneNumber { get; set; } = null!;
     public string Password { get; set; }
     public string PasswordHash { get; set; } = null!;
+    public string? SecurityStamp { get; set; }
     public string Email { get; set; }
     public EmailStatus EmailStatus { get; set; }
     public string PasswordRecoveryToken { get; set; }

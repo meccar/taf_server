@@ -1,8 +1,9 @@
 namespace Domain.SeedWork.Enums.UserLoginDataExternal;
-public enum Provider
+public enum EProvider
 {
     FACEBOOK,
     GOOGLE,
     LINLEDIN,
-    TWITTER
+    TWITTER,
+    PASSWORD
 }

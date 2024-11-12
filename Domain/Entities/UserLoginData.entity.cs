@@ -66,4 +66,6 @@ public class UserLoginDataEntity : IdentityUser<Guid>
     [ForeignKey("UserAccountId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual UserAccountAggregate UserAccount { get; set; } = null!;
+    public List<IdentityUserToken<Guid>> UserToken { get; set; } = new List<IdentityUserToken<Guid>>();
+
 }

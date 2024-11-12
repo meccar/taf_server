@@ -14,7 +14,6 @@ public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAcco
         
         builder
             .Property(x => x.Uuid)
-            // .HasConversion<UlidToStringConverter>()
             .IsRequired(false);
 
         builder 

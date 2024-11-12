@@ -20,7 +20,6 @@ public class CompanyEntity : EntityBase
     public int CityId { get; set; }
     public int DistrictId { get; set; }
     // public UserAccountEntity? UserAccount { get; set; }
-    public RoleEntity? Roles { get; set; }
     public CountryEntity? Country { get; set; }
     public StateEntity? State { get; set; }
     public CityEntity? City { get; set; }

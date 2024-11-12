@@ -36,7 +36,8 @@ public class UnitOfWork : IUnitOfWork
         
         IUserAccountCommandRepository userAccountCommandRepository,
         IUserLoginDataCommandRepository userLoginDataCommandRepository,
-        
+        IUserTokenCommandRepository userTokenCommandRepository,
+
         IUserAccountQueryRepository userAccountQueryRepository,
         IUserLoginDataQueryRepository userLoginDataQueryRepository)
     {
@@ -44,7 +45,9 @@ public class UnitOfWork : IUnitOfWork
         
         UserAccountCommandRepository = userAccountCommandRepository;
         UserLoginDataCommandRepository = userLoginDataCommandRepository;
-        
+        UserTokenCommandRepository  = userTokenCommandRepository;
+
+
         UserAccountQueryRepository = userAccountQueryRepository;
         UserLoginDataQueryRepository = userLoginDataQueryRepository;
     }
@@ -60,11 +63,13 @@ public class UnitOfWork : IUnitOfWork
     /// Gets the repository for user login data commands.
     /// </summary>
     public IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; set; }
-    
+
+    public IUserTokenCommandRepository UserTokenCommandRepository { get; set; }
+
     #endregion
-    
+
     #region Query Repository Properties
-    
+
     /// <summary>
     /// Gets the repository for user account queries.
     /// </summary>

@@ -1,3 +1,4 @@
+using Application.Dtos.Authentication.Login;
 using Application.Dtos.UserLoginData;
 using AutoMapper;
 using Domain.Entities;
@@ -26,8 +27,5 @@ public static class UserLoginDataMapper
             .ForMember(dest => dest.Uuid, opt => opt.Ignore());
         config.CreateMap<UserLoginDataEntity, UserLoginDataModel>()
             .ForMember(dest => dest.Password, opt => opt.Ignore());
-        config.CreateMap<CreateUserLoginDataDto, UserLoginDataModel>();
-        config.CreateMap<CreateUserLoginDataDto, UserLoginDataEntity>();
-        config.CreateMap<UserLoginDataModel, UserLoginDataResponseDto>();
     }
 }
