@@ -17,79 +17,78 @@ public class UserTokenCommandRepository
     private readonly IMapper _mapper;
     private readonly ApplicationDbContext _context;
     private readonly UserManager<UserLoginDataEntity> _userManager;
-
+    private readonly SignInManager<UserLoginDataEntity> _signInManager;
+    
     public UserTokenCommandRepository(
         ApplicationDbContext context,
         UserManager<UserLoginDataEntity> userManager,
+        SignInManager<UserLoginDataEntity> signInManager,
         IMapper mapper
         )
     {
         _mapper = mapper;
-        _context = context;        
+        _context = context;
+        _signInManager = signInManager;
         _userManager = userManager;
-
     }
 
     public async Task<UserTokenModel?> CreateUserTokenAsync(UserTokenModel request)
     {
-        var userLoginDataEntity = await _userManager.Users.FirstOrDefaultAsync(u => u.UserAccountId == request.UserId);
+        var user = await GetUserById(request.UserId);
         
         var result = await _userManager.SetAuthenticationTokenAsync(
-            userLoginDataEntity,
+            user,
             request.LoginProvider.ToString(),
             request.Name.ToString(),
             request.Value          
             );
 
-        if (!result.Succeeded)
+        if (result.Succeeded)
         {
-            return null;
+            await TestSignInAsync(user, request);
+            await _context.SaveChangesAsync();
+            return request;
         }
 
-        await _context.SaveChangesAsync();
-
-        return request;
+        return null;
     }
     
-    public async Task<bool> UpdateUserTokenAsync(UserTokenModel request)
+    public async Task<UserTokenModel?> UpdateUserTokenAsync(UserTokenModel request)
     {
-        var userLoginDataEntity = await _userManager.Users.FirstOrDefaultAsync(u => u.UserAccountId == request.UserId);
+        var user = await GetUserById(request.UserId);
         
         var result = await _userManager.SetAuthenticationTokenAsync(
-            userLoginDataEntity,
+            user,
             request.LoginProvider.ToString(),
             request.Name.ToString(),
             request.Value          
         );
 
-        if (!result.Succeeded)
+        if (result.Succeeded)
         {
-            return false;
+            await TestSignInAsync(user, request);
+            await _context.SaveChangesAsync();
+            return request;
         }
 
-        await _context.SaveChangesAsync();
-
-        return true;
+        return null;
     }
 
-    public async Task<List<UserTokenModel>?> TokenExistsAsync(string userId, TokenModel token)
+    public async Task<List<UserTokenModel>?> TokenExistsAsync(string userId, UserTokenModel token)
     {
         Guid.TryParse(userId, out Guid newUserAccountId);
         
-        // var userToken = await _context.UserTokens
-        //     .FirstOrDefaultAsync(ut => ut.UserId == newUserAccountId);
-        var user = await _userManager.Users
-            .FirstOrDefaultAsync(u => u.UserAccountId == userId);
+        var user = await GetUserByGuid(userId);
         
         var accessToken = await _userManager.GetAuthenticationTokenAsync(
             user,
-            EProvider.PASSWORD.ToString(), //ToDo inset EProvider from JwtService instead of using enum 
+            token.LoginProvider.ToString(),
             ETokenName.ACCESS.ToString()
         );
 
         var refreshToken = await _userManager.GetAuthenticationTokenAsync(
             user,
-            EProvider.PASSWORD.ToString(),
+            token.LoginProvider.ToString(),
             ETokenName.REFRESH.ToString()
         );
         
@@ -97,5 +96,73 @@ public class UserTokenCommandRepository
             return null;
         
         return _mapper.Map<List<UserTokenModel>>(token);
+    }
+
+    public async Task<bool> TestSignInAsync(UserLoginDataEntity userLoginDataModel, UserTokenModel token)
+    {
+        // var user = await GetUserByGuid(userLoginDataModel.Id);
+        
+        var loginInfo = new UserLoginInfo(
+            token.LoginProvider.ToString(),
+            token.Token.AccessToken,
+            token.Name?.ToString() ?? string.Empty
+        );
+        
+        await _userManager.RemoveLoginAsync(userLoginDataModel, token.LoginProvider.ToString(), token.Token.AccessToken);
+        var loginResult = await _userManager.AddLoginAsync(userLoginDataModel, loginInfo);
+        if (!loginResult.Succeeded) return false;
+        
+        await _signInManager.SignInAsync(userLoginDataModel, isPersistent: false);
+        return true;
+    }
+    
+    private async Task<UserLoginDataEntity?> GetUserById(string userAccountId)
+    {
+        return await _userManager.Users
+            .FirstOrDefaultAsync(u => u.UserAccountId == userAccountId);
+    }
+
+    private async Task<UserLoginDataEntity?> GetUserByGuid(string userId)
+    {
+        if (!Guid.TryParse(userId, out Guid userGuid))
+            return null;
+
+        return await _userManager.Users
+            .FirstOrDefaultAsync(u => u.Id == userGuid);
+    }
+    
+    private async Task<bool> SetAuthenticationToken(UserLoginDataEntity user, UserTokenModel token)
+    {
+        var result = await _userManager.SetAuthenticationTokenAsync(
+            user,
+            token.LoginProvider.ToString(),
+            token.Name.ToString(),
+            token.Value
+        );
+
+        if (result.Succeeded)
+        {
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
+    }
+    
+    private async Task<(bool, bool)> GetUserTokens(UserLoginDataEntity user, UserTokenModel token)
+    {
+        var accessToken = await _userManager.GetAuthenticationTokenAsync(
+            user,
+            token.LoginProvider.ToString(),
+            ETokenName.ACCESS.ToString()
+        );
+
+        var refreshToken = await _userManager.GetAuthenticationTokenAsync(
+            user,
+            token.LoginProvider.ToString(),
+            ETokenName.REFRESH.ToString()
+        );
+
+        return (accessToken != null, refreshToken != null);
     }
 }

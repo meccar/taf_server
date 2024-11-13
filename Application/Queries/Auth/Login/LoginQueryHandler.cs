@@ -40,6 +40,6 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
         // if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Inactive)
         //     throw new BadRequestException();
 
-        return await _jwtTokenService.ResponseAuthWithAccessTokenAndRefreshTokenCookie(userLoginDataModel);
+        return await _jwtTokenService.GenerateAuthResponseWithRefreshTokenCookie(userLoginDataModel);
     }
 }

@@ -12,190 +12,174 @@ namespace Infrastructure.Repositories.Service;
 
 public class JwtService : IJwtService
 {
-    private readonly EnvironmentConfiguration _environmentConfiguration;
+    private readonly EnvironmentConfiguration _environment;
     private readonly IUnitOfWork _unitOfWork;
-
+    private readonly JwtSecurityTokenHandler _jwtHandler;
+    private readonly byte[] _secret;
+    
     public JwtService(
-        EnvironmentConfiguration environmentConfiguration,
-        IUnitOfWork unitOfWork
-        )
+        EnvironmentConfiguration environment,
+        IUnitOfWork unitOfWork)
     {
-        _environmentConfiguration = environmentConfiguration;
+        _environment = environment;
         _unitOfWork = unitOfWork;
-    }
-    
-    private async Task<TokenModel>
-        GenerateTokens(UserLoginDataModel user)
-    {
-        var payload = GenerateClaims(user);
-        var tokenType = _environmentConfiguration.GetJwtType();
-        
-        var accessTokenExpires = TimeSpan.FromHours(_environmentConfiguration.GetJwtExpirationTime());
-        var accessToken = await GenerateJwtAccessToken(payload, accessTokenExpires);
-        
-        var refreshTokenExpires = TimeSpan.FromHours(_environmentConfiguration.GetJwtRefreshExpirationTime());
-        var refreshToken = await GenerateJwtRefreshToken(payload, refreshTokenExpires);
-
-        return new TokenModel
-        (
-            tokenType,
-            accessToken,
-            accessTokenExpires.ToString(),
-            refreshToken,
-            refreshTokenExpires.ToString()
-        );
-    }
-    
-    private static ClaimsIdentity 
-        GenerateClaims
-        (UserLoginDataModel user)
-    {
-        var ci = new ClaimsIdentity();
-
-        ci.AddClaim(new Claim("id", user.UserAccountId));
-        ci.AddClaim(new Claim(ClaimTypes.Email, user.Email));
-        // ci.AddClaim(new Claim(ClaimTypes.GivenName, user.UserAccount.FirstName));
-        // ci.AddClaim(new Claim(ClaimTypes.Surname, user.UserAccount.LastName));
-    
-        return ci;
+        _jwtHandler = new JwtSecurityTokenHandler();
+        _secret = Encoding.UTF8.GetBytes(environment.GetJwtSecret());
     }
 
-    private async Task<string>
-        GenerateJwtAccessToken
-        (ClaimsIdentity payload, TimeSpan accessTokenExpires)
+    public async Task<TokenModel> GenerateAuthResponseWithRefreshTokenCookie(UserLoginDataModel user)
     {
-        var handler = new JwtSecurityTokenHandler();
+        var token = await GenerateTokenPair(user);
+        token.LoginProvider = EProvider.PASSWORD;
+        // token.Name = 
+        await PersistTokens(user, token);
         
-        var accessTokenSecret = Encoding.UTF8.GetBytes(_environmentConfiguration.GetJwtSecret());
+        return new TokenModel(
+            token.Token.TokenType,
+            token.Token.AccessToken,
+            token.Token.AccessTokenExpires,
+            token.Token.RefreshToken,
+            token.Token.RefreshTokenExpires
+            );
+    }
 
-        var accessTokenCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(accessTokenSecret),
-            SecurityAlgorithms.HmacSha256);
+    private async Task<UserTokenModel> GenerateTokenPair(UserLoginDataModel user)
+    {
+        var claims = CreateUserClaims(user);
+        var tokenType = _environment.GetJwtType();
         
-        var tokenDescriptor = new SecurityTokenDescriptor
+        var (accessToken, accessExpiration) = await CreateAccessToken(claims);
+        var (refreshToken, refreshExpiration) = await CreateRefreshToken(claims);
+
+        return new UserTokenModel(null, null, null)
         {
-            SigningCredentials = accessTokenCredentials,
-            Expires = DateTime.Now.Add(accessTokenExpires),
-            Subject = payload
+            Token = new TokenModel(
+                tokenType,
+                accessToken,
+                accessExpiration.ToString(),
+                refreshToken,
+                refreshExpiration.ToString()
+            )
         };
-        
-        return handler.WriteToken(handler.CreateToken(tokenDescriptor));
-    }
-
-    private async Task<string> 
-        GenerateJwtRefreshToken
-        (ClaimsIdentity payload, TimeSpan refreshTokenExpires)
-    {
-        var handler = new JwtSecurityTokenHandler();
-        
-        var refreshTokenSecret = Encoding.UTF8.GetBytes(_environmentConfiguration.GetJwtSecret());
-        
-        var accessTokenCredentials = new SigningCredentials(
-            new SymmetricSecurityKey(refreshTokenSecret),
-            SecurityAlgorithms.HmacSha256);
-        
-        var tokenDescriptor = new SecurityTokenDescriptor
-        {
-            SigningCredentials = accessTokenCredentials,
-            Expires = DateTime.Now.Add(refreshTokenExpires),
-            Subject = payload
-        };
-        
-        return handler.WriteToken(handler.CreateToken(tokenDescriptor));
     }
     
-    private async Task 
-        UpdateOrCreateTokens
-        (UserLoginDataModel user, TokenModel token)
+    private static ClaimsIdentity CreateUserClaims(UserLoginDataModel user) =>
+        new(new[]
+        {
+            new Claim("id", user.UserAccountId),
+            new Claim(ClaimTypes.Email, user.Email)
+        });
+
+    private async Task<(string token, TimeSpan expiration)> CreateAccessToken(ClaimsIdentity claims)
     {
-        var userToken = await _unitOfWork
-            .UserTokenCommandRepository
+        var expiration = TimeSpan.FromHours(_environment.GetJwtExpirationTime());
+        
+        var token = await GenerateToken(claims, expiration);
+        return (token, expiration);
+    }
+
+    private async Task<(string token, TimeSpan expiration)> CreateRefreshToken(ClaimsIdentity claims)
+    {
+        var expiration = TimeSpan.FromHours(_environment.GetJwtRefreshExpirationTime());
+        
+        var token = await GenerateToken(claims, expiration);
+        return (token, expiration);
+    }
+
+    private async Task<string> GenerateToken(ClaimsIdentity claims, TimeSpan expiration)
+    {
+        var credentials = new SigningCredentials(
+            new SymmetricSecurityKey(_secret),
+            SecurityAlgorithms.HmacSha256);
+
+        var descriptor = new SecurityTokenDescriptor
+        {
+            Subject = claims,
+            SigningCredentials = credentials,
+            Expires = DateTime.UtcNow.Add(expiration)
+        };
+
+        var token = _jwtHandler.CreateToken(descriptor);
+        return _jwtHandler.WriteToken(token);
+    }
+    
+    private async Task PersistTokens(UserLoginDataModel user, UserTokenModel token)
+    {
+        var existingTokens = await _unitOfWork.UserTokenCommandRepository
             .TokenExistsAsync(user.Id, token);
-        
-        if (userToken == null)
-        {
-            var accessToken = await _unitOfWork
-                .UserTokenCommandRepository
-                .CreateUserTokenAsync(
-                    new UserTokenModel(
-                        user.UserAccountId,
-                        ETokenName.ACCESS,
-                        EProvider.PASSWORD, 
-                        token.AccessToken
-                        )
-                    );
-            
-            var refreshToken = await _unitOfWork
-                .UserTokenCommandRepository
-                .CreateUserTokenAsync(
-                    new UserTokenModel(
-                        user.UserAccountId,
-                        ETokenName.REFRESH,
-                        EProvider.PASSWORD,
-                        token.RefreshToken
-                        )
-                    );
 
-            if (accessToken == null || refreshToken == null)
-                throw new Exception();
+        if (existingTokens == null)
+        {
+            await CreateNewTokens(user, token);
         }
         else
         {
-            if (!string.IsNullOrEmpty(userToken[0].Value))
-            {
-                // Todo blacklist
-                // await _unitOfWork.GenerateBlacklistToken
-            }
+            await UpdateExistingTokens(user, token, existingTokens);
+        }
+        
+    }
 
-            var accessToken = await _unitOfWork
-                .UserTokenCommandRepository
-                .UpdateUserTokenAsync(
-                    new UserTokenModel(
-                        user.UserAccountId,
-                        ETokenName.ACCESS,
-                        EProvider.PASSWORD, 
-                        token.AccessToken
-                    )
-                );
-            
-            var refreshToken = await _unitOfWork
-                .UserTokenCommandRepository
-                .UpdateUserTokenAsync(
-                    new UserTokenModel(
-                        user.UserAccountId,
-                        ETokenName.REFRESH,
-                        EProvider.PASSWORD,
-                        token.RefreshToken
-                    )
-                );
-            
-            if (accessToken == null || refreshToken == null)
-                throw new Exception();
+    private async Task CreateNewTokens(UserLoginDataModel user, UserTokenModel token)
+    {
+        var accessToken = await CreateUserToken(user, ETokenName.ACCESS, token.Token.AccessToken);
+        var refreshToken = await CreateUserToken(user, ETokenName.REFRESH, token.Token.RefreshToken);
+
+        if (accessToken == null || refreshToken == null)
+        {
+            throw new InvalidOperationException("Failed to create user tokens");
         }
     }
 
-    private string GetCookieWithJwtRefreshToken(string refreshToken)
+    private async Task UpdateExistingTokens(UserLoginDataModel user, UserTokenModel token, object existingTokens)
     {
-        var refreshTokenValue = _environmentConfiguration.GetJwtRefreshCookieKey();
-        var refreshExpirationTime = _environmentConfiguration.GetJwtRefreshTokenCookieMaxAge();
-        
-        return $"{refreshTokenValue}={refreshToken}; HttpOnly; SameSite=None; Secure; Path=/; Max-Age={refreshExpirationTime};";
+        // TODO: Implement token blacklisting logic here
+        var accessToken = await UpdateUserToken(user, ETokenName.ACCESS, token.Token.AccessToken);
+        var refreshToken = await UpdateUserToken(user, ETokenName.REFRESH, token.Token.RefreshToken);
+
+        if (accessToken == null || refreshToken == null)
+        {
+            throw new InvalidOperationException("Failed to update user tokens");
+        }
     }
+
+    private async Task<UserTokenModel?> CreateUserToken(UserLoginDataModel user, ETokenName tokenName, string tokenValue)
+    {
+        return await _unitOfWork.UserTokenCommandRepository.CreateUserTokenAsync(
+            new UserTokenModel(
+                user.UserAccountId,
+                tokenName,
+                // EProvider.PASSWORD,
+                tokenValue
+            )
+        );
+    }
+
+    private async Task<UserTokenModel> UpdateUserToken(UserLoginDataModel user, ETokenName tokenName, string tokenValue)
+    {
+        return await _unitOfWork.UserTokenCommandRepository.UpdateUserTokenAsync(
+            new UserTokenModel(
+                user.UserAccountId,
+                tokenName,
+                // EProvider.PASSWORD,
+                tokenValue
+            )
+        );
+    }
+
+    // private async Task SignIn(UserLoginDataModel user,  UserTokenModel token)
+    // {
+    //     var signInResult = await _unitOfWork.UserTokenCommandRepository.TestSignInAsync(user, token);
+    //     if (!signInResult)
+    //     {
+    //         throw new InvalidOperationException("Failed to sign in user");
+    //     }
+    // }
     
-    public async Task<TokenModel> 
-        ResponseAuthWithAccessTokenAndRefreshTokenCookie
-        (UserLoginDataModel user)
+    private string CreateRefreshTokenCookie(string refreshToken)
     {
-        var token = await GenerateTokens(user);
+        var cookieKey = _environment.GetJwtRefreshCookieKey();
+        var maxAge = _environment.GetJwtRefreshTokenCookieMaxAge();
         
-        await UpdateOrCreateTokens(user, token);
-        var refreshTokenCookie = GetCookieWithJwtRefreshToken(token.RefreshToken);
-        
-        return new TokenModel(
-            token.TokenType,
-            token.AccessToken,
-            token.AccessTokenExpires,
-            token.RefreshToken,
-            token.RefreshTokenExpires);
+        return $"{cookieKey}={refreshToken}; HttpOnly; SameSite=None; Secure; Path=/; Max-Age={maxAge};";
     }
-}
+} 

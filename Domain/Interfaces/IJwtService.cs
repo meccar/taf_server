@@ -5,6 +5,6 @@ namespace Domain.Interfaces;
 
 public interface IJwtService
 {
-    Task<TokenModel> ResponseAuthWithAccessTokenAndRefreshTokenCookie(UserLoginDataModel user);
+    Task<TokenModel> GenerateAuthResponseWithRefreshTokenCookie(UserLoginDataModel user);
     
 }
