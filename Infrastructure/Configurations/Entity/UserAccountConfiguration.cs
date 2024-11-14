@@ -1,4 +1,5 @@
 ﻿using Domain.Aggregates;
+using Domain.SeedWork.Enums.UserAccount;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -26,10 +27,16 @@ public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAcco
 
         builder
             .Property(x => x.Avatar);
+        
         builder
             .Property(x => x.CreatedAt)
             .IsRequired();
 
+        builder
+            .Property(x => x.Status)
+            .IsRequired()
+            .HasDefaultValue(UserAccountStatus.Inactive.ToString());
+        
         builder
             .HasQueryFilter(x => !x.IsDeleted);
     }

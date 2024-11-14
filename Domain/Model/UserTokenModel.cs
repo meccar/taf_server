@@ -15,10 +15,11 @@ public class UserTokenModel
     public string? Value { get; set; }
     public UserAccountModel? UserAccount { get; set; }
     public TokenModel Token { get; set; }
-    public UserTokenModel(string userId, ETokenName? name, string? value)
+    public UserTokenModel(string userId, ETokenName? name, EProvider? loginProvider,string? value)
     {
         UserId = userId;
         Name = name;
+        LoginProvider = loginProvider;
         Value = value;
     }
 }

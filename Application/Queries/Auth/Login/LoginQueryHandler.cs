@@ -34,12 +34,14 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
             throw new UnauthorizedException("Invalid credentials");
         request.Password = null;
         
-        // if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Blocked)
+        // var userAcconutStatus = await _unitOfWork.UserAccountQueryRepository.GetUserAccountStatusAsync(userLoginDataModel.UserAccountId); 
+        //
+        // if (userAcconutStatus == UserAccountStatus.Blocked.ToString())
         //     throw new BadRequestException();
         //
-        // if (userLoginDataModel.UserAccount.Status == UserAccountStatus.Inactive)
+        // if (userAcconutStatus == UserAccountStatus.Inactive.ToString())
         //     throw new BadRequestException();
 
-        return await _jwtTokenService.GenerateAuthResponseWithRefreshTokenCookie(userLoginDataModel);
+        return await _jwtTokenService.GenerateAuthResponseWithRefreshTokenCookie(userLoginDataModel.Id);
     }
 }

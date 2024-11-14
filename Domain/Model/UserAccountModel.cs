@@ -13,7 +13,7 @@ public class UserAccountModel
     public Gender Gender { get; set; }
     public DateTime DateOfBirth { get; set; }
     public string Avatar { get; set; } = "";
-    public UserAccountStatus Status { get; set; }
+    public string Status { get; set; }
     // public int CompanyId { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

@@ -2,6 +2,7 @@ using Domain.Interfaces;
 using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
 using Infrastructure.Data;
+using Infrastructure.Repositories.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Repositories;
@@ -39,7 +40,9 @@ public class UnitOfWork : IUnitOfWork
         IUserTokenCommandRepository userTokenCommandRepository,
 
         IUserAccountQueryRepository userAccountQueryRepository,
-        IUserLoginDataQueryRepository userLoginDataQueryRepository)
+        IUserLoginDataQueryRepository userLoginDataQueryRepository,
+        IUserTokenQueryRepository userTokenQueryRepository
+        )
     {
         _context = context;
         
@@ -50,6 +53,7 @@ public class UnitOfWork : IUnitOfWork
 
         UserAccountQueryRepository = userAccountQueryRepository;
         UserLoginDataQueryRepository = userLoginDataQueryRepository;
+        UserTokenQueryRepository = userTokenQueryRepository;
     }
 
     #region Command Repository Properties
@@ -79,6 +83,7 @@ public class UnitOfWork : IUnitOfWork
     /// Gets the repository for user login data queries.
     /// </summary>
     public IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; set; }
+    public IUserTokenQueryRepository UserTokenQueryRepository { get; set; }
     
     #endregion
 

@@ -12,7 +12,7 @@ public class UserLoginDataModel
     public string PasswordHash { get; set; } = null!;
     public string? SecurityStamp { get; set; }
     public string Email { get; set; }
-    public EmailStatus EmailStatus { get; set; }
+    public EEmailStatus EmailStatus { get; set; }
     public string PasswordRecoveryToken { get; set; }
     public string ConfirmationToken { get; set; }
     public bool IsTwoFactorEnabled { get; set; }

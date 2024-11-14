@@ -22,8 +22,9 @@ public static class RepositoriesConfiguration
             .AddTransient<IJwtService, JwtService>()
             .AddScoped<IUserAccountCommandRepository, UserAccountCommandRepository>()
             .AddScoped<IUserLoginDataCommandRepository, UserLoginDataCommandRepository>()
-            .AddScoped<IUserAccountQueryRepository, UserAccountQueryRepository>()
             .AddScoped<IUserTokenCommandRepository, UserTokenCommandRepository>()
+            .AddScoped<IUserAccountQueryRepository, UserAccountQueryRepository>()
+            .AddScoped<IUserTokenQueryRepository, UserTokenQueryRepository>()
             .AddScoped<IUserLoginDataQueryRepository, UserLoginDataQueryRepository>();
         
         return services;

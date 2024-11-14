@@ -47,6 +47,7 @@ public interface IUnitOfWork : IDisposable
 
     IUserAccountQueryRepository UserAccountQueryRepository { get; set;  }
     IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; set; }
+    IUserTokenQueryRepository UserTokenQueryRepository { get; set; }
     
     #endregion
 }

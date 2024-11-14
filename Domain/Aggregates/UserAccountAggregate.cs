@@ -30,17 +30,16 @@ public class UserAccountAggregate : EntityBase
     
     [Required]
     public string LastName { get; set; } = "";
-    
-    [Required]
-    public Gender Gender { get; set; }
+
+    [Required] public Gender Gender { get; set; }
 
     [Required]
     public DateTime DateOfBirth { get; set; }
 
     [Required]
-    public string Avatar { get; set; } = "";
+    public string Avatar { get; set; } = null;
     
-    // public UserAccountStatus Status { get; set; }
+    public string Status { get; set; } = UserAccountStatus.Inactive.ToString();
     
     // public int CompanyId { get; set; }
     
