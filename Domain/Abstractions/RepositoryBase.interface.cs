@@ -85,7 +85,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="id">The identifier of the entity to retrieve.</param>
     /// <returns>A task representing the asynchronous operation. The task result is the entity if found; otherwise, <c>null</c>.</returns>
-    Task<T> GetByIdAsync(Guid id);
+    Task<T> GetByIdAsync(string id);
 
     /// <summary>
     /// Asynchronously retrieves an entity by its identifier with related properties included.
@@ -93,7 +93,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// <param name="id">The identifier of the entity to retrieve.</param>
     /// <param name="includeProperties">An array of expressions specifying related properties to include in the query.</param>
     /// <returns>A task representing the asynchronous operation. The task result is the entity if found; otherwise, <c>null</c>.</returns>
-    Task<T> GetByIdAsync(Guid id, params Expression<Func<T, object>>[] includeProperties);
+    Task<T> GetByIdAsync(string id, params Expression<Func<T, object>>[] includeProperties);
 
     #endregion
 

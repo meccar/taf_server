@@ -1,6 +1,6 @@
 namespace Domain.SeedWork.Enums.UserLoginData;
 
-public enum EmailStatus
+public enum EEmailStatus
 {
     Pending,
     Valid,

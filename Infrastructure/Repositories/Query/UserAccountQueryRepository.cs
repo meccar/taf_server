@@ -23,4 +23,10 @@ public class UserAccountQueryRepository
         _context = context;
         _mapper = mapper;
     }
+
+    public async Task<string> GetUserAccountStatusAsync(string userId)
+    {
+        var userAccount = await GetByIdAsync(userId);
+        return userAccount.Status;
+    }
 }

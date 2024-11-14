@@ -25,32 +25,32 @@ public class UserLoginDataEntity : IdentityUser<Guid>
     /// </summary>
     [Required]
     public required string UserAccountId { get; set; }
-    
+
 
     /// <summary>
     /// Gets or sets the status of the user's email verification.
     /// </summary>
-    public EmailStatus? EmailStatus { get; set; }
+    public string EmailStatus { get; set; } = EEmailStatus.Pending.ToString();
 
     /// <summary>
     /// Gets or sets the token used for password recovery.
     /// </summary>
-    public string PasswordRecoveryToken { get; set; } = "";
+    public string PasswordRecoveryToken { get; set; } = null;
 
     /// <summary>
     /// Gets or sets the token used for email confirmation.
     /// </summary>
-    public string? ConfirmationToken { get; set; }
+    public string? ConfirmationToken { get; set; } = null;
 
     /// <summary>
     /// Gets or sets a value indicating whether two-factor authentication is enabled for the user.
     /// </summary>
-    public bool IsTwoFactorEnabled { get; set; }
+    public bool IsTwoFactorEnabled { get; set; } = false;
 
     /// <summary>
     /// Gets or sets a value indicating whether the user has verified two-factor authentication.
     /// </summary>
-    public bool IsTwoFactorVerified { get; set; }
+    public bool IsTwoFactorVerified { get; set; } = false;
 
     /// <summary>
     /// Gets or sets the secret used for two-factor authentication.
@@ -60,8 +60,6 @@ public class UserLoginDataEntity : IdentityUser<Guid>
     /// <summary>
     /// Gets or sets the position of the user within the organization.
     /// </summary>
-    // [Column("user_position", TypeName = "varchar(50)")]
-    // public UserPosition? UserPosition { get; set; }
     
     [ForeignKey("UserAccountId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
