@@ -288,7 +288,7 @@ public class JwtService : IJwtService
         }
         catch (Exception)
         {
-            throw;
+            return "unknown";
         }
         return string.Empty;
     }
