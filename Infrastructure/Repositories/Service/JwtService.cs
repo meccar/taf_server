@@ -10,14 +10,8 @@ using Domain.SeedWork.Enums.UserLoginDataExternal;
 using Infrastructure.Configurations.Environment;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Management;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Text;
-using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
