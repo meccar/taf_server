@@ -2,7 +2,6 @@ using Domain.Interfaces;
 using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
 using Infrastructure.Data;
-using Infrastructure.Repositories.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Repositories;
@@ -86,7 +85,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserTokenQueryRepository UserTokenQueryRepository { get; set; }
     
     #endregion
-
+    
     /// <summary>
     /// Releases the resources used by the <see cref="UnitOfWork"/> class.
     /// </summary>

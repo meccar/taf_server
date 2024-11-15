@@ -70,32 +70,6 @@ public class UserTokenCommandRepository
         return null;
     }
 
-    // public async Task<bool> TokenExistsAsync(UserLoginDataEntity user, UserTokenModel token)
-    // {
-    //     // var existingLogins = await _userManager.GetLoginsAsync(user);
-    //     // var existingLogin = existingLogins
-    //     //     .FirstOrDefault(l => l.LoginProvider == token.LoginProvider.ToString());
-    //     //
-    //     // if (existingLogin == null) return false;
-    //     
-    //     var accessToken = await _userManager.GetAuthenticationTokenAsync(
-    //         user,
-    //         token.LoginProvider.ToString(),
-    //         ETokenName.ACCESS.ToString()
-    //     );
-    //
-    //     var refreshToken = await _userManager.GetAuthenticationTokenAsync(
-    //         user,
-    //         token.LoginProvider.ToString(),
-    //         ETokenName.REFRESH.ToString()
-    //     );
-    //     
-    //     if (accessToken == null || refreshToken == null)
-    //         return false;
-    //
-    //     return true;
-    // }
-
     public async Task<bool> RemoveLoginAndAuthenticationTokenAsync(UserLoginDataEntity userLoginDataEntity, UserTokenModel token)
     {
         var removeLogin = await _userManager
@@ -147,22 +121,5 @@ public class UserTokenCommandRepository
         await _signInManager.RefreshSignInAsync(userLoginDataModel);
         
         return true;
-    }
-    
-    private async Task<(bool, bool)> GetUserTokens(UserLoginDataEntity user, UserTokenModel token)
-    {
-        var accessToken = await _userManager.GetAuthenticationTokenAsync(
-            user,
-            token.LoginProvider.ToString(),
-            ETokenName.ACCESS.ToString()
-        );
-
-        var refreshToken = await _userManager.GetAuthenticationTokenAsync(
-            user,
-            token.LoginProvider.ToString(),
-            ETokenName.REFRESH.ToString()
-        );
-
-        return (accessToken != null, refreshToken != null);
     }
 }

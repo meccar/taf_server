@@ -22,9 +22,10 @@ public static class InfrastructureServicesConfiguration
         // services.ConfigureHangfireServices();
         // services.ConfigureApplication();
         // services.ConfigureAppSettings(configuration);
-        // services.ConfigureAuthetication();
         services.ConfigureDependencyInjection();
         services.ConfigureCors(appCors);
+        services.ConfigureAuthentication();
+        services.ConfigureAuthorization();
         // services.ConfigureTransaction();
         services.ConfigureApiVersioning();
         services.ConfigureDbContext(config);

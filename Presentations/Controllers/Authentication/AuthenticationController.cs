@@ -3,6 +3,7 @@ using Application.Dtos.Authentication.Register;
 using Application.Usecases.Auth;
 using Asp.Versioning;
 using AutoMapper;
+using Infrastructure.Decorators.Guards;
 using Infrastructure.UseCaseProxy;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -80,5 +81,18 @@ public class AuthenticationController
         _logger.LogInformation("END: Login");
         
         return Ok(response);
+    }
+    
+    [HttpGet("admin")]
+    [SwaggerOperation(
+        Summary = "Get Admin Status",
+        Description = "Returns a JSON object indicating if the user is an admin"
+    )]
+    [SwaggerResponse(200, "Successfully fetched admin status", typeof(object))]
+    [SwaggerResponse(401, "Unauthorized")]
+    [AdminGuard]
+    public IActionResult GetAdminStatus()
+    {
+        return Ok(new { Admin = "true" });
     }
 }

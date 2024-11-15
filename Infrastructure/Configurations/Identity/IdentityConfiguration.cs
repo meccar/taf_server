@@ -1,5 +1,7 @@
-﻿using Domain.Entities;
+﻿using System.Security.Claims;
+using Domain.Entities;
 using Infrastructure.Data;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,11 +28,21 @@ public static class IdentityConfiguration
                 
                 // User settings
                 options.User.AllowedUserNameCharacters = "";
+                // options.Stores.ProtectPersonalData = true;
+                
+                // ClaimsIdentity
+                options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
+                options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+                options.ClaimsIdentity.SecurityStampClaimType = ClaimTypes.System;
             })
             .AddRoles<IdentityRole<Guid>>()
             .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
+        
+            // services.AddSingleton<ILookupProtectorKeyRing, KeyRing>();
+            // services.AddSingleton<ILookupProtector, LookupProtector>();
+            // services.AddSingleton<IPersonalDataProtector, PersonalDataProtector>();
         
         //.AddTokenProvider<>()
         

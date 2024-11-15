@@ -1,5 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using Domain.Entities;
@@ -10,10 +8,8 @@ using Domain.SeedWork.Enums.UserLoginDataExternal;
 using Infrastructure.Configurations.Environment;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
+using Domain.Interfaces.Service;
+using Microsoft.AspNetCore.Http;
 
 namespace Infrastructure.Repositories.Service;
 
@@ -23,23 +19,27 @@ public class JwtService : IJwtService
     private readonly EnvironmentConfiguration _environment;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<UserLoginDataEntity> _userManager;
-    private readonly JwtSecurityTokenHandler _jwtHandler;
+    private readonly ITokenService _tokenService;
     private readonly byte[] _secret;
+    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly TokenValidationParameters _tokenValidationParameters;
-
+    
     public JwtService(
         EnvironmentConfiguration environment,
         IMapper mapper,
         IUnitOfWork unitOfWork,
-        UserManager<UserLoginDataEntity> userManager
+        UserManager<UserLoginDataEntity> userManager,
+        ITokenService tokenService,
+        IHttpContextAccessor httpContextAccessor
         )
     {
         _mapper = mapper;
         _environment = environment;
         _unitOfWork = unitOfWork;
         _userManager = userManager;
-        _jwtHandler = new JwtSecurityTokenHandler();
+        _tokenService = tokenService;
         _secret = Encoding.UTF8.GetBytes(environment.GetJwtSecret());
+        _httpContextAccessor = httpContextAccessor;
         _tokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -54,7 +54,7 @@ public class JwtService : IJwtService
     {
         var user = await _userManager.FindByIdAsync(userId);
         
-        var token = await GenerateTokenPair(user);
+        var token = await _tokenService.GenerateTokenPair(user);
         
         token.LoginProvider = EProvider.PASSWORD;
         
@@ -74,6 +74,8 @@ public class JwtService : IJwtService
 
             await UpdateExistingTokens(user, token);
         }
+
+        CreateRefreshTokenCookie(token);
         
         return new TokenModel(
             token.Token.TokenType,
@@ -82,40 +84,6 @@ public class JwtService : IJwtService
             token.Token.RefreshToken,
             token.Token.RefreshTokenExpires
             );
-    }
-
-    private async Task<UserTokenModel> GenerateTokenPair(UserLoginDataEntity user)
-    {
-        var claims = await CreateUserClaims(user);
-        var tokenType = _environment.GetJwtType();
-        
-        var (accessToken, accessExpiration) = await CreateAccessToken(claims);
-        var (refreshToken, refreshExpiration) = await CreateRefreshToken(claims);
-
-        return new UserTokenModel(null, null, null, null)
-        {
-            Token = new TokenModel(
-                tokenType,
-                accessToken,
-                accessExpiration.ToString(),
-                refreshToken,
-                refreshExpiration.ToString()
-            )
-        };
-    }
-    
-    private async Task<ClaimsIdentity> CreateUserClaims(UserLoginDataEntity user)
-    {
-        // var systemInfo = GetSystemInfo();
-        // var localIpAddress = GetLocalIPAddress();
-
-        return new ClaimsIdentity(new[]
-        {
-            new Claim("id", user.UserAccountId),
-            new Claim(ClaimTypes.Email, user.Email),
-            // new Claim("SystemInfo", systemInfo),
-            // new Claim("LocalIPAddress", localIpAddress)
-        });
     }
     
     private async Task CreateNewTokens(UserLoginDataEntity user, UserTokenModel token)
@@ -176,122 +144,19 @@ public class JwtService : IJwtService
         }
     }
     
-    private async Task<(string token, TimeSpan expiration)> CreateAccessToken(ClaimsIdentity claims)
-    {
-        var expiration = TimeSpan.FromHours(_environment.GetJwtExpirationTime());
-        
-        var token = await GenerateToken(claims, expiration);
-        return (token, expiration);
-    }
-    
-    private async Task<(string token, TimeSpan expiration)> CreateRefreshToken(ClaimsIdentity claims)
-    {
-        var expiration = TimeSpan.FromHours(_environment.GetJwtRefreshExpirationTime());
-        
-        var token = await GenerateToken(claims, expiration);
-        return (token, expiration);
-    }
-    
-    private async Task<string> GenerateToken(ClaimsIdentity claims, TimeSpan expiration)
-    {
-        var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(_secret),
-            SecurityAlgorithms.HmacSha256);
-
-        var descriptor = new SecurityTokenDescriptor
-        {
-            Subject = claims,
-            SigningCredentials = credentials,
-            Expires = DateTime.UtcNow.Add(expiration)
-        };
-
-        var token = _jwtHandler.CreateToken(descriptor);
-        return _jwtHandler.WriteToken(token);
-    }
-
-    private static string GetSystemInfo()
-    {
-        try
-        {
-            var components = new[]
-            {
-                // OS info
-                RuntimeInformation.OSDescription,
-                RuntimeInformation.OSArchitecture.ToString(),
-                
-                // Machine name
-                Environment.MachineName,
-                
-                // Network identity
-                GetMacAddress(),
-                
-                // Process info
-                Environment.ProcessorCount.ToString(),
-                
-                // Runtime info
-                RuntimeInformation.FrameworkDescription
-            };
-
-            // Combine all components
-            string deviceFingerprint = string.Join(":", components);
-
-            // Hash the fingerprint
-            using (var sha256 = SHA256.Create())
-            {
-                var hashBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(deviceFingerprint));
-                return Convert.ToBase64String(hashBytes);
-            }
-        }
-        catch (Exception)
-        {
-            // Return a fallback value if anything fails
-            return "unknown";
-        }
-    }
-
-    private static string GetLocalIPAddress()
-    {
-        string hostName = Dns.GetHostName();
-        IPHostEntry hostEntry = Dns.GetHostEntry(hostName);
-            
-        foreach (IPAddress ip in hostEntry.AddressList)
-        {
-            // Only return IPv4 addresses
-            if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-            {
-                return ip.ToString();
-            }
-        }
-        return "unknown";
-    }
-    
-    private static string GetMacAddress()
-    {
-        try
-        {
-            foreach (NetworkInterface nic in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                // Only consider physical network adapters that are up
-                if (nic.OperationalStatus == OperationalStatus.Up && 
-                    nic.NetworkInterfaceType != NetworkInterfaceType.Loopback)
-                {
-                    return BitConverter.ToString(nic.GetPhysicalAddress().GetAddressBytes())
-                        .Replace("-", "");
-                }
-            }
-        }
-        catch (Exception)
-        {
-            return "unknown";
-        }
-        return string.Empty;
-    }
-    
-    private string CreateRefreshTokenCookie(string refreshToken)
+    private void CreateRefreshTokenCookie(UserTokenModel token)
     {
         var cookieKey = _environment.GetJwtRefreshCookieKey();
-        var maxAge = _environment.GetJwtRefreshTokenCookieMaxAge();
-        
-        return $"{cookieKey}={refreshToken}; HttpOnly; SameSite=None; Secure; Path=/; Max-Age={maxAge};";
+
+        var cookieOptions = new CookieOptions
+        {
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict,
+            // Expires = DateTime.UtcNow.AddDays(token.Token.RefreshTokenExpires),
+            MaxAge = TimeSpan.FromHours(token.Token.RefreshTokenExpires),
+        };
+
+        _httpContextAccessor.HttpContext?.Response.Cookies.Append(cookieKey, token.Token.RefreshToken, cookieOptions);
     }
 } 
