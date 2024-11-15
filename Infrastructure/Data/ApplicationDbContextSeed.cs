@@ -51,14 +51,6 @@ public class ApplicationDbContextSeed
                     EClaimValue.Update
                 }
             },
-            { 
-                ERole.Guest, 
-                new[] 
-                {
-                    EClaimValue.View,
-                    EClaimValue.Read
-                }
-            }
         };
     
     public ApplicationDbContextSeed(

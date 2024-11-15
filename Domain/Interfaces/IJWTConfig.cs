@@ -9,6 +9,6 @@ public interface IJWTConfig
     int GetJwtRefreshExpirationTime();
     string GetJwtRefreshTokenCookieMaxAge();
     string GetJwtType();
-    string GetJwtPasswordExpirationTime();
+    int GetJwtPasswordExpirationTime();
     string GetJwtPasswordSecret();
 }

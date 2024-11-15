@@ -100,9 +100,9 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
     {
         return _configuration.GetValue<string>("TokenSettings:TOKEN_TYPE");
     }
-    public string GetJwtPasswordExpirationTime()
+    public int GetJwtPasswordExpirationTime()
     {
-        return _configuration.GetValue<string>("TokenSettings:RESET_PASSWORD_LINK_EXPIRES_IN");
+        return _configuration.GetValue<int>("TokenSettings:RESET_PASSWORD_LINK_EXPIRES_IN");
     }
     public string GetJwtPasswordSecret()
     {

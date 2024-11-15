@@ -8,11 +8,11 @@ public class TokenModel
 {
     public string TokenType  { get; set; }
     public string AccessToken { get; set; } 
-    public string AccessTokenExpires { get;  set; }
+    public int AccessTokenExpires { get;  set; }
     public string RefreshToken { get; set; } 
-    public string RefreshTokenExpires { get; set; }
+    public int RefreshTokenExpires { get; set; }
     
-    public TokenModel(string tokenType, string accessToken, string accessTokenExpires,  string refreshToken, string refreshTokenExpires)
+    public TokenModel(string tokenType, string accessToken, int accessTokenExpires,  string refreshToken, int refreshTokenExpires)
     {
         TokenType = tokenType;
         AccessTokenExpires = accessTokenExpires;

@@ -11,7 +11,10 @@ public class LoginUsecase : IUseCase<LoginUserRequestDto, LoginResponseDto>
     private readonly IMediator _mediator;
     private readonly IMapper _mapper;
 
-    public LoginUsecase(IMediator mediator, IMapper mapper)
+    public LoginUsecase(
+        IMediator mediator,
+        IMapper mapper
+        )
     {
         _mediator=mediator;
         _mapper=mapper;

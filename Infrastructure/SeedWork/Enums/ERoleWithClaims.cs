@@ -42,13 +42,5 @@ public class ERoleWithClaims
                     EClaimValue.Update
                 }
             },
-            { 
-                ERole.Guest, 
-                new[] 
-                {
-                    EClaimValue.View,
-                    EClaimValue.Read
-                }
-            }
         };
 }
