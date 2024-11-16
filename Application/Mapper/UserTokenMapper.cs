@@ -1,10 +1,5 @@
-﻿using Application.Dtos.Authentication.Register;
-using Application.Dtos.UserAccount;
-using AutoMapper;
-using Domain.Aggregates;
-using Domain.Entities;
+﻿using AutoMapper;
 using Domain.Model;
-using Domain.SeedWork.Enums.Token;
 using Microsoft.AspNetCore.Identity;
 
 namespace Application.Mapper;

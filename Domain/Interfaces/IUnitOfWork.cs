@@ -1,6 +1,5 @@
 using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
-using Domain.Interfaces.Service;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Domain.Interfaces;

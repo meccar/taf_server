@@ -1,14 +1,17 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
+using Swashbuckle.AspNetCore.Swagger;
 
-namespace Infrastructure.Configurations.Api;
+namespace Application.Configurations;
 
 public static class SwaggerConfiguration
 {
     public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
     {
         services
+            .Configure<SwaggerOptions>(c => c.SerializeAsV2 = true)
             .AddEndpointsApiExplorer()
             .AddSwaggerGen(options =>
             {
@@ -28,8 +31,15 @@ public static class SwaggerConfiguration
                     }
                 });
                 
-            var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-            options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                options.ExampleFilters();
+
+                options.OperationFilter<AddHeaderOperationFilter>("correlationId", "Correlation Id for the request", false);
+                options.OperationFilter<AddResponseHeadersFilter>();
+                
+                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                
+                options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
             });
         
         return services;

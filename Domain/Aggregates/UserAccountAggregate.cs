@@ -4,7 +4,6 @@ using Domain.Entities;
 using Domain.SeedWork.Enums.UserAccount;
 using Domain.SeedWork.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Aggregates;
 

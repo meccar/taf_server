@@ -1,5 +1,3 @@
-using Domain.SeedWork.Enums.UserLoginDataExternal;
-
 namespace Domain.Entities;
 public class UserLoginDataExternalEntity : EntityBase
 {

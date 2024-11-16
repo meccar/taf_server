@@ -10,11 +10,12 @@ public static class ApplicationServicesConfiguration
         this IServiceCollection services,
         IConfiguration configurations)
     {
+        services.ConfigureSwagger();
         services.ConfigureMapper();
         services.ConfigureValidatiors();
         services.ConfigureUsecases();
         services.ConfigureMediatR();
-
+        
         return services;
     }
 }

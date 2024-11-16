@@ -1,4 +1,3 @@
-using Application.Dtos.Authentication.Login;
 using Application.Dtos.UserLoginData;
 using AutoMapper;
 using Domain.Entities;

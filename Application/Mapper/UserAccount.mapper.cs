@@ -1,8 +1,5 @@
-using Application.Dtos.Authentication.Register;
-using Application.Dtos.UserAccount;
 using AutoMapper;
 using Domain.Aggregates;
-using Domain.Entities;
 using Domain.Model;
 
 namespace Application.Mapper;

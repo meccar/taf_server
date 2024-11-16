@@ -1,10 +1,8 @@
-using Application.Dtos.Authentication.Credentials;
 using Application.Dtos.Authentication.Login;
 using Application.Dtos.Authentication.Register;
 using Application.Dtos.UserAccount;
 using Application.Dtos.UserLoginData;
 using AutoMapper;
-using Domain.Aggregates;
 using Domain.Model;
 
 namespace Application.Mapper;

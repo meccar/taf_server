@@ -29,7 +29,7 @@ public static class InfrastructureServicesConfiguration
         // services.ConfigureTransaction();
         services.ConfigureApiVersioning();
         services.ConfigureDbContext(config);
-        services.ConfigureSwagger();
+        // services.ConfigureSwagger();
         services.ConfigureIdentity();
         services.ConfigureRepositories();
 

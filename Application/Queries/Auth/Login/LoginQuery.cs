@@ -1,4 +1,3 @@
-using Application.Dtos.Authentication.Login;
 using Domain.Model;
 using Domain.SeedWork.Query;
 

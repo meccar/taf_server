@@ -11,16 +11,16 @@ namespace Infrastructure.Repositories.Service;
 
 public class TokenService : ITokenService
 {
-    private readonly JwtSecurityTokenHandler _jwtHandler;
     private readonly byte[] _secret;
+    private readonly JwtSecurityTokenHandler _jwtHandler;
     private readonly EnvironmentConfiguration _environment;
     public TokenService
     (
         EnvironmentConfiguration environment
     )
     {
-        _jwtHandler = new JwtSecurityTokenHandler();
         _secret = Encoding.UTF8.GetBytes(environment.GetJwtSecret());
+        _jwtHandler = new JwtSecurityTokenHandler();
         _environment = environment;
     }
     public async Task<UserTokenModel> GenerateTokenPair(UserLoginDataEntity user)

@@ -1,5 +1,3 @@
-using Domain.Model;
-
 namespace Domain.Interfaces.Query;
 
 public interface IUserAccountQueryRepository

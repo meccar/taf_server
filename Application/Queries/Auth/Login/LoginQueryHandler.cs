@@ -1,9 +1,7 @@
-using System.Security.Authentication;
 using Application.Exceptions;
 using Domain.Interfaces;
 using Domain.Interfaces.Service;
 using Domain.Model;
-using Domain.SeedWork.Enums.UserAccount;
 using Domain.SeedWork.Query;
 
 namespace Application.Queries.Auth.Login;

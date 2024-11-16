@@ -1,4 +1,3 @@
-using Domain.Entities;
 using Domain.Model;
 using Domain.SeedWork.Results;
 

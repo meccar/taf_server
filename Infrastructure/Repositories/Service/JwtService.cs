@@ -15,7 +15,6 @@ namespace Infrastructure.Repositories.Service;
 
 public class JwtService : IJwtService
 {
-    private readonly IMapper _mapper;
     private readonly EnvironmentConfiguration _environment;
     private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<UserLoginDataEntity> _userManager;
@@ -26,14 +25,12 @@ public class JwtService : IJwtService
     
     public JwtService(
         EnvironmentConfiguration environment,
-        IMapper mapper,
         IUnitOfWork unitOfWork,
         UserManager<UserLoginDataEntity> userManager,
         ITokenService tokenService,
         IHttpContextAccessor httpContextAccessor
         )
     {
-        _mapper = mapper;
         _environment = environment;
         _unitOfWork = unitOfWork;
         _userManager = userManager;
