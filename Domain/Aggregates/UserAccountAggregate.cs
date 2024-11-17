@@ -19,11 +19,11 @@ public class UserAccountAggregate : EntityBase
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string Id { get; set; } = Ulid.NewUlid().ToString();
     
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Uuid { get; set; } = Ulid.NewUlid().ToString();
+    public string EId { get; set; } = Ulid.NewUlid().ToString();
     
     [Required]
     [ProtectedPersonalData]
@@ -40,7 +40,7 @@ public class UserAccountAggregate : EntityBase
     [Required]
     [ProtectedPersonalData]
     [PersonalData]
-    public DateTime DateOfBirth { get; set; }
+    public string DateOfBirth { get; set; }
 
     [Required]
     public string Avatar { get; set; } = null;

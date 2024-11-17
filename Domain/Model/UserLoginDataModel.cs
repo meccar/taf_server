@@ -5,7 +5,7 @@ namespace Domain.Model;
 public class UserLoginDataModel
 {
     public string Id { get; set; }
-    public string Uuid { get; set; }
+    public string EId { get; set; }
     public string UserAccountId { get; set; }
     public string PhoneNumber { get; set; } = null!;
     public string Password { get; set; }

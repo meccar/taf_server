@@ -17,7 +17,7 @@ public class UserLoginDataEntity : IdentityUser<Guid>
     /// </summary>
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Uuid { get; set; } = Ulid.NewUlid().ToString();
+    public string EId { get; set; } = Ulid.NewUlid().ToString();
 
     /// <summary>
     /// Gets or sets the identifier of the associated user account.

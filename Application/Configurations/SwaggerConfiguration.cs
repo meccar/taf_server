@@ -1,7 +1,6 @@
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Application.Configurations;
@@ -31,15 +30,15 @@ public static class SwaggerConfiguration
                     }
                 });
                 
-                options.ExampleFilters();
-
-                options.OperationFilter<AddHeaderOperationFilter>("correlationId", "Correlation Id for the request", false);
-                options.OperationFilter<AddResponseHeadersFilter>();
+                // options.ExampleFilters();
+                //
+                // options.OperationFilter<AddHeaderOperationFilter>("correlationId", "Correlation Id for the request", false);
+                // options.OperationFilter<AddResponseHeadersFilter>();
                 
                 var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
                 
-                options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+                // options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
             });
         
         return services;

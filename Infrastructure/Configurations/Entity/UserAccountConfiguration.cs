@@ -14,7 +14,7 @@ public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserAcco
             .HasAnnotation("SqlServer:Identity", "1, 1");
         
         builder
-            .Property(x => x.Uuid)
+            .Property(x => x.EId)
             .IsRequired(false);
 
         builder 

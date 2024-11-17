@@ -23,7 +23,7 @@ public static class UserLoginDataMapper
     public static void CreateMap(IMapperConfigurationExpression config)
     {
         config.CreateMap<UserLoginDataModel, UserLoginDataEntity>()
-            .ForMember(dest => dest.Uuid, opt => opt.Ignore());
+            .ForMember(dest => dest.EId, opt => opt.Ignore());
         config.CreateMap<UserLoginDataEntity, UserLoginDataModel>()
             .ForMember(dest => dest.Password, opt => opt.Ignore());
     }

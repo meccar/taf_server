@@ -8,7 +8,7 @@ public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserLoginData
     public void Configure(EntityTypeBuilder<UserLoginDataEntity> builder)
     {
         builder
-            .Property(x => x.Uuid)
+            .Property(x => x.EId)
             .IsRequired(false);
         
         builder

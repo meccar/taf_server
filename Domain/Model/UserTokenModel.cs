@@ -5,6 +5,8 @@ namespace Domain.Model;
 
 public class UserTokenModel
 {
+    public string EId { get; set; }
+
     public string UserId { get; set; }
     public ETokenName? Name { get; set; }
     //public string AccessToken { get; set; }

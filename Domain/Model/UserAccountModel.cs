@@ -7,11 +7,11 @@ namespace Domain.Model;
 public class UserAccountModel
 {
     public string Id { get; set; }
-    public string Uuid { get; set; }
+    public string EId { get; set; }
     public string FirstName { get; set; } = "";
     public string LastName { get; set; } = "";
     public Gender Gender { get; set; }
-    public DateTime DateOfBirth { get; set; }
+    public string DateOfBirth { get; set; }
     public string Avatar { get; set; } = "";
     public string Status { get; set; }
     // public int CompanyId { get; set; }

@@ -15,6 +15,6 @@ public static class UserAccountMapper
         config.CreateMap<UserAccountAggregate, UserAccountModel>()
             .ForMember(dest => dest.UserLoginData, opt => opt.MapFrom(src => src.UserLoginData));
         config.CreateMap<UserAccountModel, UserAccountAggregate>()
-            .ForMember(dest => dest.Uuid, opt => opt.Ignore());
+            .ForMember(dest => dest.EId, opt => opt.Ignore());
     }
 }
