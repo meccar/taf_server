@@ -18,8 +18,8 @@ namespace Domain.Aggregates;
 public class UserAccountAggregate : EntityBase
 {
     [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string Id { get; set; } = Ulid.NewUlid().ToString();
+    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+    public int Id { get; set; }
     
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

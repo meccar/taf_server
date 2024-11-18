@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Configurations.Environment;
 
-public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
+public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig, IIdentityServer
 {
     private readonly IConfiguration _configuration;
     public EnvironmentConfiguration(IConfiguration configuration)
@@ -17,6 +17,30 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig
     //     return _configuration.GetValue<string>("TokenSettings:ACCESS_TOKEN_SECRET");
     // }
     // #endregion
+    
+    #region IdentityServer
+
+    public string GetIdentityServerClientId()
+    {
+        return _configuration.GetValue<string>("IdentityServer:ClientId");
+    }
+
+    public string GetIdentityServerClientSecret()
+    {
+        return _configuration.GetValue<string>("IdentityServer:ClientSecret");
+    }
+    
+    public string GetIdentityServerAuthority()
+    {
+        return _configuration.GetValue<string>("IdentityServer:Authority");
+    }
+    
+    public string GetIdentityServerScopes()
+    {
+        return _configuration.GetValue<string>("IdentityServer:Scopes");
+    }
+    
+    #endregion
     
     #region Database
     public string GetDatabaseHost()

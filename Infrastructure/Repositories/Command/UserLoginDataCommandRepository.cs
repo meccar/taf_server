@@ -42,51 +42,6 @@ public class UserLoginDataCommandRepository
         // _roleManager = roleManager;
     }
 
-    private async Task<(UserLoginDataEntity User, IdentityResult Result)> CreateUserAccountAsync(
-        UserLoginDataModel request)
-    {
-        var userEntity = _mapper.Map<UserLoginDataEntity>(request);
-        userEntity.UserName ??= userEntity.Email;
-
-        var result = await _userManager.CreateAsync(userEntity, request.Password);
-        request.Password = null;
-
-        return (userEntity, result);
-    }
-    
-    private async Task<IdentityResult> AssignRoleAsync(UserLoginDataEntity user)
-    {
-        return await _userManager.AddToRoleAsync(user, ERole.User);
-    }
-    
-    private async Task<IdentityResult> AssignUserClaimsAsync(UserLoginDataEntity user)
-    {
-        var claims = new List<Claim>();
-
-        claims.AddRange(ERoleWithClaims.RoleClaims[ERole.User]
-            .Select(claim => new Claim(EClaimTypes.Permission, claim.ToString())));
-
-        claims.AddRange(new[]
-        {
-            new Claim(EClaimTypes.Email, user.Email),
-            new Claim(EClaimTypes.Role, ERole.User)
-        });
-
-        var results = new List<IdentityResult>();
-        foreach (var claim in claims)
-        {
-            var result = await _userManager.AddClaimAsync(user, claim);
-            results.Add(result);
-        }
-
-        return results.All(r => r.Succeeded) 
-            ? IdentityResult.Success 
-            : IdentityResult.Failed(results
-                .SelectMany(r => r.Errors)
-                .ToArray());
-    }
-
-
     /// <summary>
     /// Creates a new user login data entry based on the provided DTO.
     /// </summary>
@@ -108,14 +63,24 @@ public class UserLoginDataCommandRepository
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
         
-        var claimsResult = await AssignUserClaimsAsync(userLoginDataEntity);
-        if (!claimsResult.Succeeded)
-        {
-            return UserLoginDataResult.Failure(
-                claimsResult.Errors.Select(e => e.Description).ToArray());
-        }
-        
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
         return UserLoginDataResult.Success(userLoginDataModel);
+    }
+    
+    private async Task<(UserLoginDataEntity User, IdentityResult Result)> CreateUserAccountAsync(
+        UserLoginDataModel request)
+    {
+        var userEntity = _mapper.Map<UserLoginDataEntity>(request);
+        userEntity.UserName ??= userEntity.Email;
+
+        var result = await _userManager.CreateAsync(userEntity, request.Password);
+        request.Password = null;
+
+        return (userEntity, result);
+    }
+    
+    private async Task<IdentityResult> AssignRoleAsync(UserLoginDataEntity user)
+    {
+        return await _userManager.AddToRoleAsync(user, ERole.User);
     }
 }

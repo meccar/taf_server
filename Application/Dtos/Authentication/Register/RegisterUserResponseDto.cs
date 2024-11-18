@@ -6,7 +6,7 @@ namespace Application.Dtos.Authentication.Register;
 public class RegisterUserResponseDto
 {
     // public UserAccountResponseDto UserAccount { get; set; }
-    public string Uuid { get; set; }
+    public string Eid { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Gender { get; set; }

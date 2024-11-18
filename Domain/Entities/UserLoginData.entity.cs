@@ -10,7 +10,7 @@ namespace Domain.Entities;
 /// <summary>
 /// Represents the login data associated with a user account.
 /// </summary>
-public class UserLoginDataEntity : IdentityUser<Guid>
+public class UserLoginDataEntity : IdentityUser<int>
 {
     /// <summary>
     /// Gets or sets the universally unique identifier (Ulid) for the user.
@@ -23,7 +23,7 @@ public class UserLoginDataEntity : IdentityUser<Guid>
     /// Gets or sets the identifier of the associated user account.
     /// </summary>
     [Required]
-    public required string UserAccountId { get; set; }
+    public required int UserAccountId { get; set; }
 
 
     /// <summary>
@@ -63,6 +63,6 @@ public class UserLoginDataEntity : IdentityUser<Guid>
     [ForeignKey("UserAccountId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual UserAccountAggregate UserAccount { get; set; } = null!;
-    public List<IdentityUserToken<Guid>> UserToken { get; set; } = new List<IdentityUserToken<Guid>>();
+    public List<IdentityUserToken<int>> UserToken { get; set; } = new List<IdentityUserToken<int>>();
 
 }

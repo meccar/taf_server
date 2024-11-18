@@ -1,9 +1,10 @@
 ﻿using System.Security.Claims;
 using Domain.Entities;
 using Infrastructure.Data;
-using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Duende.IdentityServer.Models;
+
 
 namespace Infrastructure.Configurations.Identity;
 public static class IdentityConfiguration
@@ -11,7 +12,7 @@ public static class IdentityConfiguration
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<UserLoginDataEntity, IdentityRole<Guid>>(options =>
+            .AddIdentity<UserLoginDataEntity, IdentityRole<int>>(options =>
             {
                 // // Password settings
                 // options.Password.RequireDigit = true;
@@ -27,16 +28,21 @@ public static class IdentityConfiguration
                 // options.Lockout.AllowedForNewUsers = true;
                 
                 // User settings
-                options.User.AllowedUserNameCharacters = "";
+                // options.User.AllowedUserNameCharacters = "";
                 // options.Stores.ProtectPersonalData = true;
                 
                 // ClaimsIdentity
                 options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
                 options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
                 options.ClaimsIdentity.SecurityStampClaimType = ClaimTypes.System;
+                
+                // Tokens
+                options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultProvider;
+                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
+                options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
             })
-            .AddRoles<IdentityRole<Guid>>()
-            .AddRoleManager<RoleManager<IdentityRole<Guid>>>()
+            .AddRoles<IdentityRole<int>>()
+            .AddRoleManager<RoleManager<IdentityRole<int>>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
         

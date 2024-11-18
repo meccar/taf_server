@@ -9,7 +9,7 @@ public class ApplicationDbContextSeed
 {
     private readonly ApplicationDbContext _context;
     private readonly UserManager<UserLoginDataEntity> _userManager;
-    private readonly RoleManager<IdentityRole<Guid>> _roleManager;
+    private readonly RoleManager<IdentityRole<int>> _roleManager;
 
     private static readonly IReadOnlyDictionary<string, IReadOnlyCollection<string>> DefaultPermissions = 
         new Dictionary<string, IReadOnlyCollection<string>>
@@ -56,7 +56,7 @@ public class ApplicationDbContextSeed
     public ApplicationDbContextSeed(
         ApplicationDbContext context,
         UserManager<UserLoginDataEntity> userManager,
-        RoleManager<IdentityRole<Guid>> roleManager)
+        RoleManager<IdentityRole<int>> roleManager)
     {
         _context = context;
         _userManager = userManager;
@@ -81,7 +81,7 @@ public class ApplicationDbContextSeed
         }
     }
     
-    private async Task<IdentityRole<Guid>?> CreateRoleAsync(string roleName)
+    private async Task<IdentityRole<int>?> CreateRoleAsync(string roleName)
     {
         var existingRole = await _roleManager.FindByNameAsync(roleName);
         if (existingRole != null)
@@ -89,7 +89,7 @@ public class ApplicationDbContextSeed
             return existingRole;
         }
 
-        var newRole = new IdentityRole<Guid>(roleName);
+        var newRole = new IdentityRole<int>(roleName);
         var result = await _roleManager.CreateAsync(newRole);
 
         if (!result.Succeeded)
@@ -102,7 +102,7 @@ public class ApplicationDbContextSeed
     }
     
     private async Task UpdateRoleClaimsAsync(
-        IdentityRole<Guid> role,
+        IdentityRole<int> role,
         IEnumerable<string> permissions)
     {
         var existingClaims = await _roleManager.GetClaimsAsync(role);
@@ -113,7 +113,7 @@ public class ApplicationDbContextSeed
     }
     
     private async Task RemoveOutdatedClaimsAsync(
-        IdentityRole<Guid> role,
+        IdentityRole<int> role,
         IList<Claim> existingClaims,
         IEnumerable<Claim> desiredClaims)
     {
@@ -134,7 +134,7 @@ public class ApplicationDbContextSeed
     }
     
     private async Task AddNewClaimsAsync(
-        IdentityRole<Guid> role,
+        IdentityRole<int> role,
         IList<Claim> existingClaims,
         IEnumerable<Claim> desiredClaims)
     {

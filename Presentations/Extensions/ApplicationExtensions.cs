@@ -28,6 +28,8 @@ public static class ApplicationExtensions
         app.UseCors(appCors);
         
         app.UseAuthentication();
+
+        app.UseIdentityServer();
         
         app.UseAuthorization();
         

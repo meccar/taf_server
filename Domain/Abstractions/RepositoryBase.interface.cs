@@ -67,7 +67,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="id">The identifier of the entity to check.</param>
     /// <returns>A task representing the asynchronous operation. The task result is <c>true</c> if the entity exists; otherwise, <c>false</c>.</returns>
-    Task<bool> ExistAsync(Guid id);
+    Task<bool> ExistAsync(string id);
 
     /// <summary>
     /// Asynchronously checks whether any entities satisfying a specified condition exist in the repository.

@@ -87,9 +87,9 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// <param name="id">The identifier of the entity.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// a boolean value indicating whether the entity exists.</returns>
-    public async Task<bool> ExistAsync(Guid id)
+    public async Task<bool> ExistAsync(string id)
     {
-        return await _context.Set<T>().AnyAsync(x => new Guid(x.GetType().GetProperty("Id")!.ToString()!) == id);
+        return await _context.Set<T>().AnyAsync(x => new string(x.GetType().GetProperty("Id")!.ToString()!) == id);
     }
     /// <summary>
     /// Checks if any entity matching the specified condition exists asynchronously.

@@ -30,7 +30,7 @@ public class CreateUserAccountDto
     /// <summary>
     /// User's DateOfBirth
     /// </summary>
-    /// <example>14/07/1999</example>
+    /// <example>07/14/1999</example>
     [Required]
     public string DateOfBirth { get; set; } = "";
 }
