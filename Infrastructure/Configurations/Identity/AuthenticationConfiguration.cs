@@ -35,7 +35,7 @@ public static class AuthenticationConfiguration
                 // options.ClientSecret = configuration.GetGoogleClientSecret();
 
             // })
-            .AddJwtBearer(options =>
+            .AddJwtBearer(configuration.GetJwtType(),options =>
             {
                 options.Authority = configuration.GetIdentityServerAuthority();
                 options.RequireHttpsMetadata = false;
