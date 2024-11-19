@@ -1,14 +1,14 @@
+using System.Security.Cryptography.X509Certificates;
 using Application;
 using IdentityModel.Client;
-using IdentityServer.Areas.Extensions;
+using IdentityServer.Extensions;
 using Infrastructure;
 using Serilog;
 
 var AppCors = "AppCors";
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
-
-
+var cert = new X509Certificate2("../certificate.pfx", "tung");
 
 try
 {
@@ -21,14 +21,23 @@ try
     
     // Add services to the container.
     builder.Services.AddControllersWithViews();
+    builder.Services.AddRazorPages();
     builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
     builder.Services.ConfigureApplicationServices(builder.Configuration);
     
-    builder.Services.AddRazorPages();
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        // Configure Kestrel to use your .pfx certificate for HTTPS
+        options.ConfigureHttpsDefaults(httpsOptions =>
+        {
+            httpsOptions.ServerCertificate = cert;
+        });
+    });
+    
     // builder.Services.ConfigurePresentationsServices(builder.Configuration);
 
     var client = new HttpClient();
-    await client.GetDiscoveryDocumentAsync("https://localhost:5001");
+    await client.GetDiscoveryDocumentAsync("https://localhost:6001");
     
     WebApplication? app = builder.Build();
 
@@ -36,7 +45,7 @@ try
 
     await app.RunAsync();
 }
-catch (Exception ex)
+catch (Exception ex) when (ex is not HostAbortedException)
 {
     Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 

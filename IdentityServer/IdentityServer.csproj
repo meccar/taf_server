@@ -31,5 +31,10 @@
         <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
         <ProjectReference Include="..\Application\Application.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Views\Account\Login\" />
+      <Folder Include="Views\Account\Register\" />
+    </ItemGroup>
     
 </Project>

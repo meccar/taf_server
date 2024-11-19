@@ -1,4 +1,4 @@
-namespace IdentityServer.Areas.Extensions;
+namespace IdentityServer.Extensions;
 
 public static class HostExtensions
 {

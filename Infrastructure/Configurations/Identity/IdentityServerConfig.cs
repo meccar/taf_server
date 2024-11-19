@@ -46,7 +46,7 @@ public static class IdentityServerConfig
                     AllowedGrantTypes = GrantTypes.Code,
                     ClientSecrets =
                     {
-                        new Secret("secret".Sha256())
+                        new Secret(configuration.GetIdentityServerClientSecret().Sha256())
                     },
                     AllowedScopes =                 
                     {
@@ -60,10 +60,10 @@ public static class IdentityServerConfig
                     },
                     
                     // where to redirect to after login
-                    // RedirectUris = { "https://localhost:5002/signin-oidc" },
+                    // RedirectUris = { "https://localhost:6001/signin-oidc" },
 
                     // where to redirect to after logout
-                    // PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                    // PostLogoutRedirectUris = { "https://localhost:6001/signout-callback-oidc" },
                     
                     AccessTokenLifetime = 3600, // 1 hour
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
@@ -84,8 +84,8 @@ public static class IdentityServerConfig
                     {
                         new Secret("interactive_secret".Sha256())
                     },
-                    RedirectUris = { "https://localhost:5001/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
+                    RedirectUris = { "https://localhost:6001/signin-oidc" },
+                    PostLogoutRedirectUris = { "https://localhost:6001/signout-callback-oidc" },
                     AllowedScopes = { "openid", "profile", "api1" },
                     AllowOfflineAccess = true
                 }

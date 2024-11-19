@@ -54,23 +54,9 @@ public static class AuthenticationConfiguration
             .AddCookie("Cookies")
             .AddOpenIdConnect("oidc", options =>
             {
-                var clientId = configuration.GetIdentityServerClientId();
-                var clientSecret = configuration.GetIdentityServerClientSecret();
-                var authority = configuration.GetIdentityServerAuthority();
-
-                if (string.IsNullOrEmpty(clientId))
-                    throw new ArgumentException("IdentityServer ClientId is not configured");
-
-                if (string.IsNullOrEmpty(authority))
-                    throw new ArgumentException("IdentityServer Authority is not configured");
-
-                options.Authority = authority;
-                options.ClientId = clientId;
-                options.ClientSecret = clientSecret;
-                
-                // options.Authority = configuration.GetIdentityServerAuthority();
-                // options.ClientId = configuration.GetIdentityServerClientId();
-                // options.ClientSecret = configuration.GetIdentityServerClientSecret();
+                options.Authority = configuration.GetIdentityServerAuthority();
+                options.ClientId = configuration.GetIdentityServerClientId();
+                options.ClientSecret = configuration.GetIdentityServerClientSecret();
 
                 options.ResponseType = "code";
                 options.ResponseMode = "form_post";
