@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D16ACE33-31D8-42EF-9F15-FBCF216F5AAE}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{4E4ED2B3-0CEE-4DB8-B61E-495E7A29778E}"
@@ -19,6 +20,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{F345DE5F-4A8E-4F50-897B-22F127507822}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{455EAC03-268D-4826-845C-55B451ACBE61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "IdentityServer\IdentityServer.csproj", "{4A2202F1-C23D-4443-AD09-14B2B6DF5AAB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +45,10 @@ Global
 		{64F14DBA-B6FB-45DB-813A-6624698B467C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64F14DBA-B6FB-45DB-813A-6624698B467C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64F14DBA-B6FB-45DB-813A-6624698B467C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A2202F1-C23D-4443-AD09-14B2B6DF5AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A2202F1-C23D-4443-AD09-14B2B6DF5AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A2202F1-C23D-4443-AD09-14B2B6DF5AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A2202F1-C23D-4443-AD09-14B2B6DF5AAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

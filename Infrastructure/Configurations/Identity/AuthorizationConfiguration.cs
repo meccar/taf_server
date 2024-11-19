@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Infrastructure.SeedWork.Enums;
 using Infrastructure.SeedWork.Policies;
 using Microsoft.AspNetCore.Authorization;
@@ -17,6 +16,12 @@ public static class AuthorizationConfiguration
                     ConfigureRolePolicy(options, ERole.CompanyManager);
                     ConfigureRolePolicy(options, ERole.CompanyUser);
                     ConfigureRolePolicy(options, ERole.User);
+                    
+                    options.AddPolicy("ApiScope", policy =>
+                    {
+                        policy.RequireAuthenticatedUser();
+                        policy.RequireClaim("scope", "api1");
+                    });
                 }
             );
         return services;

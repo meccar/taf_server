@@ -12,8 +12,8 @@ public static class UserTokenMapper
     /// <param name="config">The AutoMapper configuration expression used to create the mappings.</param>
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<UserTokenModel, IdentityUserToken<Guid>>();
-        config.CreateMap<IdentityUserToken<Guid>, UserTokenModel>()
+        config.CreateMap<UserTokenModel, IdentityUserToken<int>>();
+        config.CreateMap<IdentityUserToken<int>, UserTokenModel>()
             .ForMember(dest => 
                 dest.Name, 
                 opt => 

@@ -41,8 +41,9 @@ public class JwtService : IJwtService
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(_secret),
-            ValidateIssuer = false,
+            ValidateIssuer = true,
             ValidateAudience = false,
+            ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
     }
@@ -91,7 +92,8 @@ public class JwtService : IJwtService
                 user.UserAccountId,
                 ETokenName.ACCESS,
                 token.LoginProvider,
-                token.Token.AccessToken
+                token.Token.AccessToken,
+                token.Claims
             )
         );
 
@@ -101,7 +103,8 @@ public class JwtService : IJwtService
                 user.UserAccountId,
                 ETokenName.REFRESH,
                 token.LoginProvider,
-                token.Token.RefreshToken
+                token.Token.RefreshToken,
+                token.Claims
             )
         );
                 
@@ -113,15 +116,14 @@ public class JwtService : IJwtService
 
     private async Task UpdateExistingTokens(UserLoginDataEntity user, UserTokenModel token)
     {
-        // TODO: Implement token blacklisting logic here
-        
         var accessToken = await _unitOfWork.UserTokenCommandRepository.UpdateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,
                 ETokenName.ACCESS,
                 token.LoginProvider,
-                token.Token.AccessToken
+                token.Token.AccessToken,
+                token.Claims
             )
         );
 
@@ -131,7 +133,8 @@ public class JwtService : IJwtService
                 user.UserAccountId,
                 ETokenName.REFRESH,
                 token.LoginProvider,
-                token.Token.RefreshToken
+                token.Token.RefreshToken,
+                token.Claims
             )
         );
         

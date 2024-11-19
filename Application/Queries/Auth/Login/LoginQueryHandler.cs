@@ -28,10 +28,10 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
             throw new UnauthorizedException("Invalid credentials");
         
         bool isPasswordMatch = await _unitOfWork.UserLoginDataQueryRepository.IsPasswordMatch(request.Email, request.Password);
+        request.Password = null;
         
         if (!isPasswordMatch)
             throw new UnauthorizedException("Invalid credentials");
-        request.Password = null;
         
         // var userAcconutStatus = await _unitOfWork.UserAccountQueryRepository.GetUserAccountStatusAsync(userLoginDataModel.UserAccountId); 
         //

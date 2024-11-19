@@ -31,6 +31,7 @@ public static class InfrastructureServicesConfiguration
         services.ConfigureDbContext(config);
         // services.ConfigureSwagger();
         services.ConfigureIdentity();
+        services.ConfigureIdentityServer(config);
         services.ConfigureRepositories();
 
         return services;

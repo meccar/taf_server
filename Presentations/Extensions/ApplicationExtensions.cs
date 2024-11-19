@@ -28,7 +28,7 @@ public static class ApplicationExtensions
         app.UseCors(appCors);
         
         app.UseAuthentication();
-        
+
         app.UseAuthorization();
         
         // app.UseEndpoints(endpoints =>

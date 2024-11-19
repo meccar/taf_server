@@ -18,13 +18,13 @@ namespace Infrastructure.Data;
 public class ApplicationDbContext 
     : IdentityDbContext<
         UserLoginDataEntity,
-        IdentityRole<Guid>,
-        Guid,
-        IdentityUserClaim<Guid>,
-        IdentityUserRole<Guid>,
-        IdentityUserLogin<Guid>,
-        IdentityRoleClaim<Guid>,
-        IdentityUserToken<Guid>>
+        IdentityRole<int>,
+        int,
+        IdentityUserClaim<int>,
+        IdentityUserRole<int>,
+        IdentityUserLogin<int>,
+        IdentityRoleClaim<int>,
+        IdentityUserToken<int>>
 {
     
     /// <summary>

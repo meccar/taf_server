@@ -58,7 +58,7 @@ public class AuthenticationController
 
         _logger.LogInformation("END: Register");
 
-        return Created(response.Uuid, response);
+        return Created(response.Eid, response);
     }
 
     [HttpPost("login")]

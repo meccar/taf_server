@@ -72,6 +72,11 @@ public class UserTokenCommandRepository
 
     public async Task<bool> RemoveLoginAndAuthenticationTokenAsync(UserLoginDataEntity userLoginDataEntity, UserTokenModel token)
     {
+        foreach (var claim in token.Claims)
+        {
+            await  _userManager.RemoveClaimAsync(userLoginDataEntity, claim);;
+        }
+        
         var removeLogin = await _userManager
             .RemoveLoginAsync(
                 userLoginDataEntity,
@@ -83,7 +88,7 @@ public class UserTokenCommandRepository
                 userLoginDataEntity, 
                 token.LoginProvider.ToString(), 
                 token.Name.ToString());
-        
+
         await _signInManager.SignOutAsync();
         
         if(removeLogin.Succeeded && removeAuthenticationTokenResult.Succeeded)
@@ -92,7 +97,7 @@ public class UserTokenCommandRepository
         return false;
     }
 
-    private async Task<bool> SignInAsync(UserLoginDataEntity userLoginDataModel, UserTokenModel token)
+    private async Task<SignInResult> SignInAsync(UserLoginDataEntity userLoginDataModel, UserTokenModel token)
     {
         var loginInfo = new UserLoginInfo(
             token.LoginProvider.ToString(),
@@ -101,13 +106,24 @@ public class UserTokenCommandRepository
         );
         
         var loginResult = await _userManager.AddLoginAsync(userLoginDataModel, loginInfo);
-        if (!loginResult.Succeeded) return false;
+        if (!loginResult.Succeeded) return SignInResult.Failed;
         
         await _signInManager.SignInAsync(userLoginDataModel, isPersistent: false);
-        return true;
+        
+        foreach (var claim in token.Claims)
+        {
+            await _userManager.AddClaimAsync(userLoginDataModel, claim);
+        }
+        
+        return await _signInManager.PasswordSignInAsync(
+            userLoginDataModel,
+            userLoginDataModel.PasswordHash,
+            isPersistent: false,
+            lockoutOnFailure: false
+        );;
     }
     
-    private async Task<bool> UpdateSignInAsync(UserLoginDataEntity userLoginDataModel, UserTokenModel token)
+    private async Task<SignInResult> UpdateSignInAsync(UserLoginDataEntity userLoginDataModel, UserTokenModel token)
     {
         var loginInfo = new UserLoginInfo(
             token.LoginProvider.ToString(),
@@ -116,10 +132,20 @@ public class UserTokenCommandRepository
         );
         
         var loginResult = await _userManager.AddLoginAsync(userLoginDataModel, loginInfo);
-        if (!loginResult.Succeeded) return false;
+        if (!loginResult.Succeeded) return SignInResult.Failed;
         
         await _signInManager.RefreshSignInAsync(userLoginDataModel);
         
-        return true;
+        foreach (var claim in token.Claims)
+        {
+            await _userManager.AddClaimAsync(userLoginDataModel, claim);
+        }
+        
+        return await _signInManager.PasswordSignInAsync(
+            userLoginDataModel,
+            userLoginDataModel.PasswordHash,
+            isPersistent: false,
+            lockoutOnFailure: false
+        );;
     }
 }

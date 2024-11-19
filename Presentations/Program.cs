@@ -9,8 +9,6 @@ var AppCors = "AppCors";
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
-Log.Information("Starting EvenHub API up");
-
 try
 {
     // builder.Host.UseSerilog(LoggingConfiguration.Configure);
@@ -33,7 +31,7 @@ try
 
 
 }
-catch (Exception ex)
+catch (Exception ex) when (ex is not HostAbortedException)
 {
     Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 
