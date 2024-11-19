@@ -41,8 +41,9 @@ public class JwtService : IJwtService
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(_secret),
-            ValidateIssuer = false,
+            ValidateIssuer = true,
             ValidateAudience = false,
+            ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero
         };
     }

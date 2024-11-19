@@ -72,6 +72,11 @@ public class UserTokenCommandRepository
 
     public async Task<bool> RemoveLoginAndAuthenticationTokenAsync(UserLoginDataEntity userLoginDataEntity, UserTokenModel token)
     {
+        foreach (var claim in token.Claims)
+        {
+            await  _userManager.RemoveClaimAsync(userLoginDataEntity, claim);;
+        }
+        
         var removeLogin = await _userManager
             .RemoveLoginAsync(
                 userLoginDataEntity,
@@ -83,7 +88,7 @@ public class UserTokenCommandRepository
                 userLoginDataEntity, 
                 token.LoginProvider.ToString(), 
                 token.Name.ToString());
-        
+
         await _signInManager.SignOutAsync();
         
         if(removeLogin.Succeeded && removeAuthenticationTokenResult.Succeeded)

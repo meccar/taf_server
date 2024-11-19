@@ -9,8 +9,6 @@ var AppCors = "AppCors";
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
-Log.Information("Starting EvenHub API up");
-
 try
 {
     // builder.Host.UseSerilog(LoggingConfiguration.Configure);

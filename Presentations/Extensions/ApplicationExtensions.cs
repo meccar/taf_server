@@ -29,8 +29,6 @@ public static class ApplicationExtensions
         
         app.UseAuthentication();
 
-        app.UseIdentityServer();
-        
         app.UseAuthorization();
         
         // app.UseEndpoints(endpoints =>

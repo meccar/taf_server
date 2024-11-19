@@ -1,8 +1,12 @@
 using System.Security.Claims;
 using System.Text;
+using Duende.IdentityServer;
 using Infrastructure.Configurations.Environment;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.Google;
+using Duende.IdentityServer;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Configurations.Identity;
@@ -15,14 +19,22 @@ public static class AuthenticationConfiguration
             .AddAuthentication(options =>
                 {
                     // options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-                    // options.DefaultChallengeScheme = IdentityConstants.BearerScheme;
+                    options.DefaultChallengeScheme = "oidc";
                     // options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultScheme = "Cookies";
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
                 }
             )
+            // .AddGoogle(options =>
+            // {
+                // options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                
+                // options.ClientId = configuration.GetGoogleClientId();
+                // options.ClientSecret = configuration.GetGoogleClientSecret();
+
+            // })
             .AddJwtBearer(options =>
             {
                 options.Authority = configuration.GetIdentityServerAuthority();
@@ -37,27 +49,46 @@ public static class AuthenticationConfiguration
                     ValidAudience = configuration.GetIdentityServerClientId(),
                     ValidIssuer = configuration.GetIdentityServerAuthority(),
                     ClockSkew = TimeSpan.Zero,
-
                 };
+            })
+            .AddCookie("Cookies")
+            .AddOpenIdConnect("oidc", options =>
+            {
+                var clientId = configuration.GetIdentityServerClientId();
+                var clientSecret = configuration.GetIdentityServerClientSecret();
+                var authority = configuration.GetIdentityServerAuthority();
 
-                options.Events = new JwtBearerEvents
+                if (string.IsNullOrEmpty(clientId))
+                    throw new ArgumentException("IdentityServer ClientId is not configured");
+
+                if (string.IsNullOrEmpty(authority))
+                    throw new ArgumentException("IdentityServer Authority is not configured");
+
+                options.Authority = authority;
+                options.ClientId = clientId;
+                options.ClientSecret = clientSecret;
+                
+                // options.Authority = configuration.GetIdentityServerAuthority();
+                // options.ClientId = configuration.GetIdentityServerClientId();
+                // options.ClientSecret = configuration.GetIdentityServerClientSecret();
+
+                options.ResponseType = "code";
+                options.ResponseMode = "form_post";
+                options.SaveTokens = true;
+                
+                options.GetClaimsFromUserInfoEndpoint = true;
+                options.UseTokenLifetime = true;
+                
+                var scopes = configuration.GetIdentityServerScopes().Split(' ');
+                options.Scope.Clear();
+                foreach (var scope in scopes)
                 {
-                    OnTokenValidated = async context =>
-                    {
-                        var identity = context.Principal.Identity as ClaimsIdentity;
-                        if (identity == null) return;
+                    options.Scope.Add(scope);
+                }
+                
+                options.MapInboundClaims = false;
 
-                        // Add role claims if they don't exist
-                        if (!identity.HasClaim(c => c.Type == ClaimTypes.Role))
-                        {
-                            var roleClaim = identity.Claims.FirstOrDefault(c => c.Type == "role");
-                            if (roleClaim != null)
-                            {
-                                identity.AddClaim(new Claim(ClaimTypes.Role, roleClaim.Value));
-                            }
-                        }
-                    }
-                };
+                options.SaveTokens = true;
             });
         
         return services;
