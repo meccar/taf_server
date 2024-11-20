@@ -31,14 +31,15 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          file: ./Dockerfile
+          context: .
+          file: ./Presentations/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/your-app:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/your-app:${{ github.sha }}
-#            ghcr.io/${{ github.repository }}/your-app:latest
-#            ghcr.io/${{ github.repository }}/your-app:${{ github.sha }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/your-app:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server:${{ github.sha }}
+#            ghcr.io/${{ github.repository }}/taf_server:latest
+#            ghcr.io/${{ github.repository }}/taf_server:${{ github.sha }}
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
           cache-to: type=inline
           
 #  create-release:
@@ -61,8 +62,8 @@ jobs:
 #          GITHUB_TOKEN: ${{ secrets.GITHUBTOKEN }}
 #        with:
 #          upload_url: ${{ steps.create_release.outputs.upload_url }}
-#          asset_path: ./your-app-${{ github.sha }}.tar.gz
-#          asset_name: your-app-${{ github.sha }}.tar.gz
+#          asset_path: ./taf_server-${{ github.sha }}.tar.gz
+#          asset_name: taf_server-${{ github.sha }}.tar.gz
 #          asset_content_type: application/gzip
           
 #  deploy-dev:
@@ -78,9 +79,9 @@ jobs:
 #      - name: Deploy to Azure Container Apps - Dev
 #        uses: azure/container-apps-deploy-action@v1
 #        with:
-#          containerAppName: 'your-app-name-dev'
+#          containerAppName: 'taf_server-name-dev'
 #          resourceGroup: 'your-resource-group'
-#          imageToDeploy: your-username/your-app:${{ github.sha }}
+#          imageToDeploy: your-username/taf_server:${{ github.sha }}
 #          targetPort: 80
 #            
 #  deploy-prod:
@@ -98,7 +99,7 @@ jobs:
 #      - name: Deploy to Azure Container Apps - Prod
 #        uses: azure/container-apps-deploy-action@v1
 #        with:
-#          containerAppName: 'your-app-name-prod'
+#          containerAppName: 'taf_server-name-prod'
 #          resourceGroup: 'your-resource-group'
-#          imageToDeploy: your-username/your-app:${{ github.sha }}
+#          imageToDeploy: your-username/taf_server:${{ github.sha }}
 #          targetPort: 80
