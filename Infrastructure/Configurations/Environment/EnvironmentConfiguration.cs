@@ -20,20 +20,36 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig, IIdentitySe
     
     #region IdentityServer
 
+    public string GetIdentityServerAuthority()
+    {
+        return _configuration.GetValue<string>("IdentityServer:Authority");
+    }
     public string GetIdentityServerClientId()
     {
         return _configuration.GetValue<string>("IdentityServer:ClientId");
+    }
+    public string GetIdentityServerClientName()
+    {
+        return _configuration.GetValue<string>("IdentityServer:ClientName");
     }
 
     public string GetIdentityServerClientSecret()
     {
         return _configuration.GetValue<string>("IdentityServer:ClientSecret");
     }
-    
-    public string GetIdentityServerAuthority()
+    public string GetIdentityServerMvcClientName()
     {
-        return _configuration.GetValue<string>("IdentityServer:Authority");
+        return _configuration.GetValue<string>("IdentityServer:MvcClientName");
     }
+    public string GetIdentityServerMvcClientId()
+    {
+        return _configuration.GetValue<string>("IdentityServer:MvcClientId");
+    }
+    public string GetIdentityServerMvcClientSecret()
+    {
+        return _configuration.GetValue<string>("IdentityServer:MvcClientSecret");
+    }
+    
     
     public string GetIdentityServerScopes()
     {

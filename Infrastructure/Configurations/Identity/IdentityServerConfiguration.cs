@@ -55,6 +55,7 @@ public static class IdentityServerConfiguration
             .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
             .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
             .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
+            .AddTestUsers(IdentityServerConfig.TestUsers)
             // .AddAspNetIdentity<UserLoginDataEntity>()
             .AddDeveloperSigningCredential();
         return services;
