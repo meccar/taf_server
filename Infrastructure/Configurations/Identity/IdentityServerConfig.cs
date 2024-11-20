@@ -1,6 +1,8 @@
 using System.Security.Claims;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Test;
+using IdentityModel;
 using Infrastructure.Configurations.Environment;
 
 namespace Infrastructure.Configurations.Identity;
@@ -11,6 +13,7 @@ public static class IdentityServerConfig
         public static IEnumerable<ApiScope> ApiScopes { get; set; }
         public static IEnumerable<Client> Clients { get; set; }
         public static IEnumerable<ApiResource> ApiResources { get; set; }
+        public static List<TestUser> TestUsers { get; set; }
 
         public static void Initialize(EnvironmentConfiguration configuration)
         {
@@ -19,7 +22,7 @@ public static class IdentityServerConfig
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                new IdentityResources.Email(),
+                // new IdentityResources.Email(),
                 new IdentityResource
                 {
                     Name = "roles",
@@ -43,7 +46,8 @@ public static class IdentityServerConfig
                 new Client
                 {
                     ClientId = configuration.GetIdentityServerClientId(),
-                    AllowedGrantTypes = GrantTypes.Code,
+                    ClientName = configuration.GetIdentityServerClientName(),
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
                     {
                         new Secret(configuration.GetIdentityServerClientSecret().Sha256())
@@ -76,17 +80,28 @@ public static class IdentityServerConfig
                 },
                 new Client
                 {
-                    ClientId = "interactive_client",
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    RequirePkce = true,
+                    ClientId = configuration.GetIdentityServerMvcClientId(),
+                    ClientName = configuration.GetIdentityServerMvcClientName(),
+                    AllowedGrantTypes = GrantTypes.Code,
+                    AllowRememberConsent = false,
                     RequireClientSecret = true,
                     ClientSecrets =
                     {
-                        new Secret("interactive_secret".Sha256())
+                        new Secret(configuration.GetIdentityServerMvcClientSecret().Sha256())
                     },
-                    RedirectUris = { "https://localhost:6001/signin-oidc" },
-                    PostLogoutRedirectUris = { "https://localhost:6001/signout-callback-oidc" },
-                    AllowedScopes = { "openid", "profile", "api1" },
+                    RedirectUris = new List<string>
+                    {
+                        $"{configuration.GetIdentityServerAuthority()}"+"/signin-oidc"
+                    },
+                    PostLogoutRedirectUris = new List<string>
+                    {
+                        $"{configuration.GetIdentityServerAuthority()}"+"/signout-callback-oidc"
+                    },
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },
                     AllowOfflineAccess = true
                 }
             };
@@ -103,6 +118,22 @@ public static class IdentityServerConfig
                         "eid"
                     }
                 }
+            };
+
+            TestUsers = new List<TestUser>
+            {
+                new TestUser
+                {
+                    SubjectId = "11111",
+                    Username = "jane2@example.com",
+                    Password = "HGOSFUgiodfby8^&*&",
+                    Claims = new List<Claim>
+                    {
+                        new Claim(JwtClaimTypes.GivenName, "Test User"),
+                        new Claim(JwtClaimTypes.FamilyName, "admin")
+                    }
+                }
+
             };
         }
     }

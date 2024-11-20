@@ -7,6 +7,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.Google;
 using Duende.IdentityServer;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Configurations.Identity;
@@ -19,11 +21,10 @@ public static class AuthenticationConfiguration
             .AddAuthentication(options =>
                 {
                     // options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-                    options.DefaultChallengeScheme = "oidc";
                     // options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
-                    options.DefaultScheme = "Cookies";
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                     options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
                 }
             )
@@ -51,29 +52,29 @@ public static class AuthenticationConfiguration
                     ClockSkew = TimeSpan.Zero,
                 };
             })
-            .AddCookie("Cookies")
-            .AddOpenIdConnect("oidc", options =>
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.Authority = configuration.GetIdentityServerAuthority();
-                options.ClientId = configuration.GetIdentityServerClientId();
-                options.ClientSecret = configuration.GetIdentityServerClientSecret();
-
+                
+                options.ClientId = configuration.GetIdentityServerMvcClientId();
+                options.ClientSecret = configuration.GetIdentityServerMvcClientSecret();
                 options.ResponseType = "code";
-                options.ResponseMode = "form_post";
-                options.SaveTokens = true;
+                // options.ResponseMode = "form_post";
                 
-                options.GetClaimsFromUserInfoEndpoint = true;
+                // var scopes = configuration.GetIdentityServerScopes().Split(' ');
+                // options.Scope.Clear();
+                // foreach (var scope in scopes)
+                // {
+                //     options.Scope.Add(scope);
+                // }
+                options.Scope.Add(IdentityServerConstants.StandardScopes.OpenId);
+                options.Scope.Add(IdentityServerConstants.StandardScopes.Profile);
+                
                 options.UseTokenLifetime = true;
-                
-                var scopes = configuration.GetIdentityServerScopes().Split(' ');
-                options.Scope.Clear();
-                foreach (var scope in scopes)
-                {
-                    options.Scope.Add(scope);
-                }
-                
                 options.MapInboundClaims = false;
 
+                options.GetClaimsFromUserInfoEndpoint = true;
                 options.SaveTokens = true;
             });
         
