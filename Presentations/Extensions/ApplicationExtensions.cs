@@ -30,6 +30,7 @@ public static class ApplicationExtensions
         app.UseAuthentication();
 
         app.UseAuthorization();
+
         
         // app.UseEndpoints(endpoints =>
         // {
@@ -39,8 +40,8 @@ public static class ApplicationExtensions
         app.MapGet("/", context => Task.Run(() =>
             context.Response.Redirect("/swagger/index.html")));
         // // app.MapHub<ChatHub>("/chat");
-        
+
         app.MapControllers();
-        
+
     }
 }

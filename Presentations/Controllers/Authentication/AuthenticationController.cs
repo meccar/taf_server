@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Application.Dtos.Authentication.Login;
 using Application.Dtos.Authentication.Register;
 using Application.Usecases.Auth;
@@ -93,6 +94,16 @@ public class AuthenticationController
     [AdminGuard]
     public IActionResult GetAdminStatus()
     {
-        return Ok(new { Admin = "true" });
+        var claims = User.Claims.ToList();
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var userName = User.FindFirst(ClaimTypes.Name)?.Value;
+        var sessionId = User.FindFirst("session_id")?.Value;
+        
+        return Ok(new {
+            UserId = userId,
+            UserName = userName,
+            SessionId = sessionId,
+            AllClaims = claims
+        });
     }
 }

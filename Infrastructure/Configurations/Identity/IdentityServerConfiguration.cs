@@ -1,10 +1,8 @@
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Configuration;
-using Duende.IdentityServer.Services.KeyManagement;
 using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Configurations.Environment;
 using Microsoft.IdentityModel.Tokens;
-
 
 namespace Infrastructure.Configurations.Identity;
 public static class IdentityServerConfiguration
@@ -64,6 +62,7 @@ public static class IdentityServerConfiguration
             .AddInMemoryCaching()
             // .AddAspNetIdentity<UserLoginDataEntity>()
             .AddDeveloperSigningCredential();
+            
         return services;
     }
 }

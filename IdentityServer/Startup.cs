@@ -3,6 +3,8 @@ using Application;
 using IdentityModel.Client;
 using IdentityServer.Extensions;
 using Infrastructure;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
 using Serilog;
 
 namespace IdentityServer;
@@ -35,20 +37,28 @@ public class Startup
     
     public void ConfigureLogging(ILoggingBuilder Logging)
     {
+        var serviceName = "taf_server";
+        var serviceVersion = "1.0.0";
+        
         Logging.AddConsole();
         Logging.AddSerilog();
+        Logging.AddOpenTelemetry(options => options
+            .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(
+                serviceName: serviceName,
+                serviceVersion: serviceVersion))
+            .AddConsoleExporter());
     }
     
-    public void ConfigureWebHost(IWebHostBuilder WebHost)
-    {
-        var cert = new X509Certificate2("../certificate.pfx", "tung");
-
-        WebHost.ConfigureKestrel(options =>
-        {
-            options.ConfigureHttpsDefaults(httpsOptions =>
-            {
-                httpsOptions.ServerCertificate = cert;
-            });
-        });
-    }
+    // public void ConfigureWebHost(IWebHostBuilder WebHost)
+    // {
+    //     var cert = new X509Certificate2("../certificate.pfx", "tung");
+    //
+    //     WebHost.ConfigureKestrel(options =>
+    //     {
+    //         options.ConfigureHttpsDefaults(httpsOptions =>
+    //         {
+    //             httpsOptions.ServerCertificate = cert;
+    //         });
+    //     });
+    // }
 }

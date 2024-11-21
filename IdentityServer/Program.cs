@@ -29,7 +29,7 @@ public class Program
             
             startup.ConfigureServices(builder.Services);
             startup.ConfigureLogging(builder.Logging);
-            startup.ConfigureWebHost(builder.WebHost);
+            // startup.ConfigureWebHost(builder.WebHost);
             
             var app = builder.Build();
             startup.ConfigureApplication(app);

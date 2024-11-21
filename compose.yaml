@@ -10,3 +10,9 @@
     build:
       context: .
       dockerfile: IdentityServer/Dockerfile
+
+  test:
+    image: test
+    build:
+      context: .
+      dockerfile: test/Dockerfile

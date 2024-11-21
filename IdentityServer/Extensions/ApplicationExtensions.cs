@@ -33,10 +33,13 @@ public static class ApplicationExtensions
         app.UseRouting();
         
         app.UseIdentityServer();
+        
         app.UseAuthentication();
+        app.UseBff();
         app.UseAuthorization();
 
-        app.MapControllers();
+        app.MapBffManagementEndpoints();
+        
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}")
@@ -46,7 +49,8 @@ public static class ApplicationExtensions
             .RequireAuthorization();
         
         app.MapControllers()
-            .RequireAuthorization();
+            .RequireAuthorization()
+            .AsBffApiEndpoint();
         
         // app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
         //     .RequireAuthorization();
