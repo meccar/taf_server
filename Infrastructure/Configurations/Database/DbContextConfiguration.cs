@@ -71,6 +71,8 @@ public static class DbContextConfiguration
                 });
         });
         
+        // services.AddConfigurationStore(options => options.ConnectionString = connectionString);
+        
         services.AddScoped<TransactionDecorator>();
         
         return services;

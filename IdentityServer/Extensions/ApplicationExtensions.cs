@@ -2,7 +2,7 @@ namespace IdentityServer.Extensions;
 
 public static class ApplicationExtensions
 {
-    public static void UseInfrastructure(this WebApplication app, string appCors)
+    public static void UseApplicationSetup(this WebApplication app, string appCors)
     {
         
         // Configure the HTTP request pipeline.
