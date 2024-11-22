@@ -5,7 +5,7 @@ using Duende.IdentityServer.Test;
 using IdentityModel;
 using Infrastructure.Configurations.Environment;
 
-namespace Infrastructure.Configurations.Identity;
+namespace Infrastructure.Configurations.IdentityServer;
 
 public static class IdentityServerConfig
     {
@@ -43,15 +43,18 @@ public static class IdentityServerConfig
             // Clients
             Clients = new List<Client>
             {
+                // m2m client credentials flow client
                 new Client
                 {
                     ClientId = configuration.GetIdentityServerClientId(),
                     ClientName = configuration.GetIdentityServerClientName(),
+                    
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
                     ClientSecrets =
                     {
                         new Secret(configuration.GetIdentityServerClientSecret().Sha256())
                     },
+                    
                     AllowedScopes =                 
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -78,25 +81,34 @@ public static class IdentityServerConfig
                     AlwaysIncludeUserClaimsInIdToken = true,
                     UpdateAccessTokenClaimsOnRefresh = true
                 },
+                
+                // interactive client using code flow + pkce
                 new Client
                 {
-                    ClientId = configuration.GetIdentityServerMvcClientId(),
-                    ClientName = configuration.GetIdentityServerMvcClientName(),
+                    ClientId = configuration.GetIdentityServerInteractiveClientId(),
+                    ClientName = configuration.GetIdentityServerInteractiveClientName(),
+                    
                     AllowedGrantTypes = GrantTypes.Code,
+                    
                     AllowRememberConsent = false,
                     RequireClientSecret = true,
                     ClientSecrets =
                     {
-                        new Secret(configuration.GetIdentityServerMvcClientSecret().Sha256())
+                        new Secret(configuration.GetIdentityServerInteractiveClientSecret().Sha256())
                     },
+                    
                     RedirectUris = new List<string>
                     {
                         $"{configuration.GetIdentityServerAuthority()}"+"/signin-oidc"
                     },
+                    
+                    FrontChannelLogoutUri = $"{configuration.GetIdentityServerAuthority()}"+"/signout-oidc",
+                    
                     PostLogoutRedirectUris = new List<string>
                     {
                         $"{configuration.GetIdentityServerAuthority()}"+"/signout-callback-oidc"
                     },
+                    
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

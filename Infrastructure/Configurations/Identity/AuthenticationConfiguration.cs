@@ -71,8 +71,8 @@ public static class AuthenticationConfiguration
             {
                 options.Authority = configuration.GetIdentityServerAuthority();
                 
-                options.ClientId = configuration.GetIdentityServerMvcClientId();
-                options.ClientSecret = configuration.GetIdentityServerMvcClientSecret();
+                options.ClientId = configuration.GetIdentityServerInteractiveClientId();
+                options.ClientSecret = configuration.GetIdentityServerInteractiveClientSecret();
                 
                 options.ResponseType = OpenIdConnectResponseType.Code;
                 options.ResponseMode = OpenIdConnectResponseMode.Query;

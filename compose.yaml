@@ -16,3 +16,15 @@
     build:
       context: .
       dockerfile: test/Dockerfile
+
+  test-1:
+    image: test-1
+    build:
+      context: .
+      dockerfile: test/Dockerfile
+
+  test-2:
+    image: test-2
+    build:
+      context: .
+      dockerfile: test/Dockerfile

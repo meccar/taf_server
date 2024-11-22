@@ -4,12 +4,10 @@ using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
 using Domain.Interfaces.Service;
 using Infrastructure.Configurations.Environment;
-using Infrastructure.Extensions;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Command;
 using Infrastructure.Repositories.Query;
 using Infrastructure.Repositories.Service;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Configurations.Infrastructure;

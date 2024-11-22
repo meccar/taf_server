@@ -24,15 +24,19 @@ public class Program
         {
             Log.Information("Starting host...");
             
-            var builder = WebApplication.CreateBuilder(args);
-            var startup = new Startup(builder.Configuration);
+            WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
             
-            startup.ConfigureServices(builder.Services);
-            startup.ConfigureLogging(builder.Logging);
-            // startup.ConfigureWebHost(builder.WebHost);
+            WebApplication? app = builder
+                .ConfigureBuilder()
+                .ConfigurePipeline();
             
-            var app = builder.Build();
-            startup.ConfigureApplication(app);
+            // if (args.Contains("/seed"))
+            // {
+            //     Log.Information("Seeding database...");
+            //     SeedData.EnsureSeedData(app);
+            //     Log.Information("Done seeding database. Exiting.");
+            //     return;
+            // }
             
             await app.RunAsync();
             

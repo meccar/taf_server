@@ -1,10 +1,11 @@
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Configurations.Environment;
+using Infrastructure.Configurations.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Infrastructure.Configurations.Identity;
+namespace Infrastructure.Configurations.IdentityServer;
 public static class IdentityServerConfiguration
 {
     public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services, EnvironmentConfiguration configuration)

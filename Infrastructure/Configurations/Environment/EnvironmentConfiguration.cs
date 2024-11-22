@@ -37,17 +37,17 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig, IIdentitySe
     {
         return _configuration.GetValue<string>("IdentityServer:ClientSecret");
     }
-    public string GetIdentityServerMvcClientName()
+    public string GetIdentityServerInteractiveClientName()
     {
-        return _configuration.GetValue<string>("IdentityServer:MvcClientName");
+        return _configuration.GetValue<string>("IdentityServer:InteractiveClientName");
     }
-    public string GetIdentityServerMvcClientId()
+    public string GetIdentityServerInteractiveClientId()
     {
-        return _configuration.GetValue<string>("IdentityServer:MvcClientId");
+        return _configuration.GetValue<string>("IdentityServer:InteractiveClientId");
     }
-    public string GetIdentityServerMvcClientSecret()
+    public string GetIdentityServerInteractiveClientSecret()
     {
-        return _configuration.GetValue<string>("IdentityServer:MvcClientSecret");
+        return _configuration.GetValue<string>("IdentityServer:InteractiveClientSecret");
     }
     
     
