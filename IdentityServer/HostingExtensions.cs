@@ -28,8 +28,6 @@ public static class HostingExtensions
         var serviceName = "taf_server";
         var serviceVersion = "1.0.0";
         
-        // var cert = new X509Certificate2("../certificate.pfx", "tung");
-        
         var kestrelConfig = builder.Configuration.GetSection("Kestrel:Endpoints:Https:Certificate");
 
         var cert = new X509Certificate2(kestrelConfig["Path"]!, kestrelConfig["Password"]);
