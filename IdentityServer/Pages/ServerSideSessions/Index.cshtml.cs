@@ -7,7 +7,7 @@ using Duende.IdentityServer.Stores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityServerHost.Pages.ServerSideSessions
+namespace test.Pages.ServerSideSessions
 {
     public class IndexModel : PageModel
     {
@@ -35,12 +35,8 @@ namespace IdentityServerHost.Pages.ServerSideSessions
         [BindProperty(SupportsGet = true)]
         public string? Prev { get; set; }
 
-        public async Task<ActionResult> OnGet()
+        public async Task OnGet()
         {
-            //Replace with an authorization policy check
-            if (HttpContext.Connection.IsRemote())
-                return NotFound();
-
             if (_sessionManagementService != null)
             {
                 UserSessions = await _sessionManagementService.QuerySessionsAsync(new SessionQuery
@@ -52,7 +48,6 @@ namespace IdentityServerHost.Pages.ServerSideSessions
                     SubjectId = SubjectIdFilter
                 });
             }
-            return Page();
         }
 
         [BindProperty]
@@ -60,10 +55,6 @@ namespace IdentityServerHost.Pages.ServerSideSessions
 
         public async Task<IActionResult> OnPost()
         {
-            //Replace with an authorization policy check
-            if (HttpContext.Connection.IsRemote())
-                return NotFound();
-
             ArgumentNullException.ThrowIfNull(_sessionManagementService);
 
             await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 

@@ -6,8 +6,8 @@ public interface IIdentityServer
     string GetIdentityServerClientId();
     string GetIdentityServerClientName();
     string GetIdentityServerClientSecret();
-    string GetIdentityServerMvcClientId();
-    string GetIdentityServerMvcClientName();
-    string GetIdentityServerMvcClientSecret();
+    string GetIdentityServerInteractiveClientId();
+    string GetIdentityServerInteractiveClientName();
+    string GetIdentityServerInteractiveClientSecret();
     string GetIdentityServerScopes();
 }

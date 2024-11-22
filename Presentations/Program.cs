@@ -1,53 +1,54 @@
-using Application;
-using Infrastructure;
-using Infrastructure.Data;
 using Presentations;
-using Presentations.Extensions;
 using Serilog;
+using Serilog.Events;
+using Serilog.Sinks.SystemConsole.Themes;
 
-var AppCors = "AppCors";
-
-WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
-
-try
+public class Program
 {
-    // builder.Host.UseSerilog(LoggingConfiguration.Configure);
-    builder.Host.AddAppConfigurations();
+    public static async Task<int> Main(string[] args)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+            .MinimumLevel.Override("System", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
+            .Enrich.FromLogContext()
+            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}", theme: AnsiConsoleTheme.Code)
+            .CreateLogger();
+        
+        try
+        {
+            Log.Information("Starting host...");
+            
+            WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+            
+            WebApplication? app = builder
+                .ConfigureBuilder()
+                .ConfigurePipeline();
 
-    // Add services to the container.
-    builder.Logging.AddConsole();
-    
-    builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCors);
-    builder.Services.ConfigureApplicationServices(builder.Configuration);
-    builder.Services.ConfigurePresentationsServices(builder.Configuration);
-    
-    WebApplication? app = builder.Build();
+            Log.Information("Seeding database...");
+            await SeedData.EnsureSeedData(app);
+            Log.Information("Done seeding database. Exiting.");
+            
+            await app.RunAsync();
 
-    app.UseInfrastructure(AppCors);
-    
-    await SeedDatabaseAsync(app);
-    
-    await app.RunAsync();
+            return 0;
+        }
+        catch (Exception ex) when (ex is not HostAbortedException)
+        {
+            Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 
-
+            var type = ex.GetType().Name;
+            if (type.Equals("StopTheHostException", StringComparison.Ordinal)) throw;
+            return 1;
+        }
+        finally
+        {
+            Log.Information("Shut down API complete");
+            await Log.CloseAndFlushAsync();
+        }
+    }
 }
-catch (Exception ex) when (ex is not HostAbortedException)
-{
-    Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 
-    var type = ex.GetType().Name;
-    if (type.Equals("StopTheHostException", StringComparison.Ordinal)) throw;
-}
-finally
-{
-    Log.Information("Shut down API complete");
-    await Log.CloseAndFlushAsync();
-}
 
-async Task SeedDatabaseAsync(WebApplication app)
-{
-    using var scope = app.Services.CreateScope();
-    var serviceProvider = scope.ServiceProvider;
-    var dbContextSeed = serviceProvider.GetRequiredService<ApplicationDbContextSeed>();
-    await dbContextSeed.SeedAsync();
-}

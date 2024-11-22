@@ -1,12 +1,11 @@
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Configuration;
-using Duende.IdentityServer.Services.KeyManagement;
-using Microsoft.Extensions.DependencyInjection;
 using Infrastructure.Configurations.Environment;
+using Infrastructure.Configurations.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
-
-namespace Infrastructure.Configurations.Identity;
+namespace Infrastructure.Configurations.IdentityServer;
 public static class IdentityServerConfiguration
 {
     public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services, EnvironmentConfiguration configuration)
@@ -21,6 +20,9 @@ public static class IdentityServerConfiguration
 
         services.AddIdentityServer(options =>
             {
+                options.Caching.ClientStoreExpiration = TimeSpan.FromMinutes(5);
+                options.Caching.ResourceStoreExpiration = TimeSpan.FromMinutes(5);
+                
                 options.Events.RaiseErrorEvents = true;
                 options.Events.RaiseInformationEvents = true;
                 options.Events.RaiseFailureEvents = true;
@@ -48,6 +50,7 @@ public static class IdentityServerConfiguration
                     // ES256
                     new SigningAlgorithmOptions(SecurityAlgorithms.EcdsaSha256)
                 };
+                options.ServerSideSessions.UserDisplayNameClaimType = "name";
                 // options.LicenseKey = "eyJhbG...";
             })
             .AddSigningCredential(cert)
@@ -56,8 +59,11 @@ public static class IdentityServerConfiguration
             .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
             .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
             .AddTestUsers(IdentityServerConfig.TestUsers)
+            .AddServerSideSessions()
+            .AddInMemoryCaching()
             // .AddAspNetIdentity<UserLoginDataEntity>()
             .AddDeveloperSigningCredential();
+            
         return services;
     }
 }
