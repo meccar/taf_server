@@ -3,6 +3,7 @@ using Application;
 using Infrastructure;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
+using Presentations.Configurations;
 using Presentations.Extensions;
 using Serilog;
 
@@ -30,7 +31,9 @@ public static class HostingExtensions
         
         builder.Services.ConfigureInfrastructureServices(builder.Configuration, _appCors);
         builder.Services.ConfigureApplicationServices(builder.Configuration);
-        builder.Services.ConfigurePresentationsServices(builder.Configuration);
+        // builder.Services.ConfigurePresentationsServices(builder.Configuration);
+        builder.Services.ConfigureHttpException();
+        builder.Services.ConfigureControllers();
         
         builder.Logging.AddConsole();
         builder.Logging.AddSerilog();
