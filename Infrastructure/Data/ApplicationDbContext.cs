@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Domain.Aggregates;
 using Domain.Entities;
+using Domain.SeedWork.Enums.UserAccount;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -55,6 +56,12 @@ public class ApplicationDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        
+        builder.Entity<UserAccountAggregate>()
+            .HasQueryFilter(u => u.Status != UserAccountStatus.Inactive.ToString());
+
+        builder.Entity<UserLoginDataEntity>()
+            .HasQueryFilter(u => u.UserAccount.Status != UserAccountStatus.Inactive.ToString());
         
         builder.Entity<UserLoginDataEntity>()
             .HasOne(u => u.UserAccount)

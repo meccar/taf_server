@@ -2,6 +2,7 @@
 // See LICENSE in the project root for license information.
 
 using Domain.Entities;
+using Domain.Interfaces.Service;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
@@ -26,7 +27,7 @@ public class Index : PageModel
     private readonly IEventService _events;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
     private readonly IIdentityProviderStore _identityProviderStore;
-
+    private readonly IJwtService _jwtTokenService;
     public ViewModel View { get; set; } = default!;
         
     [BindProperty]
@@ -38,7 +39,9 @@ public class Index : PageModel
         IIdentityProviderStore identityProviderStore,
         IEventService events,
         UserManager<UserLoginDataEntity> userManager,
-        SignInManager<UserLoginDataEntity> signInManager)
+        SignInManager<UserLoginDataEntity> signInManager,
+        IJwtService jwtTokenService
+        )
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -46,6 +49,7 @@ public class Index : PageModel
         _schemeProvider = schemeProvider;
         _identityProviderStore = identityProviderStore;
         _events = events;
+        _jwtTokenService = jwtTokenService;
     }
 
     public async Task<IActionResult> OnGet(string? returnUrl)
@@ -105,6 +109,8 @@ public class Index : PageModel
                 await _events.RaiseAsync(new UserLoginSuccessEvent(user!.UserName, user.EId, user.UserName, clientId: context?.Client.ClientId));
                 Telemetry.Metrics.UserLogin(context?.Client.ClientId, IdentityServerConstants.LocalIdentityProvider);
 
+                await _jwtTokenService.GenerateAuthResponseWithRefreshTokenCookie(user.Id.ToString());
+                
                 if (context != null)
                 {
                     // This "can't happen", because if the ReturnUrl was null, then the context would be null

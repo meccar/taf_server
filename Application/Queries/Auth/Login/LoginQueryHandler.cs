@@ -11,17 +11,14 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtService _jwtTokenService;
-    private readonly IEventService _eventService;
     
     public LoginQueryHandler(
         IUnitOfWork unitOfWork,
-        IJwtService jwtTokenService,
-        IEventService eventService
+        IJwtService jwtTokenService
         )
     {
         _unitOfWork = unitOfWork;
         _jwtTokenService = jwtTokenService;
-        _eventService = eventService;
     }
 
     public async Task<TokenModel> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -36,11 +33,6 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
         
         if (!isPasswordMatch)
             throw new UnauthorizedException("Invalid credentials");
-        
-        // await _eventService.RaiseAsync(new LoginSuccessEvent(
-        //     userLoginDataModel.EId,
-        //     userLoginDataModel.Email
-        // ));
         
         // var userAcconutStatus = await _unitOfWork.UserAccountQueryRepository.GetUserAccountStatusAsync(userLoginDataModel.UserAccountId); 
         //
