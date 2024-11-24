@@ -22,13 +22,13 @@ public static class IdentityServerConfig
             {
                 new IdentityResources.OpenId(),
                 new IdentityResources.Profile(),
-                // new IdentityResources.Email(),
-                new IdentityResource
-                {
-                    Name = "roles",
-                    DisplayName = "Roles",
-                    UserClaims = new[] { ClaimTypes.Role }
-                }
+                new IdentityResources.Email(),
+                // new IdentityResource
+                // {
+                //     Name = "roles",
+                //     DisplayName = "Roles",
+                //     UserClaims = new[] { ClaimTypes.Role }
+                // }
             };
 
             // API scopes
@@ -112,7 +112,9 @@ public static class IdentityServerConfig
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
+
                     },
                     AllowOfflineAccess = true
                 }

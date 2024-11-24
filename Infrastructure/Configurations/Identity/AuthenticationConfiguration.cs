@@ -86,6 +86,7 @@ public static class AuthenticationConfiguration
                 options.Scope.Clear();
                 options.Scope.Add(IdentityServerConstants.StandardScopes.OpenId);
                 options.Scope.Add(IdentityServerConstants.StandardScopes.Profile);
+                options.Scope.Add(IdentityServerConstants.StandardScopes.Email);
                 
                 // refresh token
                 options.Scope.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
