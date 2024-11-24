@@ -127,7 +127,6 @@ public static class IdentityServerConfig
                     Scopes = { "api1" },
                     UserClaims = new[]
                     {
-                        ClaimTypes.Role,
                         ClaimTypes.Email,
                         "eid"
                     }
