@@ -28,7 +28,7 @@ public static class InfrastructureServicesConfiguration
         services.ConfigureCors(appCors);
         services.ConfigureOpenTelemetry();
         services.ConfigureAuthentication(config);
-        services.ConfigureAuthorization();
+        services.ConfigureAuthorization(config);
         // services.ConfigureTransaction();
         services.ConfigureApiVersioning();
         services.ConfigureDbContext(config);

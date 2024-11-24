@@ -1,3 +1,4 @@
+using Infrastructure.Configurations.Environment;
 using Infrastructure.SeedWork.Enums;
 using Infrastructure.SeedWork.Policies;
 using Microsoft.AspNetCore.Authorization;
@@ -7,7 +8,7 @@ namespace Infrastructure.Configurations.Identity;
 
 public static class AuthorizationConfiguration
 {
-    public static IServiceCollection ConfigureAuthorization(this IServiceCollection services)
+    public static IServiceCollection ConfigureAuthorization(this IServiceCollection services, EnvironmentConfiguration configuration)
     {
         services
             .AddAuthorization(options =>
@@ -17,10 +18,10 @@ public static class AuthorizationConfiguration
                     ConfigureRolePolicy(options, ERole.CompanyUser);
                     ConfigureRolePolicy(options, ERole.User);
                     
-                    options.AddPolicy("ApiScope", policy =>
+                    options.AddPolicy("ClientIdPolicy", policy =>
                     {
                         policy.RequireAuthenticatedUser();
-                        policy.RequireClaim("scope", "api1");
+                        policy.RequireClaim("client_id", configuration.GetIdentityServerInteractiveClientId());
                     });
                 }
             );
@@ -29,7 +30,8 @@ public static class AuthorizationConfiguration
     
     private static void ConfigureRolePolicy(AuthorizationOptions options, string role)
     {
-        options.AddPolicy(new PolicyKey(role).ToString(), policy =>
-            policy.RequireRole(role));
+        options
+            .AddPolicy(new PolicyKey(role).ToString(),
+                policy => policy.RequireRole(role));
     }
 }

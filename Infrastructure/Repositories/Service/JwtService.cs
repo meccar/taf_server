@@ -9,7 +9,9 @@ using Infrastructure.Configurations.Environment;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Domain.Interfaces.Service;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Infrastructure.Repositories.Service;
 
@@ -53,6 +55,12 @@ public class JwtService : IJwtService
         var user = await _userManager.FindByIdAsync(userId);
         
         var token = await _tokenService.GenerateTokenPair(user);
+
+        var accessToken = await _httpContextAccessor
+            .HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
+        
+        var refreshToken = await _httpContextAccessor
+            .HttpContext.GetTokenAsync(OpenIdConnectParameterNames.RefreshToken);
         
         token.LoginProvider = EProvider.PASSWORD;
         
