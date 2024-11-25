@@ -25,7 +25,7 @@ jobs:
         run: dotnet build --configuration Release taf_server.sln
         
       - name: Test with dotnet CLI
-        run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+        run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" taf_server.sln
 
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v4
