@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{F345DE5F-4A8E-4F50-897B-22F127507822}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github\workflows", ".github\workflows", "{455EAC03-268D-4826-845C-55B451ACBE61}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer", "src\IdentityServer\IdentityServer.csproj", "{57C87AA6-E541-4615-80DB-3D1E975E0D48}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CD44762C-271A-4309-AA49-216513D0E593} = {CD44762C-271A-4309-AA49-216513D0E593}
@@ -74,6 +72,5 @@ Global
 		SolutionGuid = {8FE8B066-DF63-476B-99A9-E40650503D60}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{455EAC03-268D-4826-845C-55B451ACBE61} = {F345DE5F-4A8E-4F50-897B-22F127507822}
 	EndGlobalSection
 EndGlobal
