@@ -1,15 +1,15 @@
 ﻿services:
-  webapplication1:
-    image: webapplication1
+  presentations:
+    image: presentations
     build:
       context: .
-      dockerfile: WebApplication1/Dockerfile
+      dockerfile: src/Presentations/Dockerfile
 
   identityserver:
     image: identityserver
     build:
       context: .
-      dockerfile: IdentityServer/Dockerfile
+      dockerfile: src/IdentityServer/Dockerfile
 
   test:
     image: test
