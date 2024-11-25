@@ -22,7 +22,7 @@ jobs:
         run: dotnet restore taf_server.sln
       
       - name: Build
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Release taf_server.sln
         
       - name: Test with dotnet CLI
         run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
