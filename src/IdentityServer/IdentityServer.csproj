@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="IdentityModel" Version="7.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.10" />
+      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.10" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.10">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+      <PackageReference Include="Serilog" Version="4.1.0" />
+      <PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Domain\Domain.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+        <ProjectReference Include="..\Application\Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Pages\Account\AccessDenied.cshtml" />
+      <AdditionalFiles Include="Pages\Account\Login\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Account\Logout\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Account\Logout\LoggedOut.cshtml" />
+      <AdditionalFiles Include="Pages\Ciba\All.cshtml" />
+      <AdditionalFiles Include="Pages\Ciba\Consent.cshtml" />
+      <AdditionalFiles Include="Pages\Ciba\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Ciba\_ScopeListItem.cshtml" />
+      <AdditionalFiles Include="Pages\Consent\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Consent\_ScopeListItem.cshtml" />
+      <AdditionalFiles Include="Pages\Device\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Device\Success.cshtml" />
+      <AdditionalFiles Include="Pages\Device\_ScopeListItem.cshtml" />
+      <AdditionalFiles Include="Pages\Diagnostics\Index.cshtml" />
+      <AdditionalFiles Include="Pages\ExternalLogin\Callback.cshtml" />
+      <AdditionalFiles Include="Pages\ExternalLogin\Challenge.cshtml" />
+      <AdditionalFiles Include="Pages\Grants\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Home\Error\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Redirect\Index.cshtml" />
+      <AdditionalFiles Include="Pages\ServerSideSessions\Index.cshtml" />
+      <AdditionalFiles Include="Pages\Shared\_Layout.cshtml" />
+      <AdditionalFiles Include="Pages\Shared\_Nav.cshtml" />
+      <AdditionalFiles Include="Pages\Shared\_ValidationSummary.cshtml" />
+      <AdditionalFiles Include="Pages\_ViewImports.cshtml" />
+      <AdditionalFiles Include="Pages\_ViewStart.cshtml" />
+    </ItemGroup>
+    
+</Project>
