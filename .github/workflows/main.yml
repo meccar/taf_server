@@ -19,8 +19,8 @@ jobs:
             dotnet-version: ${{ matrix.dotnet-version }}
             
       - name: Install dependencies
-        run: dotnet restore
-        
+        run: dotnet restore taf_server.sln
+      
       - name: Build
         run: dotnet build --configuration Release
         
