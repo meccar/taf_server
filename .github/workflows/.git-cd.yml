@@ -32,7 +32,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./Presentations/Dockerfile
+          file: ./src/Presentations/Dockerfile
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
