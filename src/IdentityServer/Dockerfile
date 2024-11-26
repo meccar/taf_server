@@ -15,7 +15,8 @@ WORKDIR /src
 #COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
 RUN ls -a
 RUN pwd
-COPY ./src ./
+COPY src/ ./
+
 WORKDIR IdentityServer
 
 RUN dotnet restore "IdentityServer.csproj"
