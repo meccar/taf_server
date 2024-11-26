@@ -16,7 +16,7 @@ EXPOSE 8081
 #COPY . .
 
 
-RUN #dotnet restore "Presentations.csproj"
+#RUN dotnet restore "Presentations.csproj"
 
 # Copy entire source code
 #COPY . .
@@ -25,11 +25,11 @@ RUN #dotnet restore "Presentations.csproj"
 #WORKDIR Presentations
 
 # Build the project
-RUN #dotnet build "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/build
+#RUN dotnet build "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
 #FROM build AS publish
-RUN #dotnet publish "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+#RUN dotnet publish "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Final image
 FROM base AS final
