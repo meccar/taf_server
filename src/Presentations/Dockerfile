@@ -11,7 +11,7 @@ COPY ["src/Presentations/Presentations.csproj", "src/Presentations/"]
 RUN dotnet restore "src/Presentations/Presentations.csproj"
 COPY . .
 WORKDIR "/src/Presentations"
-RUN dotnet build "src/Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
