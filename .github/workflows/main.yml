@@ -27,10 +27,22 @@ jobs:
       - name: Test with dotnet CLI
         run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" taf_server.sln
 
-      - name: Upload dotnet test results
+      - name: Publish
+        run: |
+          mkdir -p ./artifacts/publish
+          dotnet publish taf_server.sln -c Release -o ./artifacts/publish
+          
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: dotnet-results-${{ matrix.dotnet-version }}
-          path: TestResults-${{ matrix.dotnet-version }}
+          name: presentations-artifacts
+          path: ./artifacts/publish
         if: ${{ always() }}
+        
+#      - name: Upload dotnet test results
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: dotnet-results-${{ matrix.dotnet-version }}
+#          path: TestResults-${{ matrix.dotnet-version }}
+#        if: ${{ always() }}
         
