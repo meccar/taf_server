@@ -16,7 +16,7 @@ COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
 RUN dotnet restore "./IdentityServer/IdentityServer.csproj"
 
 # Copy entire source code
-COPY ./src ./
+COPY . .
 
 # Build the project
 WORKDIR IdentityServer
