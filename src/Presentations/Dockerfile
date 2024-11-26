@@ -15,7 +15,7 @@ WORKDIR /src
 #COPY ./src/Presentations/Presentations.csproj ./Presentations/
 RUN echo "Current working directory:" && pwd
 RUN echo "Listing files in current directory:" && ls -a
-COPY src/ ./
+COPY . .
 
 WORKDIR Presentations
 
