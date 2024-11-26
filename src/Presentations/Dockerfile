@@ -13,8 +13,8 @@ WORKDIR /src
 
 # Copy and restore dependencies
 #COPY ./src/Presentations/Presentations.csproj ./Presentations/
-RUN ls -a
-RUN pwd
+RUN echo "Current working directory:" && pwd
+RUN echo "Listing files in current directory:" && ls -a
 COPY ./src ./
 WORKDIR Presentations
 
