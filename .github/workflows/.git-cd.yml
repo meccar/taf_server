@@ -13,21 +13,44 @@ jobs:
       matrix:
         service:
           - name: presentation
-            context: ./src/Presentations
-            dockerfile: ./src/Presentations/Dockerfile
+#            context: ./src/Presentations
+            context: ./artifacts/src/Presentations
+#            dockerfile: ./src/Presentations/Dockerfile
+            dockerfile: ./artifacts/src/Presentations/Dockerfile
           - name: identity_server
-            context: ./src/IdentityServer
-            dockerfile: ./src/IdentityServer/Dockerfile
+#            context: ./src/IdentityServer
+            context: ./artifacts/src/IdentityServer
+#            dockerfile: ./src/IdentityServer/Dockerfile
+            dockerfile: ./artifacts/src/IdentityServer/Dockerfile
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Download build artifacts
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: context.payload.workflow_run.id,
+            });
+            const matchArtifact = artifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "presentations-artifacts"
+            })[0];
+            const download = await github.rest.actions.downloadArtifact({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              artifact_id: matchArtifact.id,
+              archive_format: 'zip',
+            });
+            const fs = require('fs');
+            fs.writeFileSync(`${process.env.GITHUB_WORKSPACE}/presentations-artifacts.zip`, Buffer.from(download.data));
+
+      - name: Extract artifacts
+        run: |
+          unzip presentations-artifacts.zip -d ./artifacts
         
       - name: Login to Docker Hub
         uses: docker/login-action@v3
