@@ -12,11 +12,12 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy and restore dependencies
-COPY ./src/Presentations/Presentations.csproj ./Presentations/
+#COPY ./src/Presentations/Presentations.csproj ./Presentations/
+COPY ./src ./
 RUN dotnet restore "./Presentations/Presentations.csproj"
 
 # Copy entire source code
-COPY . .
+#COPY . .
 
 # Build the project
 WORKDIR Presentations
