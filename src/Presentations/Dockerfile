@@ -12,10 +12,9 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy and restore dependencies
-#COPY ./src/Presentations/Presentations.csproj ./Presentations/
-RUN echo "Current working directory:" && pwd
-RUN echo "Listing files in current directory:" && ls -a
-COPY . .
+COPY ./src/Presentations/Presentations.csproj ./Presentations/
+#COPY . .
+#COPY ./Presentations/ ./Presentations/
 
 WORKDIR Presentations
 
