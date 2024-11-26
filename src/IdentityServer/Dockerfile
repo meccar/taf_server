@@ -9,19 +9,19 @@ EXPOSE 8081
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
+#WORKDIR /src
 
 # Copy and restore dependencies
-COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
-#COPY . .
+#COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
+COPY . .
 
-RUN dotnet restore "./IdentityServer/IdentityServer.csproj"
+RUN dotnet restore "IdentityServer.csproj"
 
 # Copy entire source code
 #COPY . .
 
-COPY ./src ./
-WORKDIR IdentityServer
+#COPY ./src ./
+#WORKDIR IdentityServer
 
 
 # Build the project
