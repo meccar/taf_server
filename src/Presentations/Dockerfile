@@ -19,7 +19,7 @@ RUN dotnet restore "./Presentations/Presentations.csproj"
 COPY ./src ./
 
 # Build the project
-WORKDIR ./src/Presentations
+WORKDIR Presentations
 RUN dotnet build "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage

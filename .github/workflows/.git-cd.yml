@@ -39,8 +39,8 @@ jobs:
           file: ${{ matrix.service.dockerfile }}
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server:${{ github.sha }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
           cache-to: type=inline
           platforms: linux/amd64
