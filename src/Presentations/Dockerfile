@@ -16,12 +16,14 @@ COPY ./src/Presentations/Presentations.csproj ./Presentations/
 #COPY . .
 #COPY ./Presentations/ ./Presentations/
 
-WORKDIR Presentations
 
-RUN dotnet restore "Presentations.csproj"
+RUN dotnet restore "./Presentations/Presentations.csproj"
 
 # Copy entire source code
 #COPY . .
+
+COPY ./src ./
+WORKDIR Presentations
 
 # Build the project
 RUN dotnet build "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/build

@@ -16,12 +16,15 @@ COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
 #COPY . .
 #COPY ./IdentityServer/ ./IdentityServer/
 
-WORKDIR IdentityServer
 
-RUN dotnet restore "IdentityServer.csproj"
+RUN dotnet restore "./IdentityServer/IdentityServer.csproj"
 
 # Copy entire source code
 #COPY . .
+
+COPY ./src ./
+WORKDIR IdentityServer
+
 
 # Build the project
 RUN dotnet build "IdentityServer.csproj" -c $BUILD_CONFIGURATION -o /app/build
