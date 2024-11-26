@@ -15,7 +15,7 @@ EXPOSE 8081
 #COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
 COPY . .
 
-RUN #dotnet restore "IdentityServer.csproj"
+#RUN dotnet restore "IdentityServer.csproj"
 
 # Copy entire source code
 #COPY . .
@@ -25,11 +25,11 @@ RUN #dotnet restore "IdentityServer.csproj"
 
 
 # Build the project
-RUN #dotnet build "IdentityServer.csproj" -c $BUILD_CONFIGURATION -o /app/build
+#RUN dotnet build "IdentityServer.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
 FROM build AS publish
-RUN #dotnet publish "IdentityServer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+#RUN dotnet publish "IdentityServer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # Final image
 FROM base AS final
