@@ -12,14 +12,14 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy and restore dependencies
-COPY ["./src/IdentityServer/IdentityServer.csproj", "./IdentityServer/"]
+COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
 RUN dotnet restore "./IdentityServer/IdentityServer.csproj"
 
 # Copy entire source code
-COPY src/ .
+COPY ./src ./
 
 # Build the project
-WORKDIR "/src/IdentityServer"
+WORKDIR ./src/IdentityServer
 RUN dotnet build "IdentityServer.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
