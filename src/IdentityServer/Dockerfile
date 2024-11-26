@@ -12,10 +12,9 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy and restore dependencies
-#COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
-RUN ls -a
-RUN pwd
-COPY . .
+COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
+#COPY . .
+#COPY ./IdentityServer/ ./IdentityServer/
 
 WORKDIR IdentityServer
 
