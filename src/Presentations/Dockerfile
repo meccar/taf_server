@@ -16,7 +16,7 @@ COPY ./src/Presentations/Presentations.csproj ./Presentations/
 RUN dotnet restore "./Presentations/Presentations.csproj"
 
 # Copy entire source code
-COPY ./src ./
+COPY . .
 
 # Build the project
 WORKDIR Presentations
