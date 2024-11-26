@@ -34,7 +34,7 @@ RUN #dotnet publish "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/publi
 # Final image
 FROM base AS final
 WORKDIR /app
-COPY ./artifacts/publish .
+COPY . .
 #COPY --from=publish /app/publish .
 
 ENTRYPOINT ["dotnet", "Presentations.dll"]

@@ -10,7 +10,12 @@ jobs:
     strategy:
       matrix: 
         dotnet-version: ['8.0.x']
-        
+#        service:
+#          - name: identity_server
+#            project: src/IdentityServer/IdentityServer.csproj
+#          - name: presentations
+#            project: src/Presentations/Presentations.csproj
+            
     steps:
       - uses: actions/checkout@v4
       - name: Setup dotnet ${{ matrix.dotnet-version }}
@@ -29,15 +34,27 @@ jobs:
 
       - name: Publish
         run: |
-          mkdir -p ./artifacts/publish
-          dotnet publish taf_server.sln -c Release -o ./artifacts/publish
+          mkdir -p ./artifacts/
+          dotnet publish taf_server.sln -c Release -o ./artifacts/
+
+#      - name: Publish ${{ matrix.service.name }}
+#        run: |
+#          mkdir -p ./artifacts/${{ matrix.service.name }}
+#          dotnet publish "${{ matrix.service.project }}" -c Release -o "./artifacts/${{ matrix.service.name }}"
           
-      - name: Upload build artifacts
+      - name: Upload built artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: presentations-artifacts
-          path: ./artifacts/publish
+          name: build-artifacts
+          path: ./artifacts/
         if: ${{ always() }}
+
+#      - name: Upload ${{ matrix.service.name }} artifacts
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ${{ matrix.service.name }}-artifacts
+#          path: ./artifacts/${{ matrix.service.name }}
+#        if: ${{ always() }}
         
 #      - name: Upload dotnet test results
 #        uses: actions/upload-artifact@v4
