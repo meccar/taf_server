@@ -85,12 +85,12 @@ jobs:
           cache-to: type=inline
           platforms: linux/amd64
 
-#      - name: Scan image for vulnerabilities
-#        uses: anchore/scan-action@v3
-#        with:
-#          image: ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:${{ github.sha }}
-#          fail-build-on-detection: false
-#          severity-cutoff: critical
+      - name: Scan image for vulnerabilities
+        uses: anchore/scan-action@v3
+        with:
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:${{ github.sha }}
+          fail-build: false
+          severity-cutoff: critical
           
 #  create-release:
 #    needs: build-and-push
