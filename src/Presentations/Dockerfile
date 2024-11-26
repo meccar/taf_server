@@ -12,10 +12,10 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Shared build stage for dependency restoration
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
-WORKDIR /src
-COPY ["src/Directory.Build.props", "Directory.Build.props"]
-COPY ["src/Directory.Packages.props", "Directory.Packages.props"]
+#FROM mcr.microsoft.com/dotnet/sdk:8.0 AS restore
+#WORKDIR /src
+#COPY ["src/Directory.Build.props", "Directory.Build.props"]
+#COPY ["src/Directory.Packages.props", "Directory.Packages.props"]
 
 # Copy and restore dependencies
 COPY ./src/Presentations/Presentations.csproj ./Presentations/

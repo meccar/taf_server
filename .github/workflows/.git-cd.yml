@@ -12,10 +12,10 @@ jobs:
     strategy:
       matrix:
         service:
-          - name: taf_server
+          - name: Presentation
             context: ./src/Presentations
             dockerfile: ./src/Presentations/Dockerfile
-          - name: identity_server
+          - name: IdentityServer
             context: ./src/IdentityServer
             dockerfile: ./src/IdentityServer/Dockerfile
     steps:
