@@ -12,10 +12,10 @@ jobs:
     strategy:
       matrix:
         service:
-          - name: Presentation
+          - name: rresentation
             context: ./src/Presentations
             dockerfile: ./src/Presentations/Dockerfile
-          - name: IdentityServer
+          - name: identity_server
             context: ./src/IdentityServer
             dockerfile: ./src/IdentityServer/Dockerfile
     steps:
