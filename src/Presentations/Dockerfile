@@ -12,12 +12,12 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 # Copy and restore dependencies
-COPY ["src/Presentations/Presentations.csproj", "./Presentations/"]
-RUN dotnet restore "Presentations/Presentations.csproj"
+COPY ./src/Presentations/Presentations.csproj ./Presentations/
+RUN dotnet restore "./Presentations/Presentations.csproj"
 
 # Copy entire source code and build
-COPY ./src/ ./src/
-WORKDIR "src/Presentations"
+COPY ./src ./
+WORKDIR Presentations
 RUN dotnet build "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
