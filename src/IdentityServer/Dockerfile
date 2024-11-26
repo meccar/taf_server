@@ -19,7 +19,7 @@ RUN dotnet restore "./IdentityServer/IdentityServer.csproj"
 COPY ./src ./
 
 # Build the project
-WORKDIR ./src/IdentityServer
+WORKDIR IdentityServer
 RUN dotnet build "IdentityServer.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
