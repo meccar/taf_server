@@ -13,14 +13,17 @@ WORKDIR /src
 
 # Copy and restore dependencies
 #COPY ./src/Presentations/Presentations.csproj ./Presentations/
+RUN ls -a
+RUN pwd
 COPY ./src ./
-RUN dotnet restore "./Presentations/Presentations.csproj"
+WORKDIR Presentations
+
+RUN dotnet restore "Presentations.csproj"
 
 # Copy entire source code
 #COPY . .
 
 # Build the project
-WORKDIR Presentations
 RUN dotnet build "Presentations.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage

@@ -13,14 +13,17 @@ WORKDIR /src
 
 # Copy and restore dependencies
 #COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
+RUN ls -a
+RUN pwd
 COPY ./src ./
-RUN dotnet restore "./IdentityServer/IdentityServer.csproj"
+WORKDIR IdentityServer
+
+RUN dotnet restore "IdentityServer.csproj"
 
 # Copy entire source code
 #COPY . .
 
 # Build the project
-WORKDIR IdentityServer
 RUN dotnet build "IdentityServer.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # Publish stage
