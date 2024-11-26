@@ -14,8 +14,6 @@ WORKDIR /src
 # Copy and restore dependencies
 COPY ./src/IdentityServer/IdentityServer.csproj ./IdentityServer/
 #COPY . .
-#COPY ./IdentityServer/ ./IdentityServer/
-
 
 RUN dotnet restore "./IdentityServer/IdentityServer.csproj"
 

@@ -14,7 +14,6 @@ WORKDIR /src
 # Copy and restore dependencies
 COPY ./src/Presentations/Presentations.csproj ./Presentations/
 #COPY . .
-#COPY ./Presentations/ ./Presentations/
 
 
 RUN dotnet restore "./Presentations/Presentations.csproj"
