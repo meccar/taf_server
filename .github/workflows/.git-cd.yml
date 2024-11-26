@@ -22,7 +22,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         
@@ -31,19 +34,38 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}
+          tags: |
+            type=raw,value=latest
+            type=sha,format=long
+            
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: ${{ matrix.service.context }}
           file: ${{ matrix.service.dockerfile }}
           push: true
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:${{ github.sha }}
-          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
+#          tags: |
+#            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:latest
+#            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:${{ github.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+#          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:latest
           cache-to: type=inline
           platforms: linux/amd64
+
+      - name: Scan image for vulnerabilities
+        uses: anchore/scan-action@v3
+        with:
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:${{ github.sha }}
+          fail-build-on-detection: false
+          severity-cutoff: critical
           
 #  create-release:
 #    needs: build-and-push
