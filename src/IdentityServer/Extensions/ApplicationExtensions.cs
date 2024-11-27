@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Microsoft.Extensions.FileProviders;
 
 namespace IdentityServer.Extensions;
 
@@ -31,6 +32,7 @@ public static class ApplicationExtensions
         app.UseCors(appCors);
         
         app.UseHttpsRedirection();
+        
         app.UseStaticFiles();
         app.UseRouting();
         

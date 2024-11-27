@@ -1,3 +1,4 @@
+using Duende.IdentityServer;
 using Infrastructure.Configurations.Environment;
 using Infrastructure.SeedWork.Enums;
 using Infrastructure.SeedWork.Policies;
@@ -18,10 +19,11 @@ public static class AuthorizationConfiguration
                     ConfigureRolePolicy(options, ERole.CompanyUser);
                     ConfigureRolePolicy(options, ERole.User);
                     
-                    options.AddPolicy("ClientIdPolicy", policy =>
+                    options.AddPolicy("ApiScope", policy =>
                     {
                         policy.RequireAuthenticatedUser();
-                        policy.RequireClaim("client_id", configuration.GetIdentityServerInteractiveClientId());
+                        // policy.RequireClaim("client_id", configuration.GetIdentityServerInteractiveClientId());
+                        policy.RequireClaim("scope", IdentityServerConstants.StandardScopes.OpenId);
                     });
                 }
             );

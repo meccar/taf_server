@@ -1,13 +1,11 @@
 using System.Text;
-using Duende.Bff.Yarp;
 using Duende.IdentityServer;
+using IdentityModel;
 using Infrastructure.Configurations.Environment;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
@@ -24,8 +22,9 @@ public static class AuthenticationConfiguration
                     // options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
                     options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    options.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+                    // options.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    // options.DefaultSignInScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 }
             )
             // .AddGoogle(options =>
@@ -91,12 +90,42 @@ public static class AuthenticationConfiguration
                 // refresh token
                 options.Scope.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
             
+                options.CallbackPath = "/signin-oidc";
+                options.SignedOutCallbackPath = "/signout-callback-oidc";
+
                 
                 options.UseTokenLifetime = true;
                 options.MapInboundClaims = false;
             
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.SaveTokens = true;
+                
+                options.Events = new OpenIdConnectEvents
+                {
+                    OnRemoteFailure = (context) =>
+                    {
+                        // Log detailed error information
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = (context) =>
+                    {
+                        // Log authentication failure details
+                        Console.WriteLine($"OpenID Connect Authentication Failed: {context.Exception?.Message}");
+                        Console.WriteLine($"Exception Details: {context.Exception?.ToString()}");
+                        return Task.CompletedTask;
+                    },
+                    OnTokenValidated = (context) =>
+                    {
+                        // Log successful token validation
+                        Console.WriteLine("Token successfully validated");
+                        return Task.CompletedTask;
+                    }
+                };
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = JwtClaimTypes.GivenName
+                };
             });
         
         return services;

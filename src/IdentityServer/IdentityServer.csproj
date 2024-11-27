@@ -7,7 +7,9 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
         <DockerfileContext>.</DockerfileContext>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <OutputType>Exe</OutputType>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,6 +18,12 @@
       </Content>
     </ItemGroup>
 
+<!--    <ItemGroup>-->
+<!--        <None Include=".\certificate.pfx">-->
+<!--            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>-->
+<!--        </None>-->
+<!--    </ItemGroup>-->
+    
     <ItemGroup>
       <PackageReference Include="IdentityModel" Version="7.0.0" />
       <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.10" />

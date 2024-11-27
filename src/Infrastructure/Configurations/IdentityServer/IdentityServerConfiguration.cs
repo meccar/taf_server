@@ -10,7 +10,7 @@ public static class IdentityServerConfiguration
 {
     public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services, EnvironmentConfiguration configuration)
     {
-        var cert = new X509Certificate2("../certificate.pfx", "tung");
+        var cert = new X509Certificate2("certificate.pfx", "tung");
         if (cert == null)
         {
             throw new Exception("Certificate not found.");

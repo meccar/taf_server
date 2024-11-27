@@ -34,53 +34,52 @@ public static class IdentityServerConfig
             // API scopes
             ApiScopes = new List<ApiScope>
             {
-                new ApiScope("api1", "My API"),
-                new ApiScope(name: "read",   displayName: "Read your data."),
-                new ApiScope(name: "write",  displayName: "Write your data."),
-                new ApiScope(name: "delete", displayName: "Delete your data.")
+                new ApiScope("scopeV1"),
+                new ApiScope("scopeV2"),
+                new ApiScope("scopeV3"),
             };
 
             // Clients
             Clients = new List<Client>
             {
                 // m2m client credentials flow client
-                new Client
-                {
-                    ClientId = configuration.GetIdentityServerClientId(),
-                    ClientName = configuration.GetIdentityServerClientName(),
-                    
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets =
-                    {
-                        new Secret(configuration.GetIdentityServerClientSecret().Sha256())
-                    },
-                    
-                    AllowedScopes =                 
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Email,
-                        IdentityServerConstants.StandardScopes.Profile
-                        // "openid",
-                        // "profile",
-                        // "api1", 
-                        // "read"
-                    },
-                    
-                    // where to redirect to after login
-                    // RedirectUris = { "https://localhost:6001/signin-oidc" },
-
-                    // where to redirect to after logout
-                    // PostLogoutRedirectUris = { "https://localhost:6001/signout-callback-oidc" },
-                    
-                    AccessTokenLifetime = 3600, // 1 hour
-                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                    RefreshTokenExpiration = TokenExpiration.Absolute,
-                    AbsoluteRefreshTokenLifetime = 86400, // 24 hours
-                
-                    AlwaysSendClientClaims = true,
-                    AlwaysIncludeUserClaimsInIdToken = true,
-                    UpdateAccessTokenClaimsOnRefresh = true
-                },
+                // new Client
+                // {
+                //     ClientId = configuration.GetIdentityServerClientId(),
+                //     ClientName = configuration.GetIdentityServerClientName(),
+                //     
+                //     AllowedGrantTypes = GrantTypes.ClientCredentials,
+                //     ClientSecrets =
+                //     {
+                //         new Secret(configuration.GetIdentityServerClientSecret().Sha256())
+                //     },
+                //     
+                //     AllowedScopes =                 
+                //     {
+                //         IdentityServerConstants.StandardScopes.OpenId,
+                //         IdentityServerConstants.StandardScopes.Email,
+                //         IdentityServerConstants.StandardScopes.Profile
+                //         // "openid",
+                //         // "profile",
+                //         // "api1", 
+                //         // "read"
+                //     },
+                //     
+                //     // where to redirect to after login
+                //     // RedirectUris = { "https://localhost:6001/signin-oidc" },
+                //
+                //     // where to redirect to after logout
+                //     // PostLogoutRedirectUris = { "https://localhost:6001/signout-callback-oidc" },
+                //     
+                //     AccessTokenLifetime = 3600, // 1 hour
+                //     RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                //     RefreshTokenExpiration = TokenExpiration.Absolute,
+                //     AbsoluteRefreshTokenLifetime = 86400, // 24 hours
+                //
+                //     AlwaysSendClientClaims = true,
+                //     AlwaysIncludeUserClaimsInIdToken = true,
+                //     UpdateAccessTokenClaimsOnRefresh = true
+                // },
                 
                 // interactive client using code flow + pkce
                 new Client
@@ -99,14 +98,14 @@ public static class IdentityServerConfig
                     
                     RedirectUris = new List<string>
                     {
-                        $"{configuration.GetIdentityServerAuthority()}"+"/signin-oidc"
+                        "https://localhost:6002/signin-oidc"
                     },
                     
-                    FrontChannelLogoutUri = $"{configuration.GetIdentityServerAuthority()}"+"/signout-oidc",
+                    FrontChannelLogoutUri = "https://localhost:6002/signout-oidc",
                     
                     PostLogoutRedirectUris = new List<string>
                     {
-                        $"{configuration.GetIdentityServerAuthority()}"+"/signout-callback-oidc"
+                        "https://localhost:6002/signout-callback-oidc"
                     },
                     
                     AllowedScopes = new List<string>
@@ -114,7 +113,9 @@ public static class IdentityServerConfig
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-
+                        "scopeV1",
+                        "scopeV2",
+                        "scopeV3"
                     },
                     AllowOfflineAccess = true
                 }
@@ -122,13 +123,40 @@ public static class IdentityServerConfig
             
             ApiResources = new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("tafApiV1")
                 {
-                    Scopes = { "api1" },
+                    Scopes = { "scopeV1" },
                     UserClaims = new[]
                     {
                         ClaimTypes.Email,
-                        "eid"
+                    },
+                    ApiSecrets =
+                    {
+                        new Secret(configuration.GetIdentityServerInteractiveClientSecret().Sha256())
+                    }
+                },
+                new ApiResource("tafApiV2")
+                {
+                    Scopes = { "scopeV2" },
+                    UserClaims = new[]
+                    {
+                        ClaimTypes.Email,
+                    },
+                    ApiSecrets =
+                    {
+                        new Secret(configuration.GetIdentityServerInteractiveClientSecret().Sha256())
+                    }
+                },
+                new ApiResource("tafApiV3")
+                {
+                    Scopes = { "scopeV3" },
+                    UserClaims = new[]
+                    {
+                        ClaimTypes.Email,
+                    },
+                    ApiSecrets =
+                    {
+                        new Secret(configuration.GetIdentityServerInteractiveClientSecret().Sha256())
                     }
                 }
             };

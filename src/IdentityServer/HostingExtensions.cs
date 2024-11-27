@@ -60,7 +60,7 @@ namespace IdentityServer
         {
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
-
+            builder.Services.AddBff();
             builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCorsPolicy);
             builder.Services.ConfigureIdentityServer(config);
             builder.Services.ConfigureApplicationServices(builder.Configuration);
