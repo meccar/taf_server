@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Infrastructure.Configurations.Environment;
 
-public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig, IIdentityServer
+public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig, IIdentityServer, IOAuth
 {
     private readonly IConfiguration _configuration;
     public EnvironmentConfiguration(IConfiguration configuration)
@@ -17,6 +17,17 @@ public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig, IIdentitySe
     //     return _configuration.GetValue<string>("TokenSettings:ACCESS_TOKEN_SECRET");
     // }
     // #endregion
+    #region OAuth
+    public string GetGoogleClientId()
+    {
+        return _configuration.GetValue<string>("OAuth:ClientId");
+    }
+
+    public string GetGoogleClientSecret()
+    {
+        return _configuration.GetValue<string>("OAuth:ClientSecret");
+    }
+    #endregion
     
     #region IdentityServer
 

@@ -3,12 +3,14 @@ using Domain.Interfaces;
 using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
 using Domain.Interfaces.Service;
+using Duende.IdentityServer.Services;
 using Infrastructure.Configurations.Environment;
 using Infrastructure.Repositories;
 using Infrastructure.Repositories.Command;
 using Infrastructure.Repositories.Query;
 using Infrastructure.Repositories.Service;
 using Microsoft.Extensions.DependencyInjection;
+using ITokenService = Domain.Interfaces.ITokenService;
 
 namespace Infrastructure.Configurations.Infrastructure;
 
@@ -27,6 +29,7 @@ public static class RepositoriesConfiguration
             .AddScoped<IUserTokenQueryRepository, UserTokenQueryRepository>()
             .AddScoped<IUserLoginDataQueryRepository, UserLoginDataQueryRepository>()
             .AddScoped<IJwtService, JwtService>()
+            .AddScoped<IProfileService, ProfileService>()
             .AddScoped<ITokenService, TokenService>();
         
         return services;

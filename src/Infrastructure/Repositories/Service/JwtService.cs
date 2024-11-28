@@ -1,5 +1,4 @@
 using System.Text;
-using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Model;
@@ -9,9 +8,7 @@ using Infrastructure.Configurations.Environment;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Domain.Interfaces.Service;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Infrastructure.Repositories.Service;
 

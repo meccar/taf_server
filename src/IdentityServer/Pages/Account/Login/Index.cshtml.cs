@@ -16,9 +16,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using test.Pages;
-using test.Pages.Login;
-using Telemetry = test.Pages.Telemetry;
+using IdentityServer.Pages;
+using IdentityServer.Pages.Login;
+using Telemetry = IdentityServer.Pages.Telemetry;
 
 namespace IdentityServer.Pages.Account.Login;
 

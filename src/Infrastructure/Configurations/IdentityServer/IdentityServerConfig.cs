@@ -34,9 +34,7 @@ public static class IdentityServerConfig
             // API scopes
             ApiScopes = new List<ApiScope>
             {
-                new ApiScope("scopeV1"),
-                new ApiScope("scopeV2"),
-                new ApiScope("scopeV3"),
+                new ApiScope("TafServer", "TAF Server full access API"),
             };
 
             // Clients
@@ -87,7 +85,8 @@ public static class IdentityServerConfig
                     ClientId = configuration.GetIdentityServerInteractiveClientId(),
                     ClientName = configuration.GetIdentityServerInteractiveClientName(),
                     
-                    AllowedGrantTypes = GrantTypes.Code,
+                    // AllowedGrantTypes = GrantTypes.Code,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     
                     AllowRememberConsent = false,
                     RequireClientSecret = true,
@@ -113,9 +112,7 @@ public static class IdentityServerConfig
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-                        "scopeV1",
-                        "scopeV2",
-                        "scopeV3"
+                        "TafServer",
                     },
                     AllowOfflineAccess = true
                 }
@@ -125,7 +122,7 @@ public static class IdentityServerConfig
             {
                 new ApiResource("tafApiV1")
                 {
-                    Scopes = { "scopeV1" },
+                    Scopes = { "TafServer" },
                     UserClaims = new[]
                     {
                         ClaimTypes.Email,
@@ -135,43 +132,19 @@ public static class IdentityServerConfig
                         new Secret(configuration.GetIdentityServerInteractiveClientSecret().Sha256())
                     }
                 },
-                new ApiResource("tafApiV2")
-                {
-                    Scopes = { "scopeV2" },
-                    UserClaims = new[]
-                    {
-                        ClaimTypes.Email,
-                    },
-                    ApiSecrets =
-                    {
-                        new Secret(configuration.GetIdentityServerInteractiveClientSecret().Sha256())
-                    }
-                },
-                new ApiResource("tafApiV3")
-                {
-                    Scopes = { "scopeV3" },
-                    UserClaims = new[]
-                    {
-                        ClaimTypes.Email,
-                    },
-                    ApiSecrets =
-                    {
-                        new Secret(configuration.GetIdentityServerInteractiveClientSecret().Sha256())
-                    }
-                }
             };
 
             TestUsers = new List<TestUser>
             {
                 new TestUser
                 {
-                    SubjectId = "11111",
-                    Username = "jane2@example.com",
-                    Password = "HGOSFUgiodfby8^&*&",
+                    SubjectId = "1",
+                    Username = "john.smith@gmail.com",
+                    Password = "Password@1234",
                     Claims = new List<Claim>
                     {
-                        new Claim(JwtClaimTypes.GivenName, "Test User"),
-                        new Claim(JwtClaimTypes.FamilyName, "admin")
+                        new Claim(JwtClaimTypes.Name, "Test User"),
+                        new Claim("username", "testuser")
                     }
                 }
 

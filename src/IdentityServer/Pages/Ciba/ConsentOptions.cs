@@ -1,7 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
-namespace test.Pages.Ciba;
+namespace IdentityServer.Pages.Ciba;
 
 public static class ConsentOptions
 {

@@ -1,7 +1,9 @@
 using System.Security.Cryptography.X509Certificates;
+using Domain.Entities;
 using Duende.IdentityServer.Configuration;
 using Infrastructure.Configurations.Environment;
 using Infrastructure.Configurations.Identity;
+using Infrastructure.Repositories.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 
@@ -59,6 +61,7 @@ public static class IdentityServerConfiguration
             .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
             .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
             .AddTestUsers(IdentityServerConfig.TestUsers)
+            .AddProfileService<ProfileService>()
             .AddServerSideSessions()
             .AddInMemoryCaching()
             // .AddAspNetIdentity<UserLoginDataEntity>()

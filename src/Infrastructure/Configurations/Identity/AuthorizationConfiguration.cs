@@ -19,12 +19,12 @@ public static class AuthorizationConfiguration
                     ConfigureRolePolicy(options, ERole.CompanyUser);
                     ConfigureRolePolicy(options, ERole.User);
                     
-                    options.AddPolicy("ApiScope", policy =>
-                    {
-                        policy.RequireAuthenticatedUser();
-                        // policy.RequireClaim("client_id", configuration.GetIdentityServerInteractiveClientId());
-                        policy.RequireClaim("scope", IdentityServerConstants.StandardScopes.OpenId);
-                    });
+                    // options.AddPolicy("ApiScope", policy =>
+                    // {
+                    //     policy.RequireAuthenticatedUser();
+                    //     // policy.RequireClaim("client_id", configuration.GetIdentityServerInteractiveClientId());
+                    //     policy.RequireClaim("scope", IdentityServerConstants.StandardScopes.OpenId);
+                    // });
                 }
             );
         return services;

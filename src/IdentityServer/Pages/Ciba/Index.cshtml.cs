@@ -3,11 +3,12 @@
 
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
+using IdentityServer.Pages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace test.Pages.Ciba;
+namespace IdentityServer.Pages.Ciba;
 
 [AllowAnonymous]
 [SecurityHeaders]

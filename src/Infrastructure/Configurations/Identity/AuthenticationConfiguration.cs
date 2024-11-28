@@ -27,14 +27,14 @@ public static class AuthenticationConfiguration
                     options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 }
             )
-            // .AddGoogle(options =>
-            // {
-            // options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+            .AddGoogle(options =>
+            {
+                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
 
-            // options.ClientId = configuration.GetGoogleClientId();
-            // options.ClientSecret = configuration.GetGoogleClientSecret();
+                options.ClientId = configuration.GetGoogleClientId();
+                options.ClientSecret = configuration.GetGoogleClientSecret();
 
-            // })
+            })
             .AddJwtBearer(configuration.GetJwtType(), options =>
             {
                 options.Authority = configuration.GetIdentityServerAuthority();
@@ -42,6 +42,7 @@ public static class AuthenticationConfiguration
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    NameClaimType = JwtClaimTypes.Email,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetJwtSecret())),
                     ValidateAudience = true,
@@ -88,7 +89,7 @@ public static class AuthenticationConfiguration
                 options.Scope.Add(IdentityServerConstants.StandardScopes.Email);
                 
                 // refresh token
-                options.Scope.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
+                // options.Scope.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
             
                 options.CallbackPath = "/signin-oidc";
                 options.SignedOutCallbackPath = "/signout-callback-oidc";
