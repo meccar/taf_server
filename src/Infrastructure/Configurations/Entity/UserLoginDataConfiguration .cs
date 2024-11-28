@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.SeedWork.Enums.UserLoginData;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -26,5 +27,10 @@ public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserLoginData
         builder
             .Property(x => x.TwoFactorSecret)
             .IsRequired(false);
+        
+        builder
+            .Property(x => x.EmailStatus)
+            .IsRequired(false)
+            .HasDefaultValue(EEmailStatus.Pending.ToString());
     }
 }

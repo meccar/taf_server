@@ -2,6 +2,7 @@ using System.Security.Claims;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces.Command;
+using Domain.Interfaces.Service;
 using Domain.Model;
 using Domain.SeedWork.Results;
 using Infrastructure.SeedWork.Enums;
@@ -22,6 +23,8 @@ public class UserLoginDataCommandRepository
 {
     private readonly IMapper _mapper;
     private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly IMfaService _mfaService;
+
     // private readonly RoleManager<IdentityRole> _roleManager;
     
     /// <summary>
@@ -33,12 +36,15 @@ public class UserLoginDataCommandRepository
     public UserLoginDataCommandRepository(
         // ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserLoginDataEntity> userManager
+        UserManager<UserLoginDataEntity> userManager,
+        IMfaService mfaService
+
         // RoleManager<IdentityRole> roleManager
         )
     {
         _mapper = mapper;
         _userManager = userManager;
+        _mfaService = mfaService;
         // _roleManager = roleManager;
     }
 
@@ -62,9 +68,15 @@ public class UserLoginDataCommandRepository
             return UserLoginDataResult.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
-        
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
-        return UserLoginDataResult.Success(userLoginDataModel);
+
+        if (await _mfaService.MfaSetup(userLoginDataEntity))
+        {
+            var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
+            return UserLoginDataResult.Success(userLoginDataModel);
+        }
+
+        return UserLoginDataResult.Failure(
+            createResult.Errors.Select(e => e.Description).ToArray());
     }
     
     private async Task<(UserLoginDataEntity User, IdentityResult Result)> CreateUserAccountAsync(

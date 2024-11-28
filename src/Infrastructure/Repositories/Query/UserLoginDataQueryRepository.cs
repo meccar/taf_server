@@ -30,10 +30,27 @@ public class UserLoginDataQueryRepository
     /// <returns><c>true</c> if the user login data exists; otherwise, <c>false</c>.</returns>
     public async Task<bool> IsUserLoginDataExisted(string loginCredential)
     {
-        var result = await _userManager.Users
-            .AsNoTracking()
-            .AnyAsync(u => u.Email == loginCredential || u.PhoneNumber == loginCredential);
-        return result;
+        // var user = await _userManager.GetUserAsync((Func<ApplicationUser, bool>)(u => 
+        //     u.UserName == loginCredential || 
+        //     u.Email == loginCredential || 
+        //     u.PhoneNumber == loginCredential));
+
+        return false;
+    }
+
+    public async Task<bool> IsEmailExisted(UserLoginDataModel userLoginDataModel)
+    {
+        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataModel);
+
+        var email = await _userManager.GetEmailAsync(userLoginDataEntity);
+        return email != null;
+    }
+    public async Task<bool> IsPhoneNumberExisted(UserLoginDataModel userLoginDataModel)
+    {
+        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataModel);
+
+        var phone = await _userManager.GetPhoneNumberAsync(userLoginDataEntity);
+        return phone != null;
     }
     public async Task<bool> ValidateUserLoginData(string email, string password)
     {

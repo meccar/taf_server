@@ -20,21 +20,13 @@ public static class AuthenticationConfiguration
                 {
                     // options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
                     // options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
-                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    // options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    // options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     // options.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     // options.DefaultSignInScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                    options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    // options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 }
             )
-            .AddGoogle(options =>
-            {
-                options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                options.ClientId = configuration.GetGoogleClientId();
-                options.ClientSecret = configuration.GetGoogleClientSecret();
-
-            })
             .AddJwtBearer(configuration.GetJwtType(), options =>
             {
                 options.Authority = configuration.GetIdentityServerAuthority();
@@ -52,11 +44,11 @@ public static class AuthenticationConfiguration
                     ClockSkew = TimeSpan.Zero,
                 };
             })
-            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
+            .AddCookie(configuration.GetJwtRefreshCookieKey(), options =>
             {
 
                 // host prefixed cookie name
-                options.Cookie.Name = "__Host-Standalone-bff";
+                options.Cookie.Name = configuration.GetJwtRefreshCookieKey();
 
                 // strict SameSite handling
                 options.Cookie.SameSite = SameSiteMode.Strict;
@@ -66,67 +58,6 @@ public static class AuthenticationConfiguration
 
                 // sliding or absolute
                 options.SlidingExpiration = false;
-            })
-            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
-            {
-                options.Authority = configuration.GetIdentityServerAuthority();
-                
-                options.ClientId = configuration.GetIdentityServerInteractiveClientId();
-                options.ClientSecret = configuration.GetIdentityServerInteractiveClientSecret();
-                
-                options.ResponseType = OpenIdConnectResponseType.Code;
-                options.ResponseMode = OpenIdConnectResponseMode.Query;
-                
-                // var scopes = configuration.GetIdentityServerScopes().Split(' ');
-                // foreach (var scope in scopes)
-                // {
-                //     options.Scope.Add(scope);
-                // }
-                
-                options.Scope.Clear();
-                options.Scope.Add(IdentityServerConstants.StandardScopes.OpenId);
-                options.Scope.Add(IdentityServerConstants.StandardScopes.Profile);
-                options.Scope.Add(IdentityServerConstants.StandardScopes.Email);
-                
-                // refresh token
-                // options.Scope.Add(IdentityServerConstants.StandardScopes.OfflineAccess);
-            
-                options.CallbackPath = "/signin-oidc";
-                options.SignedOutCallbackPath = "/signout-callback-oidc";
-
-                
-                options.UseTokenLifetime = true;
-                options.MapInboundClaims = false;
-            
-                options.GetClaimsFromUserInfoEndpoint = true;
-                options.SaveTokens = true;
-                
-                options.Events = new OpenIdConnectEvents
-                {
-                    OnRemoteFailure = (context) =>
-                    {
-                        // Log detailed error information
-                        return Task.CompletedTask;
-                    },
-                    OnAuthenticationFailed = (context) =>
-                    {
-                        // Log authentication failure details
-                        Console.WriteLine($"OpenID Connect Authentication Failed: {context.Exception?.Message}");
-                        Console.WriteLine($"Exception Details: {context.Exception?.ToString()}");
-                        return Task.CompletedTask;
-                    },
-                    OnTokenValidated = (context) =>
-                    {
-                        // Log successful token validation
-                        Console.WriteLine("Token successfully validated");
-                        return Task.CompletedTask;
-                    }
-                };
-
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = JwtClaimTypes.GivenName
-                };
             });
         
         return services;

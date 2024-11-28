@@ -3,6 +3,7 @@ using Domain.Model;
 using Domain.SeedWork.Command;
 using System.Data;
 using Application.Dtos.Exceptions;
+using Domain.Interfaces.Service;
 using Infrastructure.Decorators;
 
 namespace Application.Commands.Auth.Register;
@@ -21,13 +22,13 @@ namespace Application.Commands.Auth.Register;
 public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccountModel>
 {
     private readonly IUnitOfWork _unitOfWork;
-    
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
     /// </summary>
     /// <param name="unitOfWork">The unit of work instance to manage data transactions.</param>
     public RegisterCommandHandler(
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork
+        )
     {
         _unitOfWork = unitOfWork;
     }
@@ -42,10 +43,10 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     [Transactional(IsolationLevel = IsolationLevel.Serializable, Replication = true)]
     public async Task<UserAccountModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel.Email))
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsEmailExisted(request.UserLoginDataModel))
             throw new BadRequestException("Email already exists");
         
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel.PhoneNumber))
+        if (await _unitOfWork.UserLoginDataQueryRepository.IsPhoneNumberExisted(request.UserLoginDataModel))
             throw new BadRequestException("Phone number already exists");
         
         var userAccount = await _unitOfWork
@@ -63,11 +64,11 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
             .UserLoginDataCommandRepository
             .CreateUserLoginDataAsync(request.UserLoginDataModel);
 
-        if (userLoginData == null)
+        if (!userLoginData.Succeeded)
             throw new BadRequestException("An error occurred. Please try again");
 
         userAccount.UserData.UserLoginData = userLoginData.UserData;
-
+        
         return userAccount.UserData;
     }
 }

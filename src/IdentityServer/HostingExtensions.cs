@@ -1,7 +1,7 @@
 using System.Security.Cryptography.X509Certificates;
 using Application;
 using IdentityModel.Client;
-using IdentityServer.Extensions;
+using IdentityServer.Pipeline;
 using Infrastructure;
 using Infrastructure.Configurations.Environment;
 using Infrastructure.Configurations.IdentityServer;
@@ -11,7 +11,7 @@ using Serilog;
 
 namespace IdentityServer
 {
-    public static class HostingExtensions
+    public static class Hosting
     {
         private static readonly string AppCorsPolicy = "AppCors";
 
@@ -63,6 +63,7 @@ namespace IdentityServer
             builder.Services.AddBff();
             builder.Services.ConfigureInfrastructureServices(builder.Configuration, AppCorsPolicy);
             builder.Services.ConfigureIdentityServer(config);
+            builder.Services.ConfigureIdentityServerAuthentication(config);
             builder.Services.ConfigureApplicationServices(builder.Configuration);
         }
 

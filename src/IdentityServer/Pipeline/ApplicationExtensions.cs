@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Microsoft.Extensions.FileProviders;
 
-namespace IdentityServer.Extensions;
+namespace IdentityServer.Pipeline;
 
 public static class ApplicationExtensions
 {
@@ -51,10 +51,10 @@ public static class ApplicationExtensions
         
         app.MapRazorPages()
             .RequireAuthorization();
-        
+
         app.MapControllers()
-            .RequireAuthorization()
-            .AsBffApiEndpoint();
+            .AsBffApiEndpoint()
+            .RequireAuthorization();
         
         app.MapGet("identity", (ClaimsPrincipal user) => user.Claims.Select(c => new { c.Type, c.Value }))
             .RequireAuthorization();

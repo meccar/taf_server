@@ -38,7 +38,7 @@ public class ProfileService : IProfileService
 
         var claims = new List<Claim>
         {
-            new Claim(JwtClaimTypes.Id, user.EId),
+            new Claim(JwtClaimTypes.Subject, user.EId),
             new Claim(JwtClaimTypes.Email, user.Email),
         };
         

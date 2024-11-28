@@ -1,4 +1,4 @@
-namespace IdentityServer.Extensions;
+namespace IdentityServer.Pipeline;
 
 public static class HostExtensions
 {

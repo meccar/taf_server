@@ -43,8 +43,11 @@ public class Callback : PageModel
     {
         // read external identity from the temporary cookie
         var result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+        
         if (result.Succeeded != true)
         {
+            _logger.LogError($"External authentication failed: { result.Failure?.Message }");
+            _logger.LogError($"Exception details: { result.Failure?.InnerException }");
             throw new InvalidOperationException($"External authentication error: { result.Failure }");
         }
 
@@ -54,6 +57,7 @@ public class Callback : PageModel
         if (_logger.IsEnabled(LogLevel.Debug))
         {
             var externalClaims = externalUser.Claims.Select(c => $"{c.Type}: {c.Value}");
+            // var externalClaims = externalUser.Identity;
             _logger.ExternalClaims(externalClaims);
         }
 
@@ -62,6 +66,7 @@ public class Callback : PageModel
         // the most common claim type for that are the sub claim and the NameIdentifier
         // depending on the external provider, some other claim type might be used
         var userIdClaim = externalUser.FindFirst(JwtClaimTypes.Subject) ??
+                          externalUser.FindFirst(JwtClaimTypes.Id) ??
                           externalUser.FindFirst(ClaimTypes.NameIdentifier) ??
                           throw new InvalidOperationException("Unknown userid");
 

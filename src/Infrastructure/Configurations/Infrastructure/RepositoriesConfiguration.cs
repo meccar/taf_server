@@ -30,6 +30,7 @@ public static class RepositoriesConfiguration
             .AddScoped<IUserLoginDataQueryRepository, UserLoginDataQueryRepository>()
             .AddScoped<IJwtService, JwtService>()
             .AddScoped<IProfileService, ProfileService>()
+            .AddScoped<IMfaService, MfaService>()
             .AddScoped<ITokenService, TokenService>();
         
         return services;

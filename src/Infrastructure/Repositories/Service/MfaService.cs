@@ -8,24 +8,32 @@ namespace Infrastructure.Repositories.Service;
 
 public class MfaService : IMfaService 
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly UserManager<UserLoginDataEntity> _userManager;
 
     public MfaService(
-        IUnitOfWork unitOfWork,
         UserManager<UserLoginDataEntity> userManager
     )
     {
-        _unitOfWork = unitOfWork;
         _userManager = userManager;
     }
 
     public async Task<bool> MfaSetup(UserLoginDataEntity user)
     {
         var token = await _userManager.GetAuthenticatorKeyAsync(user);
-        await _userManager.ResetAuthenticatorKeyAsync(user);
-        var model = new MfaViewModel { Token = token };
-        return true;
+        
+        if (string.IsNullOrEmpty(token))
+        {
+            return false;
+        }
+        
+        var result = await _userManager.ResetAuthenticatorKeyAsync(user);
+
+        if (result.Succeeded)
+        {
+            var model = new MfaViewModel { Token = token };
+            return true;
+        }
+        return false;
     }
     
     public async Task<bool> MfaSetup(MfaViewModel model,UserLoginDataEntity user)
