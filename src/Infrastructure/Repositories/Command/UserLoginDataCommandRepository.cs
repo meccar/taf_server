@@ -69,14 +69,14 @@ public class UserLoginDataCommandRepository
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
 
-        if (await _mfaService.MfaSetup(userLoginDataEntity))
-        {
-            var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
-            return UserLoginDataResult.Success(userLoginDataModel);
-        }
+        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
+        return UserLoginDataResult.Success(userLoginDataModel);
+        // if (await _mfaService.MfaSetup(userLoginDataEntity))
+        // {
+        // }
 
-        return UserLoginDataResult.Failure(
-            createResult.Errors.Select(e => e.Description).ToArray());
+        // return UserLoginDataResult.Failure(
+        //     createResult.Errors.Select(e => e.Description).ToArray());
     }
     
     private async Task<(UserLoginDataEntity User, IdentityResult Result)> CreateUserAccountAsync(

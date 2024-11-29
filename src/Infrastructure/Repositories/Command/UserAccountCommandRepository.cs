@@ -51,10 +51,12 @@ public class UserAccountCommandRepository
         var userAccountEntity = _mapper.Map<UserAccountAggregate>(request);
         
         var created = await CreateAsync(userAccountEntity);
+        
         if(!created)
             return UserAccountResult.Failure("Failed to create user account. Please try again.");
     
         var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
+        
         return UserAccountResult.Success(userAccountModel);
     }
 

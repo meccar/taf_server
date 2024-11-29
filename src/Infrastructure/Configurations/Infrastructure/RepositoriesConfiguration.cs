@@ -3,6 +3,8 @@ using Domain.Interfaces;
 using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
 using Domain.Interfaces.Service;
+using Domain.Model;
+using Domain.SeedWork.Command;
 using Duende.IdentityServer.Services;
 using Infrastructure.Configurations.Environment;
 using Infrastructure.Repositories;

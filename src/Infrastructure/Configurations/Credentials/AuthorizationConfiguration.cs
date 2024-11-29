@@ -1,11 +1,10 @@
-using Duende.IdentityServer;
 using Infrastructure.Configurations.Environment;
 using Infrastructure.SeedWork.Enums;
 using Infrastructure.SeedWork.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Configurations.Identity;
+namespace Infrastructure.Configurations.Credentials;
 
 public static class AuthorizationConfiguration
 {

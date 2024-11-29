@@ -1,7 +1,10 @@
+using System.Data;
 using Infrastructure.Configurations.Environment;
 using Infrastructure.Data;
 using Infrastructure.Decorators;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Configurations.Database;
@@ -71,9 +74,12 @@ public static class DbContextConfiguration
                 });
         });
         
+        // services.AddScoped<IDbContextTransaction>(sp =>
+        //     new SqlConnection(connectionString));
+        
         // services.AddConfigurationStore(options => options.ConnectionString = connectionString);
         
-        services.AddScoped<TransactionDecorator>();
+        // services.AddScoped<TransactionDecorator>();
         
         return services;
     }

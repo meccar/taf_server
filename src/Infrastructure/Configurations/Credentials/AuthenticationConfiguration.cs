@@ -1,15 +1,12 @@
 using System.Text;
-using Duende.IdentityServer;
 using IdentityModel;
 using Infrastructure.Configurations.Environment;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
-namespace Infrastructure.Configurations.Identity;
+namespace Infrastructure.Configurations.Credentials;
 
 public static class AuthenticationConfiguration
 {
@@ -19,12 +16,13 @@ public static class AuthenticationConfiguration
             .AddAuthentication(options =>
                 {
                     // options.DefaultAuthenticateScheme = IdentityConstants.BearerScheme;
-                    // options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
+                    options.DefaultSignInScheme = IdentityConstants.ApplicationScheme;
                     // options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     // options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     // options.DefaultAuthenticateScheme = OpenIdConnectDefaults.AuthenticationScheme;
                     // options.DefaultSignInScheme = OpenIdConnectDefaults.AuthenticationScheme;
-                    // options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                    options.DefaultSignOutScheme = IdentityConstants.ApplicationScheme;
+                    options.RequireAuthenticatedSignIn = true;
                 }
             )
             .AddJwtBearer(configuration.GetJwtType(), options =>

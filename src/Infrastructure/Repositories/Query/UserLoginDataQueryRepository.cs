@@ -13,12 +13,14 @@ public class UserLoginDataQueryRepository
 {
     private readonly IMapper _mapper;
     private readonly UserManager<UserLoginDataEntity> _userManager;
-
+    private readonly ApplicationDbContext _context;
+    
     public UserLoginDataQueryRepository(
         ApplicationDbContext context,
         IMapper mapper,
         UserManager<UserLoginDataEntity> userManager)
     {
+        _context = context;
         _mapper = mapper;
         _userManager = userManager;
     }
@@ -28,30 +30,23 @@ public class UserLoginDataQueryRepository
     /// </summary>
     /// <param name="userLoginData">The login credential to check, such as an email.</param>
     /// <returns><c>true</c> if the user login data exists; otherwise, <c>false</c>.</returns>
-    public async Task<bool> IsUserLoginDataExisted(string loginCredential)
+    public async Task<bool> IsUserLoginDataExisted(UserLoginDataModel userLoginDataModel)
     {
-        // var user = await _userManager.GetUserAsync((Func<ApplicationUser, bool>)(u => 
-        //     u.UserName == loginCredential || 
-        //     u.Email == loginCredential || 
-        //     u.PhoneNumber == loginCredential));
-
-        return false;
+        var email = await _userManager.Users
+            .AsQueryable()
+            .AnyAsync(
+                u =>
+                    u.Email == userLoginDataModel.Email);
+        
+        var phone = await _context.Users
+            .AsQueryable()
+            .AnyAsync(
+                u =>
+                    u.PhoneNumber == userLoginDataModel.PhoneNumber);
+        
+        return email && email;
     }
-
-    public async Task<bool> IsEmailExisted(UserLoginDataModel userLoginDataModel)
-    {
-        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataModel);
-
-        var email = await _userManager.GetEmailAsync(userLoginDataEntity);
-        return email != null;
-    }
-    public async Task<bool> IsPhoneNumberExisted(UserLoginDataModel userLoginDataModel)
-    {
-        var userLoginDataEntity = _mapper.Map<UserLoginDataEntity>(userLoginDataModel);
-
-        var phone = await _userManager.GetPhoneNumberAsync(userLoginDataEntity);
-        return phone != null;
-    }
+    
     public async Task<bool> ValidateUserLoginData(string email, string password)
     {
         var user = await _userManager.FindByEmailAsync(email);

@@ -1,3 +1,4 @@
+using System.Data;
 using Domain.Interfaces;
 using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
@@ -17,6 +18,7 @@ namespace Infrastructure.Repositories;
 /// </remarks>
 public class UnitOfWork : IUnitOfWork
 {
+    // private readonly IDbConnection _connection;
     private readonly ApplicationDbContext _context;
     private bool _disposed;
 
@@ -33,7 +35,8 @@ public class UnitOfWork : IUnitOfWork
     /// 
     public UnitOfWork(
         ApplicationDbContext context,
-        
+        // IDbConnection connection,
+            
         IUserAccountCommandRepository userAccountCommandRepository,
         IUserLoginDataCommandRepository userLoginDataCommandRepository,
         IUserTokenCommandRepository userTokenCommandRepository,
@@ -44,6 +47,7 @@ public class UnitOfWork : IUnitOfWork
         )
     {
         _context = context;
+        // _connection = connection;
         
         UserAccountCommandRepository = userAccountCommandRepository;
         UserLoginDataCommandRepository = userLoginDataCommandRepository;
@@ -104,13 +108,24 @@ public class UnitOfWork : IUnitOfWork
         return _context.SaveChangesAsync();
     }
 
+    public IExecutionStrategy CreateExecutionStrategy()
+    {
+        return _context.Database.CreateExecutionStrategy();
+    }
+
     /// <summary>
     /// Begins a new transaction for the current unit of work.
     /// </summary>
     /// <returns>A task representing the asynchronous operation, with the task result containing the database transaction.</returns>
-    public Task<IDbContextTransaction> BeginTransactionAsync()
+    public async Task BeginTransactionAsync()
     {
-        return _context.Database.BeginTransactionAsync();
+        // if (_connection.State != ConnectionState.Open)
+        // { 
+        //     _connection.Open();
+        // }s
+        //
+        // return await Task.FromResult(_connection.BeginTransaction());
+        await _context.Database.BeginTransactionAsync();
     }
 
     /// <summary>
@@ -123,15 +138,34 @@ public class UnitOfWork : IUnitOfWork
         await _context.Database.CommitTransactionAsync();
     }
 
+    public async Task CommitTransactionAsync()
+    {
+        // transaction.Commit();
+        // await Task.CompletedTask;
+        await CommitAsync();
+        await _context.Database.CommitTransactionAsync();
+    }
+    
     /// <summary>
     /// Rolls back the current transaction.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    public Task RollbackTransactionAsync()
+    public async Task RollbackTransactionAsync()
     {
-        return _context.Database.RollbackTransactionAsync();
+        // return _context.Database.RollbackTransactionAsync();
+        // transaction.Rollback();
+        // await Task.CompletedTask;
+        await _context.Database.RollbackTransactionAsync();
     }
 
+    // public async Task DisposeAsync()
+    // {
+    //     // return _context.Database.RollbackTransactionAsync();
+    //     // transaction.Dispose();
+    //     // await Task.CompletedTask;
+    //     return _context.Database.
+    // }
+    
     /// <summary>
     /// Disposes the resources used by the unit of work.
     /// </summary>

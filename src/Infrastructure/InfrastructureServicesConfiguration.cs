@@ -1,4 +1,5 @@
 using Infrastructure.Configurations.Api;
+using Infrastructure.Configurations.Credentials;
 using Infrastructure.Configurations.Database;
 using Infrastructure.Configurations.Environment;
 using Infrastructure.Configurations.Identity;

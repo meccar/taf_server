@@ -3,7 +3,7 @@ using Domain.Model;
 using Domain.SeedWork.Command;
 using System.Data;
 using Application.Dtos.Exceptions;
-using Domain.Interfaces.Service;
+using Domain.SeedWork.Transactions;
 using Infrastructure.Decorators;
 
 namespace Application.Commands.Auth.Register;
@@ -19,6 +19,9 @@ namespace Application.Commands.Auth.Register;
 /// Upon successful validation, a new user account and associated login data are created.
 /// </remarks>
 
+// [Transactional(
+//     IsolationLevel = IsolationLevel.ReadCommitted, 
+//     ThrowOnFailure = true)]
 public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccountModel>
 {
     private readonly IUnitOfWork _unitOfWork;
@@ -40,35 +43,52 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     /// <param name="cancellationToken">A cancellation token to signal cancellation of the operation.</param>
     /// <returns>A task that represents the asynchronous operation, containing the created <see cref="UserAccountModel"/>.</returns>
     /// <exception cref="BadRequestException">Thrown when the email or phone number is already in use.</exception>
-    [Transactional(IsolationLevel = IsolationLevel.Serializable, Replication = true)]
     public async Task<UserAccountModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsEmailExisted(request.UserLoginDataModel))
-            throw new BadRequestException("Email already exists");
-        
-        if (await _unitOfWork.UserLoginDataQueryRepository.IsPhoneNumberExisted(request.UserLoginDataModel))
-            throw new BadRequestException("Phone number already exists");
-        
-        var userAccount = await _unitOfWork
-            .UserAccountCommandRepository
-            .CreateUserAccountAsync(request.UserAccountModel);
+        var strategy = _unitOfWork.CreateExecutionStrategy();
 
-        if (userAccount == null)
+        return await strategy.ExecuteAsync(
+            state: request,
+            verifySucceeded: null, 
+            cancellationToken: cancellationToken,
+            operation: async (context, state, token) =>
         {
-            throw new BadRequestException("An error occurred. Please try again");
-        }
+            await _unitOfWork.BeginTransactionAsync();
+            try
+            {
+                if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel))
+                    throw new BadRequestException("Either Email or Phone number already exists");
 
-        request.UserLoginDataModel.UserAccountId = userAccount.UserData.Id;
-        
-        var userLoginData = await _unitOfWork
-            .UserLoginDataCommandRepository
-            .CreateUserLoginDataAsync(request.UserLoginDataModel);
+                var userAccount = await _unitOfWork
+                    .UserAccountCommandRepository
+                    .CreateUserAccountAsync(request.UserAccountModel);
 
-        if (!userLoginData.Succeeded)
-            throw new BadRequestException("An error occurred. Please try again");
+                if (!userAccount.Succeeded)
+                {
+                    throw new BadRequestException("An error occurred. Please try again");
+                }
 
-        userAccount.UserData.UserLoginData = userLoginData.UserData;
-        
-        return userAccount.UserData;
+                request.UserLoginDataModel.UserAccountId = userAccount.UserData.Id;
+
+                var userLoginData = await _unitOfWork
+                    .UserLoginDataCommandRepository
+                    .CreateUserLoginDataAsync(request.UserLoginDataModel);
+
+                if (!userLoginData.Succeeded)
+                    throw new BadRequestException("An error occurred. Please try again");
+
+                userAccount.UserData.UserLoginData = userLoginData.UserData;
+
+                await _unitOfWork.CommitTransactionAsync();
+
+                return userAccount.UserData;
+            }
+            catch (Exception ex)
+            {
+                // Rollback the transaction if an error occurs
+                await _unitOfWork.RollbackTransactionAsync();
+                throw new BadRequestException("An error occurred during registration: " + ex.Message);
+            }
+        });
     }
 }

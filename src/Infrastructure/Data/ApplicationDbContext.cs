@@ -57,11 +57,11 @@ public class ApplicationDbContext
     {
         base.OnModelCreating(builder);
         
-        builder.Entity<UserAccountAggregate>()
-            .HasQueryFilter(u => u.Status != UserAccountStatus.Inactive.ToString());
-        
-        builder.Entity<UserLoginDataEntity>()
-            .HasQueryFilter(u => u.UserAccount.Status != UserAccountStatus.Inactive.ToString());
+        // builder.Entity<UserAccountAggregate>()
+        //     .HasQueryFilter(u => u.Status != UserAccountStatus.Inactive.ToString());
+        //
+        // builder.Entity<UserLoginDataEntity>()
+        //     .HasQueryFilter(u => u.UserAccount.Status != UserAccountStatus.Inactive.ToString());
         
         builder.Entity<UserLoginDataEntity>()
             .HasOne(u => u.UserAccount)
