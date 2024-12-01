@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Domain.Entities;
-using Infrastructure.SeedWork.Enums;
 using Microsoft.AspNetCore.Identity;
+using Share.Enums;
 
 namespace Infrastructure.Data;
 

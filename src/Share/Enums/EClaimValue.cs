@@ -1,4 +1,4 @@
-namespace Infrastructure.SeedWork.Enums;
+namespace Share.Enums;
 
 public static class EClaimValue
 {

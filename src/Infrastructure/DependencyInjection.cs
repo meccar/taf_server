@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure;
 
-public static class InfrastructureServicesConfiguration
+public static class DependencyInjection
 {
     public static IServiceCollection ConfigureInfrastructureServices(
         this IServiceCollection services,
@@ -25,14 +25,14 @@ public static class InfrastructureServicesConfiguration
         // services.ConfigureHangfireServices();
         // services.ConfigureApplication();
         // services.ConfigureAppSettings(configuration);
-        services.ConfigureDependencyInjection();
+
+        services.ConfigureDbContext(config);
         services.ConfigureCors(appCors);
+        services.ConfigureApi();
         services.ConfigureOpenTelemetry();
         services.ConfigureAuthentication(config);
         services.ConfigureAuthorization(config);
         // services.ConfigureTransaction();
-        services.ConfigureApiVersioning();
-        services.ConfigureDbContext(config);
         // services.ConfigureSwagger();
         services.ConfigureIdentity();
         // services.ConfigureIdentityServer(config);

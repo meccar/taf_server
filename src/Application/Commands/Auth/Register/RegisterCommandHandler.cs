@@ -1,10 +1,9 @@
-﻿using Domain.Interfaces;
+﻿
+
+using Domain.Interfaces;
 using Domain.Model;
 using Domain.SeedWork.Command;
-using System.Data;
-using Application.Dtos.Exceptions;
-using Domain.SeedWork.Transactions;
-using Infrastructure.Decorators;
+using Share.Dtos.Exceptions;
 
 namespace Application.Commands.Auth.Register;
 

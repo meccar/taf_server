@@ -1,4 +1,4 @@
-﻿using Application.SeedWork;
+﻿using Share.SeedWork;
 
 namespace Application.Dtos.Exceptions;
 /// <summary>

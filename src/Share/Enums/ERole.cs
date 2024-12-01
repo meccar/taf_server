@@ -1,6 +1,4 @@
-using System.Security.Claims;
-
-namespace Infrastructure.SeedWork.Enums;
+namespace Share.Enums;
 
 public class ERole
 {

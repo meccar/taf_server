@@ -32,7 +32,7 @@ public static class HostingExtensions
         builder.Services.ConfigureInfrastructureServices(builder.Configuration, _appCors);
         builder.Services.ConfigureApplicationServices(builder.Configuration);
         // builder.Services.ConfigurePresentationsServices(builder.Configuration);
-        builder.Services.ConfigureHttpException();
+        // builder.Services.ConfigureHttpException();
         builder.Services.ConfigureControllers();
         
         builder.Logging.AddConsole();

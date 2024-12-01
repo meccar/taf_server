@@ -73,6 +73,9 @@ public static class DbContextConfiguration
                     sqlOptions.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
                 });
         });
+
+        services
+            .AddScoped<ApplicationDbContextSeed>();
         
         // services.AddScoped<IDbContextTransaction>(sp =>
         //     new SqlConnection(connectionString));

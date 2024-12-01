@@ -1,4 +1,4 @@
-﻿namespace Application.SeedWork;
+﻿namespace Share.SeedWork;
 
 /// <summary>
 /// Represents an exception that can be thrown to return a specific HTTP response status code and optional value.
