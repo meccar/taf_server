@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.Enums;
 
-namespace DataBase.Configurations.Entity;
+namespace Persistance.Configurations.Entity;
 public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserAccountAggregate>
 {
     public void Configure(EntityTypeBuilder<UserAccountAggregate> builder)

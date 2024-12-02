@@ -9,15 +9,15 @@ namespace Application.Queries.Auth.Login;
 public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
 {
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IJwtService _jwtTokenService;
+    private readonly IJwtRepository _jwtTokenRepository;
     
     public LoginQueryHandler(
         IUnitOfWork unitOfWork,
-        IJwtService jwtTokenService
+        IJwtRepository jwtTokenRepository
         )
     {
         _unitOfWork = unitOfWork;
-        _jwtTokenService = jwtTokenService;
+        _jwtTokenRepository = jwtTokenRepository;
     }
 
     public async Task<TokenModel> Handle(LoginQuery request, CancellationToken cancellationToken)
@@ -26,6 +26,6 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, TokenModel>
             throw new UnauthorizedException("Invalid credentials");
         request.Password = null;
 
-        return await _jwtTokenService.GenerateAuthResponseWithRefreshTokenCookie(request.Email);
+        return await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(request.Email);
     }
 }

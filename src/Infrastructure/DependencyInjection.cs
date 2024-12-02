@@ -1,12 +1,11 @@
-using DataBase.Configurations;
-using Infrastructure.Configurations.Api;
 using Infrastructure.Configurations.Credentials;
+using Infrastructure.Configurations.DataBase;
 using Infrastructure.Configurations.Identity;
-using Infrastructure.Configurations.Infrastructure;
 using Infrastructure.Configurations.Observability;
+using Infrastructure.Configurations.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Share.Configurations.Environment;
+using Shared.Configurations.Environment;
 
 namespace Infrastructure;
 
@@ -14,8 +13,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection ConfigureInfrastructureDependencyInjection(
         this IServiceCollection services,
-        IConfiguration configuration,
-        string appCors)
+        IConfiguration configuration)
     {
         var config = new EnvironmentConfiguration(configuration);
         
@@ -26,8 +24,8 @@ public static class DependencyInjection
         // services.ConfigureAppSettings(configuration);
 
         services.ConfigureDbContext(config);
-        services.ConfigureCors(appCors);
-        services.ConfigureApi();
+        // services.ConfigureCors(appCors);
+        // services.ConfigureApi();
         services.ConfigureOpenTelemetry();
         services.ConfigureAuthentication(config);
         services.ConfigureAuthorization(config);

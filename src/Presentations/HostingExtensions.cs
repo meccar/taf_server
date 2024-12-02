@@ -1,6 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
 using Application;
-using DataBase;
 using Infrastructure;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
@@ -29,9 +28,9 @@ public static class HostingExtensions
         var kestrelConfig = builder.Configuration.GetSection("Kestrel:Endpoints:Https:Certificate");
 
         var cert = new X509Certificate2(kestrelConfig["Path"]!, kestrelConfig["Password"]);
-
-        builder.Services.ConfigureInfrastructureDependencyInjection(builder.Configuration, _appCors);
-        builder.Services.ConfigureApplicationDependencyInjection(builder.Configuration);
+        
+        builder.Services.ConfigureInfrastructureDependencyInjection(builder.Configuration);
+        builder.Services.ConfigureApplicationDependencyInjection(builder.Configuration, _appCors);
         // builder.Services.ConfigurePresentationsServices(builder.Configuration);
         // builder.Services.ConfigureHttpException();
         builder.Services.ConfigureControllers();

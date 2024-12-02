@@ -45,7 +45,7 @@ public class Index : PageModel
         UserManager<UserAccountAggregate> userManager,
         SignInManager<UserAccountAggregate> signInManager,
         UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> loginUsecase,
-        IJwtService jwtTokenService
+        IJwtRepository jwtTokenRepository
         )
     {
         _userManager = userManager;

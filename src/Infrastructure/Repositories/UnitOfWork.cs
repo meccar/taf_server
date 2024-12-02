@@ -1,8 +1,6 @@
-using DataBase.Data;
 using Domain.Interfaces;
-using Domain.Interfaces.Command;
-using Domain.Interfaces.Query;
 using Microsoft.EntityFrameworkCore.Storage;
+using Persistance.Data;
 
 namespace Infrastructure.Repositories;
 

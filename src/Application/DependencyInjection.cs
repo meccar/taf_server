@@ -1,4 +1,5 @@
 using Application.Configurations;
+using Application.Configurations.Api;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,8 +9,12 @@ public static class DependencyInjection
 {
     public static IServiceCollection ConfigureApplicationDependencyInjection(
         this IServiceCollection services,
-        IConfiguration configurations)
+        IConfiguration configurations,
+        string appCors
+        )
     {
+        services.ConfigureCors(appCors);
+        services.ConfigureApi();
         services.ConfigureSwagger();
         services.ConfigureMapper();
         services.ConfigureValidatiors();

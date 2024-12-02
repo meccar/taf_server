@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
-using Share.Configurations.Environment;
+using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
 

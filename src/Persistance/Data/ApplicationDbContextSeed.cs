@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Shared.Enums;
 using Shared.FileObjects;
 
-namespace DataBase.Data;
+namespace Persistance.Data;
 
 public class ApplicationDbContextSeed
 {

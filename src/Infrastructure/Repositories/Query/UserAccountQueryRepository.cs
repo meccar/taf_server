@@ -1,7 +1,7 @@
 using AutoMapper;
-using DataBase.Data;
 using Domain.Aggregates;
 using Domain.Interfaces.Query;
+using Persistance.Data;
 
 namespace Infrastructure.Repositories.Query;
 

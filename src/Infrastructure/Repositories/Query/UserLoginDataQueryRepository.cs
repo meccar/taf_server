@@ -1,9 +1,9 @@
 using AutoMapper;
-using DataBase.Data;
 using Domain.Entities;
 using Domain.Interfaces.Query;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Persistance.Data;
 using Shared.Model;
 
 namespace Infrastructure.Repositories.Query;

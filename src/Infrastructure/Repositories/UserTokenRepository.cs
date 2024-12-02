@@ -1,10 +1,10 @@
 using AutoMapper;
-using DataBase.Data;
 using Domain.Entities;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Share.Configurations.Environment;
+using Persistance.Data;
+using Shared.Configurations.Environment;
 using Shared.Enums;
 using Shared.Model;
 

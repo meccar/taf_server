@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
-using DataBase.Configurations.Entity;
 using Domain.Aggregates;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace DataBase.Data;
+namespace Persistance.Data;
 
 /// <summary>
 /// Represents the application database context, inheriting from <see cref="IdentityDbContext"/>.

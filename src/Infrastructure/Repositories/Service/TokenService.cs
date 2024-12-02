@@ -3,19 +3,18 @@ using System.Security.Claims;
 using System.Text;
 using Domain.Entities;
 using Domain.Interfaces;
-using IdentityModel;
 using Microsoft.IdentityModel.Tokens;
-using Share.Configurations.Environment;
+using Shared.Configurations.Environment;
 using Shared.Model;
 
 namespace Infrastructure.Repositories.Service;
 
-public class TokenService : ITokenService
+public class TokenRepository : ITokenRepository
 {
     private readonly byte[] _secret;
     private readonly JwtSecurityTokenHandler _jwtHandler;
     private readonly EnvironmentConfiguration _environment;
-    public TokenService
+    public TokenRepository
     (
         EnvironmentConfiguration environment
     )

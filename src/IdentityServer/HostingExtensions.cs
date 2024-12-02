@@ -1,6 +1,5 @@
 using System.Security.Cryptography.X509Certificates;
 using Application;
-using DataBase;
 using IdentityModel.Client;
 using IdentityServer.Pipeline;
 using Infrastructure;
@@ -8,7 +7,7 @@ using Infrastructure.Configurations.IdentityServer;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
 using Serilog;
-using Share.Configurations.Environment;
+using Shared.Configurations.Environment;
 
 namespace IdentityServer
 {
@@ -62,10 +61,10 @@ namespace IdentityServer
             builder.Services.AddControllersWithViews();
             builder.Services.AddRazorPages();
             builder.Services.AddBff();
-            builder.Services.ConfigureInfrastructureDependencyInjection(builder.Configuration, AppCorsPolicy);
+            builder.Services.ConfigureInfrastructureDependencyInjection(builder.Configuration);
             builder.Services.ConfigureIdentityServer(config);
             builder.Services.ConfigureIdentityServerAuthentication(config);
-            builder.Services.ConfigureApplicationDependencyInjection(builder.Configuration);
+            builder.Services.ConfigureApplicationDependencyInjection(builder.Configuration, AppCorsPolicy);
         }
 
         // Configures logging with Console, Serilog, and OpenTelemetry

@@ -15,20 +15,20 @@ public class UserAccountRepository
 {
     private readonly IMapper _mapper;
     private readonly UserManager<UserAccountAggregate> _userManager;
-    private readonly IMfaService _mfaService;
+    private readonly IMfaRepository _mfaRepository;
 
     public UserAccountRepository(
         // ApplicationDbContext context,
         IMapper mapper,
         UserManager<UserAccountAggregate> userManager,
-        IMfaService mfaService
+        IMfaRepository mfaRepository
 
         // RoleManager<IdentityRole> roleManager
     )
     {
         _mapper = mapper;
         _userManager = userManager;
-        _mfaService = mfaService;
+        _mfaRepository = mfaRepository;
         // _roleManager = roleManager;
     }
     
@@ -50,7 +50,7 @@ public class UserAccountRepository
 
         var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userAccountAggregate);
         return UserLoginDataResult.Success(userLoginDataModel);
-        // if (await _mfaService.MfaSetup(userAccountAggregate))
+        // if (await _mfaRepository.MfaSetup(userAccountAggregate))
         // {
         // }
 

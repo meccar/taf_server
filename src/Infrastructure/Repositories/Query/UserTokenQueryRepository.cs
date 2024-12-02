@@ -1,9 +1,9 @@
 using AutoMapper;
-using DataBase.Data;
 using Domain.Entities;
 using Domain.Interfaces.Query;
 using Microsoft.AspNetCore.Identity;
-using Share.Configurations.Environment;
+using Persistance.Data;
+using Shared.Configurations.Environment;
 using Shared.Enums;
 using Shared.Model;
 

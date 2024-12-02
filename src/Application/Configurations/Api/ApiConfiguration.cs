@@ -2,7 +2,7 @@ using Asp.Versioning;
 using Asp.Versioning.Conventions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Infrastructure.Configurations.Api;
+namespace Application.Configurations.Api;
 
 public static class ApiConfiguration
 {
@@ -30,10 +30,6 @@ public static class ApiConfiguration
                     options.GroupNameFormat = "'v'VVV";
                     options.SubstituteApiVersionInUrl = true;
                 });
-        
-            services
-            .AddHttpContextAccessor();
-
                 
         return services;
     }

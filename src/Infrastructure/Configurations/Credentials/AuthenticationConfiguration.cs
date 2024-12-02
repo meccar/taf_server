@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Share.Configurations.Environment;
+using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.Credentials;
 

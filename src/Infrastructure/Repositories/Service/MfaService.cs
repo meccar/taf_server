@@ -1,16 +1,15 @@
 using Domain.Entities;
-using Domain.Interfaces;
 using Domain.Interfaces.Service;
 using Microsoft.AspNetCore.Identity;
 using Shared.Model;
 
 namespace Infrastructure.Repositories.Service;
 
-public class MfaService : IMfaService 
+public class MfaRepository : IMfaRepository 
 {
     private readonly UserManager<UserAccountAggregate> _userManager;
 
-    public MfaService(
+    public MfaRepository(
         UserManager<UserAccountAggregate> userManager
     )
     {

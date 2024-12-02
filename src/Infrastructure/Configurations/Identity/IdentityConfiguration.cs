@@ -1,8 +1,8 @@
 ﻿using System.Security.Claims;
-using DataBase.Data;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
+using Persistance.Data;
 
 namespace Infrastructure.Configurations.Identity;
 public static class IdentityConfiguration

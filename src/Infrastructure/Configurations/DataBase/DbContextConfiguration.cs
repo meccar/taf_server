@@ -1,9 +1,9 @@
-using DataBase.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Share.Configurations.Environment;
+using Persistance.Data;
+using Shared.Configurations.Environment;
 
-namespace DataBase.Configurations;
+namespace Infrastructure.Configurations.DataBase;
 
 public static class DbContextConfiguration
 {

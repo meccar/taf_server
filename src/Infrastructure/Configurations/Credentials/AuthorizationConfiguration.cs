@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
-using Share.Configurations.Environment;
+using Shared.Configurations.Environment;
 using Shared.Enums;
 using Shared.Policies;
 

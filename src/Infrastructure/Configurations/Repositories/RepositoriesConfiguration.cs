@@ -1,19 +1,13 @@
 using Domain.Abstractions;
 using Domain.Interfaces;
-using Domain.Interfaces.Command;
-using Domain.Interfaces.Query;
 using Domain.Interfaces.Service;
-using Domain.SeedWork.Command;
 using Duende.IdentityServer.Services;
 using Infrastructure.Repositories;
-using Infrastructure.Repositories.Command;
-using Infrastructure.Repositories.Query;
 using Infrastructure.Repositories.Service;
 using Microsoft.Extensions.DependencyInjection;
-using Share.Configurations.Environment;
-using ITokenService = Domain.Interfaces.ITokenService;
+using Shared.Configurations.Environment;
 
-namespace Infrastructure.Configurations.Infrastructure;
+namespace Infrastructure.Configurations.Repositories;
 
 public static class RepositoriesConfiguration
 {
@@ -26,10 +20,10 @@ public static class RepositoriesConfiguration
             .AddScoped<IUserAccountRepository, UserAccountRepository>()
             .AddScoped<IUserProfileRepository, UserProfileRepository>()
             .AddScoped<IUserTokenRepository, UserTokenRepository>()
-            .AddScoped<IJwtService, JwtService>()
+            .AddScoped<IJwtRepository, JwtRepository>()
             .AddScoped<IProfileService, ProfileService>()
-            .AddScoped<IMfaService, MfaService>()
-            .AddScoped<ITokenService, TokenService>();
+            .AddScoped<IMfaRepository, MfaRepository>()
+            .AddScoped<ITokenRepository, TokenRepository>();
         
         return services;
     }

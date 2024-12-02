@@ -3,7 +3,7 @@ using Shared.Model;
 
 namespace Domain.Interfaces;
 
-public interface ITokenService
+public interface ITokenRepository
 {
     Task<UserTokenModel> GenerateTokenPair(UserAccountAggregate user);
 }

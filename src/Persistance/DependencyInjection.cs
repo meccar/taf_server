@@ -1,20 +1,18 @@
-// using DataBase.Configurations;
 // using Microsoft.Extensions.Configuration;
 // using Microsoft.Extensions.DependencyInjection;
-// using Share.Configurations.Environment;
 //
-// namespace DataBase;
+// namespace Persistance;
 //
 // public static class DependencyInjection
 // {
 //     public static IServiceCollection ConfigureDataBaseDependencyInjection(
 //         this IServiceCollection services,
-//         IConfiguration configuration,
-//         string appCors)
+//         IConfiguration configuration
+//         )
 //     {
-//         var config = new EnvironmentConfiguration(configuration);
+//         // var config = new EnvironmentConfiguration(configuration);
 //
-//         services.ConfigureDbContext(config);
+//         services.ConfigureDbContext(configuration);
 //
 //         return services;
 //     }
