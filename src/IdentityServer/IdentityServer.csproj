@@ -8,7 +8,7 @@
         <DockerfileContext>.</DockerfileContext>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
+<!--        <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>-->
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     </PropertyGroup>
 
