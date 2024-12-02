@@ -1,7 +1,6 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
-using Application.Dtos.Authentication.Login;
 using Application.Usecases.Auth;
 using Domain.Entities;
 using Domain.Interfaces.Service;
@@ -16,8 +15,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using IdentityServer.Pages;
 using IdentityServer.Pages.Login;
+using Shared.Dtos.Authentication.Login;
 using Telemetry = IdentityServer.Pages.Telemetry;
 
 namespace IdentityServer.Pages.Account.Login;
@@ -26,7 +25,7 @@ namespace IdentityServer.Pages.Account.Login;
 [AllowAnonymous]
 public class Index : PageModel
 {
-    private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly IIdentityServerInteractionService _interaction;
     private readonly IEventService _events;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
@@ -43,8 +42,8 @@ public class Index : PageModel
         IAuthenticationSchemeProvider schemeProvider,
         IIdentityProviderStore identityProviderStore,
         IEventService events,
-        UserManager<UserLoginDataEntity> userManager,
-        SignInManager<UserLoginDataEntity> signInManager,
+        UserManager<UserAccountAggregate> userManager,
+        SignInManager<UserAccountAggregate> signInManager,
         UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> loginUsecase,
         IJwtService jwtTokenService
         )
@@ -98,7 +97,7 @@ public class Index : PageModel
         return await HandleSuccessfulLogin(context);
     }
     
-    private async Task<(bool Success, UserLoginDataEntity? User)> AttemptLogin(AuthorizationRequest? context)
+    private async Task<(bool Success, UserAccountAggregate? User)> AttemptLogin(AuthorizationRequest? context)
     {
         var loginDto = new LoginUserRequestDto
         {
@@ -126,7 +125,7 @@ public class Index : PageModel
         return (true, user);
     }
 
-    private async Task LogSuccessfulLogin(AuthorizationRequest? context, UserLoginDataEntity user)
+    private async Task LogSuccessfulLogin(AuthorizationRequest? context, UserAccountAggregate user)
     {
         await _events.RaiseAsync(new UserLoginSuccessEvent(
             user.Email,

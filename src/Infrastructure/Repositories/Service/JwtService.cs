@@ -1,14 +1,13 @@
 using System.Text;
 using Domain.Entities;
 using Domain.Interfaces;
-using Domain.Model;
-using Domain.SeedWork.Enums.Token;
-using Domain.SeedWork.Enums.UserLoginDataExternal;
-using Infrastructure.Configurations.Environment;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Domain.Interfaces.Service;
 using Microsoft.AspNetCore.Http;
+using Share.Configurations.Environment;
+using Shared.Enums;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Service;
 
@@ -16,7 +15,7 @@ public class JwtService : IJwtService
 {
     private readonly EnvironmentConfiguration _environment;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly ITokenService _tokenService;
     private readonly byte[] _secret;
     private readonly IHttpContextAccessor _httpContextAccessor;
@@ -25,7 +24,7 @@ public class JwtService : IJwtService
     public JwtService(
         EnvironmentConfiguration environment,
         IUnitOfWork unitOfWork,
-        UserManager<UserLoginDataEntity> userManager,
+        UserManager<UserAccountAggregate> userManager,
         ITokenService tokenService,
         IHttpContextAccessor httpContextAccessor
         )
@@ -61,7 +60,7 @@ public class JwtService : IJwtService
         
         token.LoginProvider = EProvider.PASSWORD;
         
-        var existingTokens = await _unitOfWork.UserTokenQueryRepository
+        var existingTokens = await _unitOfWork.UserTokenRepository
             .TokenExistsAsync(user, token);
         
         if (!existingTokens)
@@ -70,7 +69,7 @@ public class JwtService : IJwtService
         }
         else
         {
-            var result = await _unitOfWork.UserTokenCommandRepository.RemoveLoginAndAuthenticationTokenAsync(user, token);
+            var result = await _unitOfWork.UserTokenRepository.RemoveLoginAndAuthenticationTokenAsync(user, token);
             
             if(!result)
                 throw new InvalidOperationException("Failed to create user tokens");
@@ -89,9 +88,9 @@ public class JwtService : IJwtService
             );
     }
     
-    private async Task CreateNewTokens(UserLoginDataEntity user, UserTokenModel token)
+    private async Task CreateNewTokens(UserAccountAggregate user, UserTokenModel token)
     {
-        var accessToken = await _unitOfWork.UserTokenCommandRepository.CreateUserTokenAsync(
+        var accessToken = await _unitOfWork.UserTokenRepository.CreateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,
@@ -102,7 +101,7 @@ public class JwtService : IJwtService
             )
         );
 
-        var refreshToken = await _unitOfWork.UserTokenCommandRepository.CreateUserTokenAsync(
+        var refreshToken = await _unitOfWork.UserTokenRepository.CreateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,
@@ -119,9 +118,9 @@ public class JwtService : IJwtService
         }
     }
 
-    private async Task UpdateExistingTokens(UserLoginDataEntity user, UserTokenModel token)
+    private async Task UpdateExistingTokens(UserAccountAggregate user, UserTokenModel token)
     {
-        var accessToken = await _unitOfWork.UserTokenCommandRepository.UpdateUserTokenAsync(
+        var accessToken = await _unitOfWork.UserTokenRepository.UpdateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,
@@ -132,7 +131,7 @@ public class JwtService : IJwtService
             )
         );
 
-        var refreshToken = await _unitOfWork.UserTokenCommandRepository.UpdateUserTokenAsync(
+        var refreshToken = await _unitOfWork.UserTokenRepository.UpdateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,

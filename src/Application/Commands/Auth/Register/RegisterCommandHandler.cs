@@ -1,9 +1,7 @@
-﻿
-
-using Domain.Interfaces;
-using Domain.Model;
+﻿using Domain.Interfaces;
 using Domain.SeedWork.Command;
-using Share.Dtos.Exceptions;
+using Shared.Dtos.Exceptions;
+using Shared.Model;
 
 namespace Application.Commands.Auth.Register;
 
@@ -55,11 +53,11 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
             await _unitOfWork.BeginTransactionAsync();
             try
             {
-                if (await _unitOfWork.UserLoginDataQueryRepository.IsUserLoginDataExisted(request.UserLoginDataModel))
+                if (await _unitOfWork.UserAccountRepository.IsUserLoginDataExisted(request.UserLoginDataModel))
                     throw new BadRequestException("Either Email or Phone number already exists");
 
                 var userAccount = await _unitOfWork
-                    .UserAccountCommandRepository
+                    .UserProfileRepository
                     .CreateUserAccountAsync(request.UserAccountModel);
 
                 if (!userAccount.Succeeded)
@@ -70,7 +68,7 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
                 request.UserLoginDataModel.UserAccountId = userAccount.UserData.Id;
 
                 var userLoginData = await _unitOfWork
-                    .UserLoginDataCommandRepository
+                    .UserAccountRepository
                     .CreateUserLoginDataAsync(request.UserLoginDataModel);
 
                 if (!userLoginData.Succeeded)

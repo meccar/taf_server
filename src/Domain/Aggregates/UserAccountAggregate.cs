@@ -1,70 +1,68 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Entities;
-using Domain.SeedWork.Enums.UserAccount;
-using Domain.SeedWork.Interfaces;
+using Domain.Aggregates;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Shared.Enums;
 
-namespace Domain.Aggregates;
+namespace Domain.Entities;
 
 /// <summary>
-/// Represents a user account within the application, extending the IdentityUser class.
+/// Represents the login data associated with a user account.
 /// </summary>
-/// <remarks>
-/// This aggregate encapsulates user-related data and behavior, including personal details,
-/// account status, and associated tokens. It implements the <see cref="IDateTracking"/> 
-/// interface for managing creation and update timestamps.
-/// </remarks>
-public class UserAccountAggregate : EntityBase
+public class UserAccountAggregate : IdentityUser<int>
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-    public int Id { get; set; }
-    
+    /// <summary>
+    /// Gets or sets the universally unique identifier (Ulid) for the user.
+    /// </summary>
     [Required]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public string EId { get; set; } = Ulid.NewUlid().ToString();
-    
+
+    /// <summary>
+    /// Gets or sets the identifier of the associated user account.
+    /// </summary>
     [Required]
-    [ProtectedPersonalData]
-    [PersonalData]
-    public string FirstName { get; set; } = "";
+    public required int UserAccountId { get; set; }
+
+
+    /// <summary>
+    /// Gets or sets the status of the user's email verification.
+    /// </summary>
+    public string EmailStatus { get; set; } = EEmailStatus.Pending.ToString();
+
+    /// <summary>
+    /// Gets or sets the token used for password recovery.
+    /// </summary>
+    public string PasswordRecoveryToken { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets the token used for email confirmation.
+    /// </summary>
+    public string? ConfirmationToken { get; set; } = null;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether two-factor authentication is enabled for the user.
+    /// </summary>
+    public bool IsTwoFactorEnabled { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the user has verified two-factor authentication.
+    /// </summary>
+    public bool IsTwoFactorVerified { get; set; } = false;
+
+    /// <summary>
+    /// Gets or sets the secret used for two-factor authentication.
+    /// </summary>
+    public string TwoFactorSecret { get; set; } = "";
+
+    /// <summary>
+    /// Gets or sets the position of the user within the organization.
+    /// </summary>
     
-    [Required]
-    [ProtectedPersonalData]
-    [PersonalData]
-    public string LastName { get; set; } = "";
+    [ForeignKey("UserAccountId")]
+    [DeleteBehavior(DeleteBehavior.ClientSetNull)]
+    public virtual UserProfileAggregate UserAccount { get; set; } = null!;
+    public List<IdentityUserToken<int>> UserToken { get; set; } = new List<IdentityUserToken<int>>();
 
-    [Required] public Gender Gender { get; set; }
-
-    [Required]
-    [ProtectedPersonalData]
-    [PersonalData]
-    public string DateOfBirth { get; set; }
-
-    [Required]
-    public string Avatar { get; set; } = null;
-    
-    public string Status { get; set; } = UserAccountStatus.Inactive.ToString();
-    
-    // public int CompanyId { get; set; }
-    
-    [Required]
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    
-    public DateTime? UpdatedAt { get; set; }
-   
-    public DateTime DeletedAt { get; set; }
-    public bool IsDeleted { get; set; } = false;
-    
-    // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
-
-    public virtual UserLoginDataEntity UserLoginData { get; set; } = null!;
-
-    // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
-
-
-    // public List<RoleModel> Roles { get; set; }
-
-    // public CompanyModel Company { get; set; }
 }

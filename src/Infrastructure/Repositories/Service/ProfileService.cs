@@ -9,10 +9,10 @@ namespace Infrastructure.Repositories.Service;
 
 public class ProfileService : IProfileService
 {
-    private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
 
     public ProfileService(
-        UserManager<UserLoginDataEntity> userManager
+        UserManager<UserAccountAggregate> userManager
     )
     {
         _userManager = userManager;

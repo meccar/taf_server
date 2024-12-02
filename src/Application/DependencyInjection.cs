@@ -6,7 +6,7 @@ namespace Application;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection ConfigureApplicationServices(
+    public static IServiceCollection ConfigureApplicationDependencyInjection(
         this IServiceCollection services,
         IConfiguration configurations)
     {

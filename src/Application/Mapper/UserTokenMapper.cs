@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Domain.Model;
 using Microsoft.AspNetCore.Identity;
+using Shared.Model;
 
 namespace Application.Mapper;
 

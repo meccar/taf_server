@@ -1,6 +1,4 @@
 using System.Security.Claims;
-using Application.Dtos.Authentication.Login;
-using Application.Dtos.Authentication.Register;
 using Application.Usecases.Auth;
 using Asp.Versioning;
 using AutoMapper;
@@ -9,6 +7,8 @@ using Infrastructure.UseCaseProxy;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dtos.Authentication.Login;
+using Shared.Dtos.Authentication.Register;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Presentations.Controllers.Authentication;

@@ -1,8 +1,7 @@
-using System.Data;
+using DataBase.Data;
 using Domain.Interfaces;
 using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
-using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Repositories;
@@ -36,59 +35,22 @@ public class UnitOfWork : IUnitOfWork
     public UnitOfWork(
         ApplicationDbContext context,
         // IDbConnection connection,
-            
-        IUserAccountCommandRepository userAccountCommandRepository,
-        IUserLoginDataCommandRepository userLoginDataCommandRepository,
-        IUserTokenCommandRepository userTokenCommandRepository,
-
-        IUserAccountQueryRepository userAccountQueryRepository,
-        IUserLoginDataQueryRepository userLoginDataQueryRepository,
-        IUserTokenQueryRepository userTokenQueryRepository
+        
+        IUserAccountRepository userAccountRepository,
+        IUserProfileRepository userProfileRepository,
+        IUserTokenRepository userTokenRepository
         )
     {
         _context = context;
         // _connection = connection;
         
-        UserAccountCommandRepository = userAccountCommandRepository;
-        UserLoginDataCommandRepository = userLoginDataCommandRepository;
-        UserTokenCommandRepository  = userTokenCommandRepository;
-
-
-        UserAccountQueryRepository = userAccountQueryRepository;
-        UserLoginDataQueryRepository = userLoginDataQueryRepository;
-        UserTokenQueryRepository = userTokenQueryRepository;
+        UserAccountRepository = userAccountRepository;
+        UserProfileRepository = userProfileRepository;
+        UserTokenRepository = userTokenRepository;
     }
-
-    #region Command Repository Properties
-    
-    /// <summary>
-    /// Gets the repository for user account commands.
-    /// </summary>
-    public IUserAccountCommandRepository UserAccountCommandRepository { get; set; }
-    
-    /// <summary>
-    /// Gets the repository for user login data commands.
-    /// </summary>
-    public IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; set; }
-
-    public IUserTokenCommandRepository UserTokenCommandRepository { get; set; }
-
-    #endregion
-
-    #region Query Repository Properties
-
-    /// <summary>
-    /// Gets the repository for user account queries.
-    /// </summary>
-    public IUserAccountQueryRepository UserAccountQueryRepository { get; set; }
-    
-    /// <summary>
-    /// Gets the repository for user login data queries.
-    /// </summary>
-    public IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; set; }
-    public IUserTokenQueryRepository UserTokenQueryRepository { get; set; }
-    
-    #endregion
+    public IUserAccountRepository UserAccountRepository { get; set; }
+    public IUserProfileRepository UserProfileRepository { get; set; }
+    public IUserTokenRepository UserTokenRepository { get; set; }
     
     /// <summary>
     /// Releases the resources used by the <see cref="UnitOfWork"/> class.

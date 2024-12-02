@@ -40,19 +40,7 @@ public interface IUnitOfWork : IDisposable
     Task RollbackTransactionAsync();
 
     // Task DisposeAsync(IDbContextTransaction transaction);
-    #region Command Repository Properties
-
-    IUserAccountCommandRepository UserAccountCommandRepository { get; set; }
-    IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; set; }
-    IUserTokenCommandRepository UserTokenCommandRepository { get; set; }
-
-    #endregion
-
-    #region Query Repository Properties
-
-    IUserAccountQueryRepository UserAccountQueryRepository { get; set;  }
-    IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; set; }
-    IUserTokenQueryRepository UserTokenQueryRepository { get; set; }
-    
-    #endregion
+    IUserAccountRepository UserAccountRepository { get; set; }
+    IUserProfileRepository UserProfileRepository { get; set; }
+    IUserTokenRepository UserTokenRepository { get; set; }
 }

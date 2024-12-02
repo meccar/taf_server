@@ -3,7 +3,7 @@ using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Test;
 using IdentityModel;
-using Infrastructure.Configurations.Environment;
+using Share.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
 

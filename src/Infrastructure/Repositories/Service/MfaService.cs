@@ -1,23 +1,23 @@
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Interfaces.Service;
-using Domain.Model;
 using Microsoft.AspNetCore.Identity;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Service;
 
 public class MfaService : IMfaService 
 {
-    private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
 
     public MfaService(
-        UserManager<UserLoginDataEntity> userManager
+        UserManager<UserAccountAggregate> userManager
     )
     {
         _userManager = userManager;
     }
 
-    public async Task<bool> MfaSetup(UserLoginDataEntity user)
+    public async Task<bool> MfaSetup(UserAccountAggregate user)
     {
         var token = await _userManager.GetAuthenticatorKeyAsync(user);
         
@@ -36,7 +36,7 @@ public class MfaService : IMfaService
         return false;
     }
     
-    public async Task<bool> MfaSetup(MfaViewModel model,UserLoginDataEntity user)
+    public async Task<bool> MfaSetup(MfaViewModel model,UserAccountAggregate user)
     {
 
         var result = await _userManager.VerifyUserTokenAsync(

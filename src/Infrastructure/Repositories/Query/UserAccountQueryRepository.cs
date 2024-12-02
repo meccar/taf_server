@@ -1,16 +1,12 @@
 using AutoMapper;
+using DataBase.Data;
 using Domain.Aggregates;
-using Domain.Entities;
 using Domain.Interfaces.Query;
-using Domain.Model;
-using Infrastructure.Data;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories.Query;
 
 public class UserAccountQueryRepository
-    : RepositoryBase<UserAccountAggregate>, IUserAccountQueryRepository
+    : RepositoryBase<UserProfileAggregate>, IUserAccountQueryRepository
 {
     private readonly IMapper _mapper;
     private readonly ApplicationDbContext _context; 

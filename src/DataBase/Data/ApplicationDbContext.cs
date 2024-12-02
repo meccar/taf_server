@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
+using DataBase.Configurations.Entity;
 using Domain.Aggregates;
 using Domain.Entities;
-using Domain.SeedWork.Enums.UserAccount;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure.Data;
+namespace DataBase.Data;
 
 /// <summary>
 /// Represents the application database context, inheriting from <see cref="IdentityDbContext"/>.
@@ -18,7 +18,7 @@ namespace Infrastructure.Data;
 /// </remarks>
 public class ApplicationDbContext 
     : IdentityDbContext<
-        UserLoginDataEntity,
+        UserAccountAggregate,
         IdentityRole<int>,
         int,
         IdentityUserClaim<int>,
@@ -27,7 +27,6 @@ public class ApplicationDbContext
         IdentityRoleClaim<int>,
         IdentityUserToken<int>>
 {
-    
     /// <summary>
     /// Initializes a new instance of the <see cref="ApplicationDbContext"/> class.
     /// </summary>
@@ -37,15 +36,15 @@ public class ApplicationDbContext
     {
     }
     
-    #region UserAccountAggregate
+    #region UserProfileAggregate
     /// <summary>
-    /// Gets or sets the <see cref="DbSet{UserAccountAggregate}"/> for user accounts.
+    /// Gets or sets the <see cref="DbSet{UserProfileAggregate}"/> for user accounts.
     /// </summary>
-    public DbSet<UserAccountAggregate> UserAccount { get; set; }
+    public DbSet<UserProfileAggregate> UserAccount { get; set; }
     /// <summary>
-    /// Gets or sets the <see cref="DbSet{UserLoginDataEntity}"/> for user login data.
+    /// Gets or sets the <see cref="DbSet{UserAccountAggregate}"/> for user login data.
     /// </summary>
-    public DbSet<UserLoginDataEntity> UserLoginData { get; set; }
+    public DbSet<UserAccountAggregate> UserLoginData { get; set; }
 
     #endregion
 
@@ -57,24 +56,25 @@ public class ApplicationDbContext
     {
         base.OnModelCreating(builder);
         
-        // builder.Entity<UserAccountAggregate>()
+        // builder.Entity<UserProfileAggregate>()
         //     .HasQueryFilter(u => u.Status != UserAccountStatus.Inactive.ToString());
         //
-        // builder.Entity<UserLoginDataEntity>()
+        // builder.Entity<UserAccountAggregate>()
         //     .HasQueryFilter(u => u.UserAccount.Status != UserAccountStatus.Inactive.ToString());
         
-        builder.Entity<UserLoginDataEntity>()
-            .HasOne(u => u.UserAccount)
-            .WithOne(u => u.UserLoginData)
-            .HasForeignKey<UserLoginDataEntity>(u => u.UserAccountId)
-            .HasPrincipalKey<UserAccountAggregate>(u => u.Id)
-            .IsRequired();
+        // builder.Entity<UserAccountAggregate>()
+        //     .HasOne(u => u.UserAccount)
+        //     .WithOne(u => u.UserLoginData)
+        //     .HasForeignKey<UserAccountAggregate>(u => u.UserAccountId)
+        //     .HasPrincipalKey<UserProfileAggregate>(u => u.Id)
+        //     .IsRequired();
 
-        builder.Entity<UserLoginDataEntity>()
-            .HasMany(u => u.UserToken)
-            .WithOne()
-            .HasForeignKey(u => u.UserId);
-        
+        // builder
+        //     .Entity<UserAccountAggregate>()
+        //     .HasMany(u => u.UserToken)
+        //     .WithOne()
+        //     .HasForeignKey(u => u.UserId);
+
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

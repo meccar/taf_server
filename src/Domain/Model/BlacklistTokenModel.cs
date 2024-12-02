@@ -1,5 +1,5 @@
-namespace Domain.Model;
-
-public class BlacklistTokenModel
-{
-}
+// namespace Domain.Model;
+//
+// public class BlacklistTokenModel
+// {
+// }

@@ -8,8 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\DataBase\DataBase.csproj" />
         <ProjectReference Include="..\Domain\Domain.csproj" />
-        <ProjectReference Include="..\Share\Share.csproj" />
+        <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -37,7 +38,6 @@
       <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.10.0" />
       <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
       <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
-      <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.9.0" />
       <PackageReference Include="System.Management" Version="8.0.0" />
       <PackageReference Include="System.Net.NetworkInformation" Version="4.3.0" />
       <PackageReference Include="System.Security.Claims" Version="4.3.0" />
@@ -52,5 +52,9 @@
         <None Update="appsettings.Development.json">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Configurations\DataBase\" />
     </ItemGroup>
 </Project>

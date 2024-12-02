@@ -1,5 +1,4 @@
 using Duende.IdentityServer;
-using Infrastructure.Configurations.Environment;
 using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;

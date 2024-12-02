@@ -1,61 +1,62 @@
 using System.Security.Claims;
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Share.Enums;
+using Shared.Enums;
+using Shared.FileObjects;
 
-namespace Infrastructure.Data;
+namespace DataBase.Data;
 
 public class ApplicationDbContextSeed
 {
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly RoleManager<IdentityRole<int>> _roleManager;
 
     private static readonly IReadOnlyDictionary<string, IReadOnlyCollection<string>> DefaultPermissions = 
         new Dictionary<string, IReadOnlyCollection<string>>
         {
             { 
-                ERole.Admin, 
+                FORole.Admin, 
                 new[] 
                 {
-                    EClaimValue.View,
-                    EClaimValue.Read,
-                    EClaimValue.Update,
-                    EClaimValue.Delete
+                    FOClaimeActionsValue.View,
+                    FOClaimeActionsValue.Read,
+                    FOClaimeActionsValue.Update,
+                    FOClaimeActionsValue.Delete
                 }
             },
             { 
-                ERole.CompanyManager, 
+                FORole.CompanyManager, 
                 new[] 
                 {
-                    EClaimValue.View,
-                    EClaimValue.Read,
-                    EClaimValue.Update
+                    FOClaimeActionsValue.View,
+                    FOClaimeActionsValue.Read,
+                    FOClaimeActionsValue.Update
                 }
             },
             { 
-                ERole.CompanyUser, 
+                FORole.CompanyUser, 
                 new[] 
                 {
-                    EClaimValue.View,
-                    EClaimValue.Read,
-                    EClaimValue.Update
+                    FOClaimeActionsValue.View,
+                    FOClaimeActionsValue.Read,
+                    FOClaimeActionsValue.Update
                 }
             },
             { 
-                ERole.User, 
+                FORole.User, 
                 new[] 
                 {
-                    EClaimValue.View,
-                    EClaimValue.Read,
-                    EClaimValue.Update
+                    FOClaimeActionsValue.View,
+                    FOClaimeActionsValue.Read,
+                    FOClaimeActionsValue.Update
                 }
             },
         };
     
     public ApplicationDbContextSeed(
         ApplicationDbContext context,
-        UserManager<UserLoginDataEntity> userManager,
+        UserManager<UserAccountAggregate> userManager,
         RoleManager<IdentityRole<int>> roleManager)
     {
         _context = context;
@@ -106,7 +107,7 @@ public class ApplicationDbContextSeed
         IEnumerable<string> permissions)
     {
         var existingClaims = await _roleManager.GetClaimsAsync(role);
-        var desiredClaims = permissions.Select(p => new Claim(EClaimTypes.Permission, p));
+        var desiredClaims = permissions.Select(p => new Claim(EClaimTypes.Permission.ToString(), p));
 
         await RemoveOutdatedClaimsAsync(role, existingClaims, desiredClaims);
         await AddNewClaimsAsync(role, existingClaims, desiredClaims);

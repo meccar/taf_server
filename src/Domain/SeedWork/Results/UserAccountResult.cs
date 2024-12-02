@@ -1,4 +1,4 @@
-using Domain.Model;
+using Shared.Model;
 
 namespace Domain.SeedWork.Results;
 

@@ -1,5 +1,5 @@
-namespace Domain.Model;
-
-public class CompanyModel
-{
-}
+// namespace Domain.Model;
+//
+// public class CompanyModel
+// {
+// }

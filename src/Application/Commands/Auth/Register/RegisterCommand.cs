@@ -1,7 +1,6 @@
-﻿using Application.Dtos.UserAccount;
-using Application.Dtos.UserLoginData;
-using Domain.Model;
-using Domain.SeedWork.Command;
+﻿using Domain.SeedWork.Command;
+using Shared.Dtos.UserLoginData;
+using Shared.Model;
 
 namespace Application.Commands.Auth.Register;
 

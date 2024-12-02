@@ -1,7 +1,7 @@
 using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace Infrastructure.Configurations.Environment;
+namespace Share.Configurations.Environment;
 
 public class EnvironmentConfiguration : IDatabaseConfig, IJWTConfig, IIdentityServer, IOAuth
 {

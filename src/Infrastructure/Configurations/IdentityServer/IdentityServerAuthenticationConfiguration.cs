@@ -1,13 +1,13 @@
 using System.Text;
 using Duende.IdentityServer;
 using IdentityModel;
-using Infrastructure.Configurations.Environment;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using Share.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
 

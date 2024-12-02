@@ -40,7 +40,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "src\Applicat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "src\Test\Test.csproj", "{D281627F-1CC3-407B-BBAC-008BE2C46597}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Share", "src\Share\Share.csproj", "{6B11BA40-8B0C-492B-A26E-0E684CA98040}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\Shared\Shared.csproj", "{6B11BA40-8B0C-492B-A26E-0E684CA98040}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBase", "src\DataBase\DataBase.csproj", "{A7686044-DAEE-4BBC-9A60-6411076FF797}"
 EndProject

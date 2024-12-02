@@ -18,14 +18,14 @@ namespace IdentityServer.Pages.Account.Logout;
 [AllowAnonymous]
 public class Index : PageModel
 {
-    private readonly SignInManager<UserLoginDataEntity> _signInManager;
+    private readonly SignInManager<UserAccountAggregate> _signInManager;
     private readonly IIdentityServerInteractionService _interaction;
     private readonly IEventService _events;
 
     [BindProperty] 
     public string? LogoutId { get; set; }
 
-    public Index(SignInManager<UserLoginDataEntity> signInManager, IIdentityServerInteractionService interaction, IEventService events)
+    public Index(SignInManager<UserAccountAggregate> signInManager, IIdentityServerInteractionService interaction, IEventService events)
     {
         _signInManager = signInManager;
         _interaction = interaction;

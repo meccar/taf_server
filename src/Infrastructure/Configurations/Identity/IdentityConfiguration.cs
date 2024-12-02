@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
+using DataBase.Data;
 using Domain.Entities;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +10,7 @@ public static class IdentityConfiguration
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services
-            .AddIdentity<UserLoginDataEntity, IdentityRole<int>>(options =>
+            .AddIdentity<UserAccountAggregate, IdentityRole<int>>(options =>
             {
                 // // Password settings
                 options.Password.RequireDigit = true;

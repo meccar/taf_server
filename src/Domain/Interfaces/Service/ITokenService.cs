@@ -1,9 +1,9 @@
 using Domain.Entities;
-using Domain.Model;
+using Shared.Model;
 
 namespace Domain.Interfaces;
 
 public interface ITokenService
 {
-    Task<UserTokenModel> GenerateTokenPair(UserLoginDataEntity user);
+    Task<UserTokenModel> GenerateTokenPair(UserAccountAggregate user);
 }

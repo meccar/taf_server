@@ -1,10 +1,10 @@
-using Infrastructure.SeedWork.Enums;
-using Infrastructure.SeedWork.Policies;
 using Microsoft.AspNetCore.Authorization;
+using Shared.Enums;
+using Shared.Policies;
 
 namespace Infrastructure.Decorators.Guards;
 
 public class CompanyUserGuard : AuthorizeAttribute
 {
-    public CompanyUserGuard() : base(new PolicyKey(ERole.CompanyUser).ToString()) { }
+    public CompanyUserGuard() : base(new PolicyKey(FORole.CompanyUser).ToString()) { }
 }

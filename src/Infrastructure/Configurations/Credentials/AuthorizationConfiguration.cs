@@ -1,8 +1,8 @@
-using Infrastructure.Configurations.Environment;
-using Infrastructure.SeedWork.Enums;
-using Infrastructure.SeedWork.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+using Share.Configurations.Environment;
+using Shared.Enums;
+using Shared.Policies;
 
 namespace Infrastructure.Configurations.Credentials;
 
@@ -13,10 +13,10 @@ public static class AuthorizationConfiguration
         services
             .AddAuthorization(options =>
                 {
-                    ConfigureRolePolicy(options, ERole.Admin);
-                    ConfigureRolePolicy(options, ERole.CompanyManager);
-                    ConfigureRolePolicy(options, ERole.CompanyUser);
-                    ConfigureRolePolicy(options, ERole.User);
+                    ConfigureRolePolicy(options, FORole.Admin);
+                    ConfigureRolePolicy(options, FORole.CompanyManager);
+                    ConfigureRolePolicy(options, FORole.CompanyUser);
+                    ConfigureRolePolicy(options, FORole.User);
                     
                     // options.AddPolicy("ApiScope", policy =>
                     // {

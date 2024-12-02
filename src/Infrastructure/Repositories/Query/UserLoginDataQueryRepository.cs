@@ -1,10 +1,10 @@
 using AutoMapper;
+using DataBase.Data;
 using Domain.Entities;
 using Domain.Interfaces.Query;
-using Domain.Model;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Query;
 
@@ -12,13 +12,13 @@ public class UserLoginDataQueryRepository
     : IUserLoginDataQueryRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly ApplicationDbContext _context;
     
     public UserLoginDataQueryRepository(
         ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserLoginDataEntity> userManager)
+        UserManager<UserAccountAggregate> userManager)
     {
         _context = context;
         _mapper = mapper;

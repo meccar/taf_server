@@ -1,12 +1,11 @@
 using AutoMapper;
+using DataBase.Data;
 using Domain.Entities;
 using Domain.Interfaces.Command;
-using Domain.Model;
-using Domain.SeedWork.Enums.Token;
-using Infrastructure.Configurations.Environment;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Share.Configurations.Environment;
+using Shared.Model;
 
 
 namespace Infrastructure.Repositories.Command;
@@ -16,14 +15,14 @@ public class UserTokenCommandRepository
 {
     private readonly IMapper _mapper;
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
-    private readonly SignInManager<UserLoginDataEntity> _signInManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly SignInManager<UserAccountAggregate> _signInManager;
     
     public UserTokenCommandRepository(
         ApplicationDbContext context,
-        UserManager<UserLoginDataEntity> userManager,
+        UserManager<UserAccountAggregate> userManager,
         EnvironmentConfiguration environment,
-        SignInManager<UserLoginDataEntity> signInManager,
+        SignInManager<UserAccountAggregate> signInManager,
         IMapper mapper
         )
     {
@@ -33,7 +32,7 @@ public class UserTokenCommandRepository
         _userManager = userManager;
     }
 
-    public async Task<UserTokenModel?> CreateUserTokenAsync(UserLoginDataEntity user, UserTokenModel request)
+    public async Task<UserTokenModel?> CreateUserTokenAsync(UserAccountAggregate user, UserTokenModel request)
     {
         var result = await _userManager.SetAuthenticationTokenAsync(
             user,
@@ -52,7 +51,7 @@ public class UserTokenCommandRepository
         return null;
     }
     
-    public async Task<UserTokenModel?> UpdateUserTokenAsync(UserLoginDataEntity user, UserTokenModel request)
+    public async Task<UserTokenModel?> UpdateUserTokenAsync(UserAccountAggregate user, UserTokenModel request)
     {
         var result = await _userManager.SetAuthenticationTokenAsync(
             user,
@@ -71,22 +70,22 @@ public class UserTokenCommandRepository
         return null;
     }
 
-    public async Task<bool> RemoveLoginAndAuthenticationTokenAsync(UserLoginDataEntity userLoginDataEntity, UserTokenModel token)
+    public async Task<bool> RemoveLoginAndAuthenticationTokenAsync(UserAccountAggregate userAccountAggregate, UserTokenModel token)
     {
         foreach (var claim in token.Claims)
         {
-            await  _userManager.RemoveClaimAsync(userLoginDataEntity, claim);;
+            await  _userManager.RemoveClaimAsync(userAccountAggregate, claim);;
         }
         
         var removeLogin = await _userManager
             .RemoveLoginAsync(
-                userLoginDataEntity,
+                userAccountAggregate,
                 token.LoginProvider.ToString(),
-                userLoginDataEntity.Email);
+                userAccountAggregate.Email);
         
         var removeAuthenticationTokenResult = await _userManager
             .RemoveAuthenticationTokenAsync(
-                userLoginDataEntity, 
+                userAccountAggregate, 
                 token.LoginProvider.ToString(), 
                 token.Name.ToString());
 
@@ -98,7 +97,7 @@ public class UserTokenCommandRepository
         return false;
     }
 
-    private async Task<SignInResult> SignInAsync(UserLoginDataEntity userLoginDataModel, UserTokenModel token)
+    private async Task<SignInResult> SignInAsync(UserAccountAggregate userLoginDataModel, UserTokenModel token)
     {
         var loginInfo = new UserLoginInfo(
             token.LoginProvider.ToString(),
@@ -132,7 +131,7 @@ public class UserTokenCommandRepository
         );;
     }
     
-    private async Task<SignInResult> UpdateSignInAsync(UserLoginDataEntity userLoginDataModel, UserTokenModel token)
+    private async Task<SignInResult> UpdateSignInAsync(UserAccountAggregate userLoginDataModel, UserTokenModel token)
     {
         var loginInfo = new UserLoginInfo(
             token.LoginProvider.ToString(),

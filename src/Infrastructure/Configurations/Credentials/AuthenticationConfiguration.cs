@@ -1,10 +1,10 @@
 using System.Text;
 using IdentityModel;
-using Infrastructure.Configurations.Environment;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Share.Configurations.Environment;
 
 namespace Infrastructure.Configurations.Credentials;
 

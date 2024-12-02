@@ -19,8 +19,8 @@ namespace IdentityServer.Pages.ExternalLogin;
 [SecurityHeaders]
 public class Callback : PageModel
 {
-    private readonly UserManager<UserLoginDataEntity> _userManager;
-    private readonly SignInManager<UserLoginDataEntity> _signInManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly SignInManager<UserAccountAggregate> _signInManager;
     private readonly IIdentityServerInteractionService _interaction;
     private readonly ILogger<Callback> _logger;
     private readonly IEventService _events;
@@ -29,8 +29,8 @@ public class Callback : PageModel
         IIdentityServerInteractionService interaction,
         IEventService events,
         ILogger<Callback> logger,
-        UserManager<UserLoginDataEntity> userManager,
-        SignInManager<UserLoginDataEntity> signInManager)
+        UserManager<UserAccountAggregate> userManager,
+        SignInManager<UserAccountAggregate> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -118,7 +118,7 @@ public class Callback : PageModel
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1851:Possible multiple enumerations of 'IEnumerable' collection", Justification = "<Pending>")]
-    private async Task<UserLoginDataEntity> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
+    private async Task<UserAccountAggregate> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
     {
         var sub = Ulid.NewUlid().ToString();
         var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ??
@@ -127,7 +127,7 @@ public class Callback : PageModel
         var userEntity = await _userManager.FindByEmailAsync(email);
         var userAccountId = userEntity?.Id ?? 0;
         
-        var user = new UserLoginDataEntity
+        var user = new UserAccountAggregate
         {
             EId = sub,
             UserName = email, // don't need a username, since the user will be using an external provider to login

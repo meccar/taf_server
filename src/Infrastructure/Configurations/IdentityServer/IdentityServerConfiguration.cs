@@ -1,11 +1,11 @@
 using System.Security.Cryptography.X509Certificates;
 using Domain.Entities;
 using Duende.IdentityServer.Configuration;
-using Infrastructure.Configurations.Environment;
 using Infrastructure.Configurations.Identity;
 using Infrastructure.Repositories.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Share.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
 public static class IdentityServerConfiguration
@@ -64,7 +64,7 @@ public static class IdentityServerConfiguration
             .AddProfileService<ProfileService>()
             .AddServerSideSessions()
             .AddInMemoryCaching()
-            // .AddAspNetIdentity<UserLoginDataEntity>()
+            // .AddAspNetIdentity<UserAccountAggregate>()
             .AddDeveloperSigningCredential();
             
         return services;

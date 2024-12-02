@@ -2,8 +2,8 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Presentations.HttpResponse;
-using Share.Dtos.Exceptions;
+using Shared.Dtos.Exceptions;
+using Shared.HttpResponses;
 
 namespace Presentations.Controllers.Exceptions;
 

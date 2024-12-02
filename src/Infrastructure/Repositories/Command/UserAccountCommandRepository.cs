@@ -1,11 +1,11 @@
 using AutoMapper;
+using DataBase.Data;
 using Domain.Aggregates;
 using Domain.Entities;
 using Domain.Interfaces.Command;
-using Domain.Model;
 using Domain.SeedWork.Results;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Command;
 
@@ -18,10 +18,10 @@ namespace Infrastructure.Repositories.Command;
 /// <see cref="UserManager{TUser}"/> for user management tasks.
 /// </remarks>
 public class UserAccountCommandRepository
-    : RepositoryBase<UserAccountAggregate>, IUserAccountCommandRepository
+    : RepositoryBase<UserProfileAggregate>, IUserAccountCommandRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
     // private readonly ApplicationDbContext _context;
 
     /// <summary>
@@ -33,7 +33,7 @@ public class UserAccountCommandRepository
     public UserAccountCommandRepository(
         ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserLoginDataEntity> userManager
+        UserManager<UserAccountAggregate> userManager
         ) : base(context)
     {
         // _context = context;
@@ -48,7 +48,7 @@ public class UserAccountCommandRepository
     /// <returns>The created user account model.</returns>
     public async Task<UserAccountResult> CreateUserAccountAsync(UserAccountModel request)
     {
-        var userAccountEntity = _mapper.Map<UserAccountAggregate>(request);
+        var userAccountEntity = _mapper.Map<UserProfileAggregate>(request);
         
         var created = await CreateAsync(userAccountEntity);
         

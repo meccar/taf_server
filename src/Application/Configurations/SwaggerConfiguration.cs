@@ -1,6 +1,6 @@
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
+using Shared.Dtos.Authentication.Login;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Application.Configurations;
@@ -35,8 +35,10 @@ public static class SwaggerConfiguration
                 // options.OperationFilter<AddHeaderOperationFilter>("correlationId", "Correlation Id for the request", false);
                 // options.OperationFilter<AddResponseHeadersFilter>();
                 
-                var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+                var xmlFilename = Path.Combine(AppContext.BaseDirectory, "..", "..", "Shared");
+                var sharedXmlPath = Path.Combine(Path.GetDirectoryName(typeof(LoginUserRequestDto).Assembly.Location), "Shared.xml");
+
+                options.IncludeXmlComments(sharedXmlPath);
                 
                 // options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
             });

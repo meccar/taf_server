@@ -1,11 +1,11 @@
 using Application.Commands.Auth.Register;
-using Application.Dtos.Authentication.Login;
-using Application.Dtos.Authentication.Register;
 using Application.Usecases.Auth;
-using Domain.Model;
 using Domain.SeedWork.Command;
 using Infrastructure.UseCaseProxy;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Dtos.Authentication.Login;
+using Shared.Dtos.Authentication.Register;
+using Shared.Model;
 
 namespace Application.Configurations;
 
