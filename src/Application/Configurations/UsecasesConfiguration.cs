@@ -17,14 +17,15 @@ public static class UsecasesConfiguration
             .AddScoped<RegisterUsecase>()
             .AddScoped<LoginUsecase>()
             .AddScoped<ICommandHandler<RegisterCommand, UserAccountModel>, RegisterCommandHandler>()
-            // .Decorate<ICommandHandler<RegisterCommand, UserAccountModel>, 
-            //     TransactionalDecorator<RegisterCommand, UserAccountModel>>()
-            .AddScoped<UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto>>(provider =>
-                new UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto>(
-                    provider.GetRequiredService<RegisterUsecase>()))
-            .AddScoped<UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto>>(provider =>
-                new UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto>(
-                    provider.GetRequiredService<LoginUsecase>()));
+            .AddScoped<RegisterUsecase>()
+            .AddScoped<LoginUsecase>();
+            
+            // .AddScoped<UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto>>(provider =>
+            //     new UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto>(
+            //         provider.GetRequiredService<RegisterUsecase>()))
+            // .AddScoped<UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto>>(provider =>
+            //     new UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto>(
+            //         provider.GetRequiredService<LoginUsecase>()));
         
         return services;
     }

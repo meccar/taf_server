@@ -23,21 +23,25 @@ public class AuthenticationController
 {
     private readonly IMapper _mapper;
     private readonly ILogger<AuthenticationController> _logger;
-    private readonly UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> _registerUseCase;
-    private readonly UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> _loginUsecase;
+    // private readonly UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> _registerUseCase;
+    // private readonly UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> _loginUsecase;
     private readonly IMediator _mediator;
+    private readonly RegisterUsecase _registerUseCase;
+    private readonly LoginUsecase _loginUsecase;
     public AuthenticationController(
         IMapper mapper,
-        UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> registerUsecase,
-        UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> loginUsecase,
+        // UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> registerUsecase,
+        // UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> loginUsecase,
         ILogger<AuthenticationController> logger,
+        RegisterUsecase registerUsecase,
+        LoginUsecase loginUsecase,
         IMediator mediator)
     {
         _mapper = mapper;
-        _registerUseCase = registerUsecase;
         _loginUsecase = loginUsecase;
         _logger = logger;
         _mediator = mediator;
+        _registerUseCase = registerUsecase;
     }
 
     [HttpPost("register")]
@@ -55,7 +59,8 @@ public class AuthenticationController
     {
         _logger.LogInformation("START: Register");
 
-        var response = await _registerUseCase.GetInstance().Execute(registerDto);
+        var response = await _registerUseCase.Execute(registerDto);
+        // var response = await _registerUseCase.GetInstance().Execute(registerDto);
 
         _logger.LogInformation("END: Register");
 
@@ -77,7 +82,8 @@ public class AuthenticationController
     {
         _logger.LogInformation("START: Login");
 
-        var response = await _loginUsecase.GetInstance().Execute(loginDto);
+        var response = await _loginUsecase.Execute(loginDto);
+        // var response = await _loginUsecase.GetInstance().Execute(loginDto);
         
         _logger.LogInformation("END: Login");
         

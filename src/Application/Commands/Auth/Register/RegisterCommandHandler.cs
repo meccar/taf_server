@@ -1,5 +1,4 @@
 ﻿using Domain.Interfaces;
-using Domain.SeedWork.Command;
 using Shared.Dtos.Exceptions;
 using Shared.Model;
 
@@ -16,23 +15,18 @@ namespace Application.Commands.Auth.Register;
 /// Upon successful validation, a new user account and associated login data are created.
 /// </remarks>
 
-// [Transactional(
-//     IsolationLevel = IsolationLevel.ReadCommitted, 
-//     ThrowOnFailure = true)]
-public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccountModel>
+public class RegisterCommandHandler : TransactionalHandler<RegisterCommand, UserAccountModel>
 {
-    private readonly IUnitOfWork _unitOfWork;
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
     /// </summary>
     /// <param name="unitOfWork">The unit of work instance to manage data transactions.</param>
     public RegisterCommandHandler(
         IUnitOfWork unitOfWork
-        )
+        ) : base(unitOfWork)
     {
-        _unitOfWork = unitOfWork;
     }
-    
+
     /// <summary>
     /// Handles the registration command by validating user data and creating a new account.
     /// </summary>
@@ -40,52 +34,33 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand, UserAccou
     /// <param name="cancellationToken">A cancellation token to signal cancellation of the operation.</param>
     /// <returns>A task that represents the asynchronous operation, containing the created <see cref="UserAccountModel"/>.</returns>
     /// <exception cref="BadRequestException">Thrown when the email or phone number is already in use.</exception>
-    public async Task<UserAccountModel> Handle(RegisterCommand request, CancellationToken cancellationToken)
+    protected override async Task<UserAccountModel> ExecuteCoreAsync(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var strategy = _unitOfWork.CreateExecutionStrategy();
+        // Validate existing user login data
+        if (await _unitOfWork.UserAccountRepository.IsUserLoginDataExisted(request.UserLoginDataModel))
+            throw new BadRequestException("Either Email or Phone number already exists");
 
-        return await strategy.ExecuteAsync(
-            state: request,
-            verifySucceeded: null, 
-            cancellationToken: cancellationToken,
-            operation: async (context, state, token) =>
-        {
-            await _unitOfWork.BeginTransactionAsync();
-            try
-            {
-                if (await _unitOfWork.UserAccountRepository.IsUserLoginDataExisted(request.UserLoginDataModel))
-                    throw new BadRequestException("Either Email or Phone number already exists");
+        // Create user account
+        var userAccount = await _unitOfWork
+            .UserProfileRepository
+            .CreateUserAccountAsync(request.UserAccountModel);
 
-                var userAccount = await _unitOfWork
-                    .UserProfileRepository
-                    .CreateUserAccountAsync(request.UserAccountModel);
+        if (!userAccount.Succeeded)
+            throw new BadRequestException("Failed to create user account");
 
-                if (!userAccount.Succeeded)
-                {
-                    throw new BadRequestException("An error occurred. Please try again");
-                }
+        // Associate login data with the new account
+        request.UserLoginDataModel.UserAccountId = userAccount.UserData.Id;
 
-                request.UserLoginDataModel.UserAccountId = userAccount.UserData.Id;
+        var userLoginData = await _unitOfWork
+            .UserAccountRepository
+            .CreateUserLoginDataAsync(request.UserLoginDataModel);
 
-                var userLoginData = await _unitOfWork
-                    .UserAccountRepository
-                    .CreateUserLoginDataAsync(request.UserLoginDataModel);
+        if (!userLoginData.Succeeded)
+            throw new BadRequestException("Failed to create user login data");
 
-                if (!userLoginData.Succeeded)
-                    throw new BadRequestException("An error occurred. Please try again");
+        // Attach login data to the user account
+        userAccount.UserData.UserLoginData = userLoginData.UserData;
 
-                userAccount.UserData.UserLoginData = userLoginData.UserData;
-
-                await _unitOfWork.CommitTransactionAsync();
-
-                return userAccount.UserData;
-            }
-            catch (Exception ex)
-            {
-                // Rollback the transaction if an error occurs
-                await _unitOfWork.RollbackTransactionAsync();
-                throw new BadRequestException("An error occurred during registration: " + ex.Message);
-            }
-        });
+        return userAccount.UserData;
     }
 }
