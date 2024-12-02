@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Shared</name>
+    </assembly>
+    <members>
+        <member name="P:Shared.Dtos.Authentication.Login.LoginUserRequestDto.Email">
+            <summary>
+            User's Email
+            </summary>
+            <example>john.smith@gmail.com</example>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Login.LoginUserRequestDto.Password">
+            <summary>
+            User's Password
+            </summary>
+            <example>Password@1234</example>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Login.LoginUserRequestDto.RememberUser">
+            <summary>
+            Remember User
+            </summary>
+            <example>true</example>
+        </member>
+        <member name="T:Shared.Dtos.Exceptions.BadRequestException">
+            <summary>
+            Represents an exception that is thrown when a bad request (HTTP 400) occurs.
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.BadRequestException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.BadRequestException"/> class without a value.
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.BadRequestException.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.BadRequestException"/> class with an optional value.
+            </summary>
+            <param name="value">
+            An optional object that provides additional information about the bad request. This value is passed to the base exception class.
+            </param>
+        </member>
+        <member name="T:Shared.Dtos.Exceptions.ExpiredTokenException">
+            <summary>
+            Represents an exception that is thrown when an expired token is encountered, resulting in an unauthorized request (HTTP 401).
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.ExpiredTokenException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.ExpiredTokenException"/> class with a default message indicating an expired token.
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.ForbiddenException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.NotFoundException"/> class without a value.
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.ForbiddenException.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.NotFoundException"/> class with a specified value.
+            </summary>
+            <param name="value">
+            An object that provides additional information about the resource that was not found. This value is passed to the base exception class.
+            </param>
+        </member>
+        <member name="T:Shared.Dtos.Exceptions.InvalidTokenException">
+            <summary>
+            Represents an exception that is thrown when an invalid token is encountered, resulting in an unauthorized request (HTTP 401).
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.InvalidTokenException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.InvalidTokenException"/> class with a default message indicating an invalid token.
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Exceptions.NotFoundException">
+            <summary>
+            Represents an exception that is thrown when a requested resource is not found (HTTP 404).
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.NotFoundException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.NotFoundException"/> class without a value.
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.NotFoundException.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.NotFoundException"/> class with a specified value.
+            </summary>
+            <param name="value">
+            An object that provides additional information about the resource that was not found. This value is passed to the base exception class.
+            </param>
+        </member>
+        <member name="T:Shared.Dtos.Exceptions.UnauthorizedException">
+            <summary>
+            Represents an exception that is thrown when an unauthorized request (HTTP 401) occurs.
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.UnauthorizedException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.UnauthorizedException"/> class without a value.
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Exceptions.UnauthorizedException.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.UnauthorizedException"/> class with a specified value.
+            </summary>
+            <param name="value">
+            An object that provides additional information about the unauthorized request. This value is passed to the base exception class.
+            </param>
+        </member>
+        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.FirstName">
+            <summary>
+            User's FirstName
+            </summary>
+            <example>John</example>
+        </member>
+        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.LastName">
+            <summary>
+            User's LastName
+            </summary>
+            <example>Smith</example>
+        </member>
+        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.Gender">
+            <summary>
+            User's Gender
+            </summary>
+            <example>Male</example>
+        </member>
+        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.DateOfBirth">
+            <summary>
+            User's DateOfBirth
+            </summary>
+            <example>07/14/1999</example>
+        </member>
+        <member name="P:Shared.Dtos.UserLoginData.CreateUserLoginDataDto.Email">
+            <summary>
+            User's Email
+            </summary>
+            <example>john.smith@gmail.com</example>
+        </member>
+        <member name="P:Shared.Dtos.UserLoginData.CreateUserLoginDataDto.Password">
+            <summary>
+            User's Password
+            </summary>
+            <example>Password@1234</example>
+        </member>
+        <member name="P:Shared.Dtos.UserLoginData.CreateUserLoginDataDto.PhoneNumber">
+            <summary>
+            User's PhoneNumber
+            </summary>
+            <example>098765432123</example>
+        </member>
+        <member name="T:Shared.HttpResponses.HttpResponseException">
+            <summary>
+            Represents an exception that can be thrown to return a specific HTTP response status code and optional value.
+            </summary>
+            <remarks>
+            This class is used to signal that an HTTP response should be generated with a specific status code and an optional value.
+            It is useful for handling and customizing HTTP responses in a web application.
+            </remarks>
+        </member>
+        <member name="M:Shared.HttpResponses.HttpResponseException.#ctor(System.Int32,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.HttpResponseException"/> class with a specified status code and optional value.
+            </summary>
+            <param name="statusCode">The HTTP status code to be returned.</param>
+            <param name="value">An optional value to include in the response. This can be any object, such as an error message or additional data.</param>
+        </member>
+        <member name="P:Shared.HttpResponses.HttpResponseException.StatusCode">
+            <summary>
+            Gets the HTTP status code associated with the exception.
+            </summary>
+            <value>
+            An integer representing the HTTP status code. This is used to indicate the type of error or response.
+            </value>
+        </member>
+        <member name="P:Shared.HttpResponses.HttpResponseException.Message">
+            <summary>
+            Gets a new message that provides additional context.
+            </summary>
+        </member>
+        <member name="T:Shared.Model.UserAccountModel">
+            <summary>
+            
+            </summary>
+        </member>
+    </members>
+</doc>
