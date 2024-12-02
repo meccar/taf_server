@@ -1,16 +1,16 @@
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Configuration;
-using Infrastructure.Configurations.Environment;
-using Infrastructure.Configurations.Identity;
+using Infrastructure.Repositories.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
 public static class IdentityServerConfiguration
 {
     public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services, EnvironmentConfiguration configuration)
     {
-        var cert = new X509Certificate2("../certificate.pfx", "tung");
+        var cert = new X509Certificate2("certificate.pfx", "tung");
         if (cert == null)
         {
             throw new Exception("Certificate not found.");
@@ -59,9 +59,10 @@ public static class IdentityServerConfiguration
             .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
             .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
             .AddTestUsers(IdentityServerConfig.TestUsers)
+            .AddProfileService<ProfileService>()
             .AddServerSideSessions()
             .AddInMemoryCaching()
-            // .AddAspNetIdentity<UserLoginDataEntity>()
+            // .AddAspNetIdentity<UserAccountAggregate>()
             .AddDeveloperSigningCredential();
             
         return services;

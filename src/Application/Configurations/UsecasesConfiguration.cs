@@ -1,8 +1,8 @@
-using Application.Dtos.Authentication.Login;
-using Application.Dtos.Authentication.Register;
+using Application.Commands.Auth.Register;
 using Application.Usecases.Auth;
-using Infrastructure.UseCaseProxy;
+using Domain.SeedWork.Command;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Model;
 
 namespace Application.Configurations;
 
@@ -13,12 +13,9 @@ public static class UsecasesConfiguration
         services
             .AddScoped<RegisterUsecase>()
             .AddScoped<LoginUsecase>()
-            .AddScoped<UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto>>(provider =>
-                new UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto>(
-                    provider.GetRequiredService<RegisterUsecase>()))
-            .AddScoped<UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto>>(provider =>
-                new UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto>(
-                    provider.GetRequiredService<LoginUsecase>()));
+            .AddScoped<ICommandHandler<RegisterCommand, UserAccountModel>, RegisterCommandHandler>()
+            .AddScoped<RegisterUsecase>()
+            .AddScoped<LoginUsecase>();
         
         return services;
     }

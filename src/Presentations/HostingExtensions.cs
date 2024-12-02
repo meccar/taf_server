@@ -29,10 +29,10 @@ public static class HostingExtensions
 
         var cert = new X509Certificate2(kestrelConfig["Path"]!, kestrelConfig["Password"]);
         
-        builder.Services.ConfigureInfrastructureServices(builder.Configuration, _appCors);
-        builder.Services.ConfigureApplicationServices(builder.Configuration);
+        builder.Services.ConfigureInfrastructureDependencyInjection(builder.Configuration);
+        builder.Services.ConfigureApplicationDependencyInjection(builder.Configuration, _appCors);
         // builder.Services.ConfigurePresentationsServices(builder.Configuration);
-        builder.Services.ConfigureHttpException();
+        // builder.Services.ConfigureHttpException();
         builder.Services.ConfigureControllers();
         
         builder.Logging.AddConsole();
@@ -50,6 +50,7 @@ public static class HostingExtensions
             options.ConfigureHttpsDefaults(httpsOptions =>
             {
                 httpsOptions.ServerCertificate = cert;
+                httpsOptions.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
             });
         });
         

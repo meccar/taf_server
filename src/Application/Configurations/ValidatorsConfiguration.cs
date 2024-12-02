@@ -1,10 +1,10 @@
 using System.Reflection;
-using Application.Dtos.Authentication.Register;
-using Application.Validators.Auth;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
+using Shared.Dtos.Authentication.Register;
+using Shared.Validators.Auth;
 
 namespace Application.Configurations;
 

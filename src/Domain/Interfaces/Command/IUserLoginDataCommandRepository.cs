@@ -1,5 +1,5 @@
-using Domain.Model;
 using Domain.SeedWork.Results;
+using Shared.Model;
 
 namespace Domain.Interfaces.Command;
 

@@ -1,11 +1,11 @@
-using System.Security.Claims;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces.Command;
-using Domain.Model;
+using Domain.Interfaces.Service;
 using Domain.SeedWork.Results;
-using Infrastructure.SeedWork.Enums;
 using Microsoft.AspNetCore.Identity;
+using Shared.Enums;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Command;
 
@@ -21,7 +21,9 @@ public class UserLoginDataCommandRepository
     : IUserLoginDataCommandRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly IMfaRepository _mfaRepository;
+
     // private readonly RoleManager<IdentityRole> _roleManager;
     
     /// <summary>
@@ -33,12 +35,15 @@ public class UserLoginDataCommandRepository
     public UserLoginDataCommandRepository(
         // ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserLoginDataEntity> userManager
+        UserManager<UserAccountAggregate> userManager,
+        IMfaRepository mfaRepository
+
         // RoleManager<IdentityRole> roleManager
         )
     {
         _mapper = mapper;
         _userManager = userManager;
+        _mfaRepository = mfaRepository;
         // _roleManager = roleManager;
     }
 
@@ -49,28 +54,34 @@ public class UserLoginDataCommandRepository
     /// <returns>The created user login data model.</returns>
     public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserLoginDataModel request)
     {
-        var (userLoginDataEntity, createResult) = await CreateUserAccountAsync(request);
+        var (userAccountAggregate, createResult) = await CreateUserAccountAsync(request);
         if (!createResult.Succeeded)
         {
             return UserLoginDataResult.Failure(
                 createResult.Errors.Select(e => e.Description).ToArray());
         }
         
-        var roleResult = await AssignRoleAsync(userLoginDataEntity);
+        var roleResult = await AssignRoleAsync(userAccountAggregate);
         if (!roleResult.Succeeded)
         {
             return UserLoginDataResult.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
-        
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userLoginDataEntity);
+
+        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userAccountAggregate);
         return UserLoginDataResult.Success(userLoginDataModel);
+        // if (await _mfaRepository.MfaSetup(userAccountAggregate))
+        // {
+        // }
+
+        // return UserLoginDataResult.Failure(
+        //     createResult.Errors.Select(e => e.Description).ToArray());
     }
     
-    private async Task<(UserLoginDataEntity User, IdentityResult Result)> CreateUserAccountAsync(
+    private async Task<(UserAccountAggregate User, IdentityResult Result)> CreateUserAccountAsync(
         UserLoginDataModel request)
     {
-        var userEntity = _mapper.Map<UserLoginDataEntity>(request);
+        var userEntity = _mapper.Map<UserAccountAggregate>(request);
         userEntity.UserName ??= userEntity.Email;
 
         var result = await _userManager.CreateAsync(userEntity, request.Password);
@@ -79,8 +90,8 @@ public class UserLoginDataCommandRepository
         return (userEntity, result);
     }
     
-    private async Task<IdentityResult> AssignRoleAsync(UserLoginDataEntity user)
+    private async Task<IdentityResult> AssignRoleAsync(UserAccountAggregate user)
     {
-        return await _userManager.AddToRoleAsync(user, ERole.User);
+        return await _userManager.AddToRoleAsync(user, FORole.User);
     }
 }

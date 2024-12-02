@@ -1,12 +1,11 @@
 using AutoMapper;
 using Domain.Entities;
-using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
-using Domain.Model;
-using Domain.SeedWork.Enums.Token;
-using Infrastructure.Configurations.Environment;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
+using Persistance.Data;
+using Shared.Configurations.Environment;
+using Shared.Enums;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Query;
 
@@ -15,14 +14,14 @@ public class UserTokenQueryRepository
 {
     private readonly IMapper _mapper;
     private readonly ApplicationDbContext _context;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
-    private readonly SignInManager<UserLoginDataEntity> _signInManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly SignInManager<UserAccountAggregate> _signInManager;
     
     public UserTokenQueryRepository(
         ApplicationDbContext context,
-        UserManager<UserLoginDataEntity> userManager,
+        UserManager<UserAccountAggregate> userManager,
         EnvironmentConfiguration environment,
-        SignInManager<UserLoginDataEntity> signInManager,
+        SignInManager<UserAccountAggregate> signInManager,
         IMapper mapper
         )
     {
@@ -32,7 +31,7 @@ public class UserTokenQueryRepository
         _userManager = userManager;
     }
 
-    public async Task<bool> TokenExistsAsync(UserLoginDataEntity user, UserTokenModel token)
+    public async Task<bool> TokenExistsAsync(UserAccountAggregate user, UserTokenModel token)
     {
         // var existingLogins = await _userManager.GetLoginsAsync(user);
         // var existingLogin = existingLogins

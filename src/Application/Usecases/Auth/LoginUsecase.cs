@@ -1,9 +1,9 @@
-﻿using Application.Dtos.Authentication.Login;
-using Application.Queries.Auth.Login;
+﻿using Application.Queries.Auth.Login;
 using AutoMapper;
-using Domain.Model;
 using Domain.Usecase;
 using MediatR;
+using Shared.Dtos.Authentication.Login;
+using Shared.Model;
 
 namespace Application.Usecases.Auth;
 public class LoginUsecase : IUseCase<LoginUserRequestDto, LoginResponseDto>
@@ -16,8 +16,8 @@ public class LoginUsecase : IUseCase<LoginUserRequestDto, LoginResponseDto>
         IMapper mapper
         )
     {
-        _mediator=mediator;
-        _mapper=mapper;
+        _mediator = mediator;
+        _mapper = mapper;
     }
 
     public async Task<LoginResponseDto> Execute(LoginUserRequestDto request)

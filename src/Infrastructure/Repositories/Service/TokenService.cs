@@ -3,19 +3,18 @@ using System.Security.Claims;
 using System.Text;
 using Domain.Entities;
 using Domain.Interfaces;
-using Domain.Model;
-using IdentityModel;
-using Infrastructure.Configurations.Environment;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Configurations.Environment;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Service;
 
-public class TokenService : ITokenService
+public class TokenRepository : ITokenRepository
 {
     private readonly byte[] _secret;
     private readonly JwtSecurityTokenHandler _jwtHandler;
     private readonly EnvironmentConfiguration _environment;
-    public TokenService
+    public TokenRepository
     (
         EnvironmentConfiguration environment
     )
@@ -24,7 +23,7 @@ public class TokenService : ITokenService
         _jwtHandler = new JwtSecurityTokenHandler();
         _environment = environment;
     }
-    public async Task<UserTokenModel> GenerateTokenPair(UserLoginDataEntity user)
+    public async Task<UserTokenModel> GenerateTokenPair(UserAccountAggregate user)
     {
         var claims = await CreateUserClaims(user);
         var tokenType = _environment.GetJwtType();
@@ -44,7 +43,7 @@ public class TokenService : ITokenService
         };
     }
     
-    private async Task<List<Claim>> CreateUserClaims(UserLoginDataEntity user)
+    private async Task<List<Claim>> CreateUserClaims(UserAccountAggregate user)
     {
         // var systemInfo = GetSystemInfo();
         // var localIpAddress = GetLocalIPAddress();
@@ -58,14 +57,14 @@ public class TokenService : ITokenService
         };
     }
     
-    private async Task<(string token, TimeSpan expiration)> CreateToken(UserLoginDataEntity user, List<Claim> claims, double expirationTimeInHours)
+    private async Task<(string token, TimeSpan expiration)> CreateToken(UserAccountAggregate user, List<Claim> claims, double expirationTimeInHours)
     {
         var expiration = TimeSpan.FromHours(expirationTimeInHours);
         var token = await GenerateToken(user, claims, expiration);
         return (token, expiration);
     }
 
-    private async Task<string> GenerateToken(UserLoginDataEntity user, List<Claim> claims, TimeSpan expiration)
+    private async Task<string> GenerateToken(UserAccountAggregate user, List<Claim> claims, TimeSpan expiration)
     {
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(_secret),

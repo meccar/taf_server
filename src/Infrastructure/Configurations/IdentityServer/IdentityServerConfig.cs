@@ -3,7 +3,7 @@ using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Test;
 using IdentityModel;
-using Infrastructure.Configurations.Environment;
+using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
 
@@ -34,53 +34,50 @@ public static class IdentityServerConfig
             // API scopes
             ApiScopes = new List<ApiScope>
             {
-                new ApiScope("api1", "My API"),
-                new ApiScope(name: "read",   displayName: "Read your data."),
-                new ApiScope(name: "write",  displayName: "Write your data."),
-                new ApiScope(name: "delete", displayName: "Delete your data.")
+                new ApiScope("TafServer", "TAF Server full access API"),
             };
 
             // Clients
             Clients = new List<Client>
             {
                 // m2m client credentials flow client
-                new Client
-                {
-                    ClientId = configuration.GetIdentityServerClientId(),
-                    ClientName = configuration.GetIdentityServerClientName(),
-                    
-                    AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    ClientSecrets =
-                    {
-                        new Secret(configuration.GetIdentityServerClientSecret().Sha256())
-                    },
-                    
-                    AllowedScopes =                 
-                    {
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Email,
-                        IdentityServerConstants.StandardScopes.Profile
-                        // "openid",
-                        // "profile",
-                        // "api1", 
-                        // "read"
-                    },
-                    
-                    // where to redirect to after login
-                    // RedirectUris = { "https://localhost:6001/signin-oidc" },
-
-                    // where to redirect to after logout
-                    // PostLogoutRedirectUris = { "https://localhost:6001/signout-callback-oidc" },
-                    
-                    AccessTokenLifetime = 3600, // 1 hour
-                    RefreshTokenUsage = TokenUsage.OneTimeOnly,
-                    RefreshTokenExpiration = TokenExpiration.Absolute,
-                    AbsoluteRefreshTokenLifetime = 86400, // 24 hours
-                
-                    AlwaysSendClientClaims = true,
-                    AlwaysIncludeUserClaimsInIdToken = true,
-                    UpdateAccessTokenClaimsOnRefresh = true
-                },
+                // new Client
+                // {
+                //     ClientId = configuration.GetIdentityServerClientId(),
+                //     ClientName = configuration.GetIdentityServerClientName(),
+                //     
+                //     AllowedGrantTypes = GrantTypes.ClientCredentials,
+                //     ClientSecrets =
+                //     {
+                //         new Secret(configuration.GetIdentityServerClientSecret().Sha256())
+                //     },
+                //     
+                //     AllowedScopes =                 
+                //     {
+                //         IdentityServerConstants.StandardScopes.OpenId,
+                //         IdentityServerConstants.StandardScopes.Email,
+                //         IdentityServerConstants.StandardScopes.Profile
+                //         // "openid",
+                //         // "profile",
+                //         // "api1", 
+                //         // "read"
+                //     },
+                //     
+                //     // where to redirect to after login
+                //     // RedirectUris = { "https://localhost:6001/signin-oidc" },
+                //
+                //     // where to redirect to after logout
+                //     // PostLogoutRedirectUris = { "https://localhost:6001/signout-callback-oidc" },
+                //     
+                //     AccessTokenLifetime = 3600, // 1 hour
+                //     RefreshTokenUsage = TokenUsage.OneTimeOnly,
+                //     RefreshTokenExpiration = TokenExpiration.Absolute,
+                //     AbsoluteRefreshTokenLifetime = 86400, // 24 hours
+                //
+                //     AlwaysSendClientClaims = true,
+                //     AlwaysIncludeUserClaimsInIdToken = true,
+                //     UpdateAccessTokenClaimsOnRefresh = true
+                // },
                 
                 // interactive client using code flow + pkce
                 new Client
@@ -88,7 +85,8 @@ public static class IdentityServerConfig
                     ClientId = configuration.GetIdentityServerInteractiveClientId(),
                     ClientName = configuration.GetIdentityServerInteractiveClientName(),
                     
-                    AllowedGrantTypes = GrantTypes.Code,
+                    // AllowedGrantTypes = GrantTypes.Code,
+                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
                     
                     AllowRememberConsent = false,
                     RequireClientSecret = true,
@@ -99,14 +97,14 @@ public static class IdentityServerConfig
                     
                     RedirectUris = new List<string>
                     {
-                        $"{configuration.GetIdentityServerAuthority()}"+"/signin-oidc"
+                        "https://localhost:6002/signin-oidc"
                     },
                     
-                    FrontChannelLogoutUri = $"{configuration.GetIdentityServerAuthority()}"+"/signout-oidc",
+                    FrontChannelLogoutUri = "https://localhost:6002/signout-oidc",
                     
                     PostLogoutRedirectUris = new List<string>
                     {
-                        $"{configuration.GetIdentityServerAuthority()}"+"/signout-callback-oidc"
+                        "https://localhost:6002/signout-callback-oidc"
                     },
                     
                     AllowedScopes = new List<string>
@@ -114,7 +112,7 @@ public static class IdentityServerConfig
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-
+                        "TafServer",
                     },
                     AllowOfflineAccess = true
                 }
@@ -122,28 +120,31 @@ public static class IdentityServerConfig
             
             ApiResources = new List<ApiResource>
             {
-                new ApiResource("api1", "My API")
+                new ApiResource("tafApiV1")
                 {
-                    Scopes = { "api1" },
+                    Scopes = { "TafServer" },
                     UserClaims = new[]
                     {
                         ClaimTypes.Email,
-                        "eid"
+                    },
+                    ApiSecrets =
+                    {
+                        new Secret(configuration.GetIdentityServerInteractiveClientSecret().Sha256())
                     }
-                }
+                },
             };
 
             TestUsers = new List<TestUser>
             {
                 new TestUser
                 {
-                    SubjectId = "11111",
-                    Username = "jane2@example.com",
-                    Password = "HGOSFUgiodfby8^&*&",
+                    SubjectId = "1",
+                    Username = "john.smith@gmail.com",
+                    Password = "Password@1234",
                     Claims = new List<Claim>
                     {
-                        new Claim(JwtClaimTypes.GivenName, "Test User"),
-                        new Claim(JwtClaimTypes.FamilyName, "admin")
+                        new Claim(JwtClaimTypes.Name, "Test User"),
+                        new Claim("username", "testuser")
                     }
                 }
 

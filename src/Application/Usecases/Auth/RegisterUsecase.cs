@@ -1,9 +1,9 @@
 ﻿using Application.Commands.Auth.Register;
-using Application.Dtos.Authentication.Register;
 using AutoMapper;
-using Domain.Model;
 using Domain.Usecase;
 using MediatR;
+using Shared.Dtos.Authentication.Register;
+using Shared.Model;
 
 namespace Application.Usecases.Auth;
 public class RegisterUsecase : IUseCase<RegisterUserRequestDto, RegisterUserResponseDto>

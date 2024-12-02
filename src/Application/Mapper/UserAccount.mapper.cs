@@ -1,6 +1,6 @@
 using AutoMapper;
 using Domain.Aggregates;
-using Domain.Model;
+using Shared.Model;
 
 namespace Application.Mapper;
 
@@ -12,9 +12,9 @@ public static class UserAccountMapper
     /// <param name="config">The AutoMapper configuration expression used to create the mappings.</param>
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<UserAccountAggregate, UserAccountModel>()
+        config.CreateMap<UserProfileAggregate, UserAccountModel>()
             .ForMember(dest => dest.UserLoginData, opt => opt.MapFrom(src => src.UserLoginData));
-        config.CreateMap<UserAccountModel, UserAccountAggregate>()
+        config.CreateMap<UserAccountModel, UserProfileAggregate>()
             .ForMember(dest => dest.EId, opt => opt.Ignore());
     }
 }

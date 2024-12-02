@@ -13,14 +13,14 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace test.Pages.ExternalLogin;
+namespace IdentityServer.Pages.ExternalLogin;
 
 [AllowAnonymous]
 [SecurityHeaders]
 public class Callback : PageModel
 {
-    private readonly UserManager<UserLoginDataEntity> _userManager;
-    private readonly SignInManager<UserLoginDataEntity> _signInManager;
+    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly SignInManager<UserAccountAggregate> _signInManager;
     private readonly IIdentityServerInteractionService _interaction;
     private readonly ILogger<Callback> _logger;
     private readonly IEventService _events;
@@ -29,8 +29,8 @@ public class Callback : PageModel
         IIdentityServerInteractionService interaction,
         IEventService events,
         ILogger<Callback> logger,
-        UserManager<UserLoginDataEntity> userManager,
-        SignInManager<UserLoginDataEntity> signInManager)
+        UserManager<UserAccountAggregate> userManager,
+        SignInManager<UserAccountAggregate> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -43,8 +43,11 @@ public class Callback : PageModel
     {
         // read external identity from the temporary cookie
         var result = await HttpContext.AuthenticateAsync(IdentityServerConstants.ExternalCookieAuthenticationScheme);
+        
         if (result.Succeeded != true)
         {
+            _logger.LogError($"External authentication failed: { result.Failure?.Message }");
+            _logger.LogError($"Exception details: { result.Failure?.InnerException }");
             throw new InvalidOperationException($"External authentication error: { result.Failure }");
         }
 
@@ -54,6 +57,7 @@ public class Callback : PageModel
         if (_logger.IsEnabled(LogLevel.Debug))
         {
             var externalClaims = externalUser.Claims.Select(c => $"{c.Type}: {c.Value}");
+            // var externalClaims = externalUser.Identity;
             _logger.ExternalClaims(externalClaims);
         }
 
@@ -62,6 +66,7 @@ public class Callback : PageModel
         // the most common claim type for that are the sub claim and the NameIdentifier
         // depending on the external provider, some other claim type might be used
         var userIdClaim = externalUser.FindFirst(JwtClaimTypes.Subject) ??
+                          externalUser.FindFirst(JwtClaimTypes.Id) ??
                           externalUser.FindFirst(ClaimTypes.NameIdentifier) ??
                           throw new InvalidOperationException("Unknown userid");
 
@@ -113,7 +118,7 @@ public class Callback : PageModel
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1851:Possible multiple enumerations of 'IEnumerable' collection", Justification = "<Pending>")]
-    private async Task<UserLoginDataEntity> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
+    private async Task<UserAccountAggregate> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
     {
         var sub = Ulid.NewUlid().ToString();
         var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ??
@@ -122,7 +127,7 @@ public class Callback : PageModel
         var userEntity = await _userManager.FindByEmailAsync(email);
         var userAccountId = userEntity?.Id ?? 0;
         
-        var user = new UserLoginDataEntity
+        var user = new UserAccountAggregate
         {
             EId = sub,
             UserName = email, // don't need a username, since the user will be using an external provider to login

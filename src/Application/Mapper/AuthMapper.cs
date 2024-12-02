@@ -1,9 +1,9 @@
-using Application.Dtos.Authentication.Login;
-using Application.Dtos.Authentication.Register;
-using Application.Dtos.UserAccount;
-using Application.Dtos.UserLoginData;
 using AutoMapper;
-using Domain.Model;
+using Shared.Dtos.Authentication.Login;
+using Shared.Dtos.Authentication.Register;
+using Shared.Dtos.UserAccount;
+using Shared.Dtos.UserLoginData;
+using Shared.Model;
 
 namespace Application.Mapper;
 

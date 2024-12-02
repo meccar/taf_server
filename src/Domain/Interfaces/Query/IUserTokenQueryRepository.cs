@@ -1,9 +1,9 @@
 using Domain.Entities;
-using Domain.Model;
+using Shared.Model;
 
 namespace Domain.Interfaces.Query;
 
 public interface IUserTokenQueryRepository
 {
-    Task<bool> TokenExistsAsync(UserLoginDataEntity user, UserTokenModel token);
+    Task<bool> TokenExistsAsync(UserAccountAggregate user, UserTokenModel token);
 }

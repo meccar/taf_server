@@ -1,10 +1,10 @@
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces.Query;
-using Domain.Model;
-using Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Persistance.Data;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Query;
 
@@ -12,13 +12,15 @@ public class UserLoginDataQueryRepository
     : IUserLoginDataQueryRepository
 {
     private readonly IMapper _mapper;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
-
+    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly ApplicationDbContext _context;
+    
     public UserLoginDataQueryRepository(
         ApplicationDbContext context,
         IMapper mapper,
-        UserManager<UserLoginDataEntity> userManager)
+        UserManager<UserAccountAggregate> userManager)
     {
+        _context = context;
         _mapper = mapper;
         _userManager = userManager;
     }
@@ -28,13 +30,23 @@ public class UserLoginDataQueryRepository
     /// </summary>
     /// <param name="userLoginData">The login credential to check, such as an email.</param>
     /// <returns><c>true</c> if the user login data exists; otherwise, <c>false</c>.</returns>
-    public async Task<bool> IsUserLoginDataExisted(string loginCredential)
+    public async Task<bool> IsUserLoginDataExisted(UserLoginDataModel userLoginDataModel)
     {
-        var result = await _userManager.Users
-            .AsNoTracking()
-            .AnyAsync(u => u.Email == loginCredential || u.PhoneNumber == loginCredential);
-        return result;
+        var email = await _userManager.Users
+            .AsQueryable()
+            .AnyAsync(
+                u =>
+                    u.Email == userLoginDataModel.Email);
+        
+        var phone = await _context.Users
+            .AsQueryable()
+            .AnyAsync(
+                u =>
+                    u.PhoneNumber == userLoginDataModel.PhoneNumber);
+        
+        return email && email;
     }
+    
     public async Task<bool> ValidateUserLoginData(string email, string password)
     {
         var user = await _userManager.FindByEmailAsync(email);

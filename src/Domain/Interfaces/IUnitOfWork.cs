@@ -1,3 +1,4 @@
+using System.Data;
 using Domain.Interfaces.Command;
 using Domain.Interfaces.Query;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -14,6 +15,7 @@ namespace Domain.Interfaces;
 /// </remarks>
 public interface IUnitOfWork : IDisposable
 {
+    IExecutionStrategy CreateExecutionStrategy();
     /// <summary>
     /// Commits the current transaction to the database asynchronously.
     /// </summary>
@@ -23,31 +25,22 @@ public interface IUnitOfWork : IDisposable
     /// Begins a new database transaction asynchronously.
     /// </summary>
     /// <returns>A task representing the asynchronous operation. The task result contains the transaction object.</returns>
-    Task<IDbContextTransaction> BeginTransactionAsync();
+    Task BeginTransactionAsync();
     /// <summary>
     /// Ends the current database transaction asynchronously.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task EndTransactionAsync();
+
+    Task CommitTransactionAsync();
     /// <summary>
     /// Rolls back the current database transaction asynchronously.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
     Task RollbackTransactionAsync();
 
-    #region Command Repository Properties
-
-    IUserAccountCommandRepository UserAccountCommandRepository { get; set; }
-    IUserLoginDataCommandRepository UserLoginDataCommandRepository { get; set; }
-    IUserTokenCommandRepository UserTokenCommandRepository { get; set; }
-
-    #endregion
-
-    #region Query Repository Properties
-
-    IUserAccountQueryRepository UserAccountQueryRepository { get; set;  }
-    IUserLoginDataQueryRepository UserLoginDataQueryRepository { get; set; }
-    IUserTokenQueryRepository UserTokenQueryRepository { get; set; }
-    
-    #endregion
+    // Task DisposeAsync(IDbContextTransaction transaction);
+    IUserAccountRepository UserAccountRepository { get; set; }
+    IUserProfileRepository UserProfileRepository { get; set; }
+    IUserTokenRepository UserTokenRepository { get; set; }
 }

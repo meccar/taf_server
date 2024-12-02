@@ -1,5 +1,5 @@
-using Domain.Model;
 using Domain.SeedWork.Query;
+using Shared.Model;
 
 namespace Application.Queries.Auth.Login;
 

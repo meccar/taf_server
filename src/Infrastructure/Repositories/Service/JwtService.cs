@@ -1,42 +1,38 @@
 using System.Text;
-using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using Domain.Model;
-using Domain.SeedWork.Enums.Token;
-using Domain.SeedWork.Enums.UserLoginDataExternal;
-using Infrastructure.Configurations.Environment;
+using Domain.Interfaces.Service;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
-using Domain.Interfaces.Service;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Shared.Configurations.Environment;
+using Shared.Enums;
+using Shared.Model;
 
 namespace Infrastructure.Repositories.Service;
 
-public class JwtService : IJwtService
+public class JwtRepository : IJwtRepository
 {
     private readonly EnvironmentConfiguration _environment;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<UserLoginDataEntity> _userManager;
-    private readonly ITokenService _tokenService;
+    private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly ITokenRepository _tokenRepository;
     private readonly byte[] _secret;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly TokenValidationParameters _tokenValidationParameters;
     
-    public JwtService(
+    public JwtRepository(
         EnvironmentConfiguration environment,
         IUnitOfWork unitOfWork,
-        UserManager<UserLoginDataEntity> userManager,
-        ITokenService tokenService,
+        UserManager<UserAccountAggregate> userManager,
+        ITokenRepository tokenRepository,
         IHttpContextAccessor httpContextAccessor
         )
     {
         _environment = environment;
         _unitOfWork = unitOfWork;
         _userManager = userManager;
-        _tokenService = tokenService;
+        _tokenRepository = tokenRepository;
         _secret = Encoding.UTF8.GetBytes(environment.GetJwtSecret());
         _httpContextAccessor = httpContextAccessor;
         _tokenValidationParameters = new TokenValidationParameters
@@ -54,7 +50,7 @@ public class JwtService : IJwtService
     {
         var user = await _userManager.FindByEmailAsync(email);
         
-        var token = await _tokenService.GenerateTokenPair(user);
+        var token = await _tokenRepository.GenerateTokenPair(user);
 
         // var accessToken = await _httpContextAccessor
         //     .HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
@@ -64,7 +60,7 @@ public class JwtService : IJwtService
         
         token.LoginProvider = EProvider.PASSWORD;
         
-        var existingTokens = await _unitOfWork.UserTokenQueryRepository
+        var existingTokens = await _unitOfWork.UserTokenRepository
             .TokenExistsAsync(user, token);
         
         if (!existingTokens)
@@ -73,7 +69,7 @@ public class JwtService : IJwtService
         }
         else
         {
-            var result = await _unitOfWork.UserTokenCommandRepository.RemoveLoginAndAuthenticationTokenAsync(user, token);
+            var result = await _unitOfWork.UserTokenRepository.RemoveLoginAndAuthenticationTokenAsync(user, token);
             
             if(!result)
                 throw new InvalidOperationException("Failed to create user tokens");
@@ -92,9 +88,9 @@ public class JwtService : IJwtService
             );
     }
     
-    private async Task CreateNewTokens(UserLoginDataEntity user, UserTokenModel token)
+    private async Task CreateNewTokens(UserAccountAggregate user, UserTokenModel token)
     {
-        var accessToken = await _unitOfWork.UserTokenCommandRepository.CreateUserTokenAsync(
+        var accessToken = await _unitOfWork.UserTokenRepository.CreateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,
@@ -105,7 +101,7 @@ public class JwtService : IJwtService
             )
         );
 
-        var refreshToken = await _unitOfWork.UserTokenCommandRepository.CreateUserTokenAsync(
+        var refreshToken = await _unitOfWork.UserTokenRepository.CreateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,
@@ -122,9 +118,9 @@ public class JwtService : IJwtService
         }
     }
 
-    private async Task UpdateExistingTokens(UserLoginDataEntity user, UserTokenModel token)
+    private async Task UpdateExistingTokens(UserAccountAggregate user, UserTokenModel token)
     {
-        var accessToken = await _unitOfWork.UserTokenCommandRepository.UpdateUserTokenAsync(
+        var accessToken = await _unitOfWork.UserTokenRepository.UpdateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,
@@ -135,7 +131,7 @@ public class JwtService : IJwtService
             )
         );
 
-        var refreshToken = await _unitOfWork.UserTokenCommandRepository.UpdateUserTokenAsync(
+        var refreshToken = await _unitOfWork.UserTokenRepository.UpdateUserTokenAsync(
             user,
             new UserTokenModel(
                 user.UserAccountId,

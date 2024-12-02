@@ -1,7 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
-namespace test.Pages.Login;
+namespace IdentityServer.Pages.Login;
 
 public class ViewModel
 {
