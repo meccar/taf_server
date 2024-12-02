@@ -1,4 +1,5 @@
 ﻿using Domain.Interfaces;
+using Domain.SeedWork.Command;
 using Shared.Dtos.Exceptions;
 using Shared.Model;
 
@@ -15,7 +16,7 @@ namespace Application.Commands.Auth.Register;
 /// Upon successful validation, a new user account and associated login data are created.
 /// </remarks>
 
-public class RegisterCommandHandler : TransactionalHandler<RegisterCommand, UserAccountModel>
+public class RegisterCommandHandler : TransactionalCommandHandler<RegisterCommand, UserAccountModel>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.

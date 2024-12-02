@@ -9,7 +9,6 @@ using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
-using Infrastructure.UseCaseProxy;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,7 +29,7 @@ public class Index : PageModel
     private readonly IEventService _events;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
     private readonly IIdentityProviderStore _identityProviderStore;
-    private readonly UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> _loginUsecase;
+    private readonly LoginUsecase _loginUsecase;
 
     public ViewModel View { get; set; } = default!;
         
@@ -44,7 +43,7 @@ public class Index : PageModel
         IEventService events,
         UserManager<UserAccountAggregate> userManager,
         SignInManager<UserAccountAggregate> signInManager,
-        UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> loginUsecase,
+        LoginUsecase loginUsecase,
         IJwtRepository jwtTokenRepository
         )
     {
@@ -106,7 +105,7 @@ public class Index : PageModel
             RememberUser = Input.RememberLogin
         };
         
-        var response = await _loginUsecase.GetInstance().Execute(loginDto);
+        var response = await _loginUsecase.Execute(loginDto);
         
         if (response == null)
         {

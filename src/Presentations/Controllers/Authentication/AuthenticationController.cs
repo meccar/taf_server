@@ -3,7 +3,6 @@ using Application.Usecases.Auth;
 using Asp.Versioning;
 using AutoMapper;
 using Infrastructure.Decorators.Guards;
-using Infrastructure.UseCaseProxy;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -23,15 +22,11 @@ public class AuthenticationController
 {
     private readonly IMapper _mapper;
     private readonly ILogger<AuthenticationController> _logger;
-    // private readonly UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> _registerUseCase;
-    // private readonly UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> _loginUsecase;
     private readonly IMediator _mediator;
     private readonly RegisterUsecase _registerUseCase;
     private readonly LoginUsecase _loginUsecase;
     public AuthenticationController(
         IMapper mapper,
-        // UseCaseProxy<RegisterUsecase, RegisterUserRequestDto, RegisterUserResponseDto> registerUsecase,
-        // UseCaseProxy<LoginUsecase, LoginUserRequestDto, LoginResponseDto> loginUsecase,
         ILogger<AuthenticationController> logger,
         RegisterUsecase registerUsecase,
         LoginUsecase loginUsecase,
@@ -60,7 +55,6 @@ public class AuthenticationController
         _logger.LogInformation("START: Register");
 
         var response = await _registerUseCase.Execute(registerDto);
-        // var response = await _registerUseCase.GetInstance().Execute(registerDto);
 
         _logger.LogInformation("END: Register");
 
@@ -83,7 +77,6 @@ public class AuthenticationController
         _logger.LogInformation("START: Login");
 
         var response = await _loginUsecase.Execute(loginDto);
-        // var response = await _loginUsecase.GetInstance().Execute(loginDto);
         
         _logger.LogInformation("END: Login");
         

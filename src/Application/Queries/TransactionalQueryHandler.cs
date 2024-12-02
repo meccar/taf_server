@@ -1,20 +1,22 @@
 using Domain.Interfaces;
 using Domain.SeedWork.Command;
 
-public abstract class TransactionalHandler<TCommand, TCommandResponse> 
-    : ICommandHandler<TCommand, TCommandResponse>
-    where TCommand : ICommand<TCommandResponse>
+namespace Application.Queries;
+
+public abstract class TransactionalQueryHandler<TQuery, TQueryResponse> 
+    : ICommandHandler<TQuery, TQueryResponse>
+    where TQuery : ICommand<TQueryResponse>
 {
     protected readonly IUnitOfWork _unitOfWork;
 
-    protected TransactionalHandler(
+    protected TransactionalQueryHandler(
         IUnitOfWork unitOfWork
     )
     {
         _unitOfWork = unitOfWork;
     }
-    public async Task<TCommandResponse> Handle(
-        TCommand request,
+    public async Task<TQueryResponse> Handle(
+        TQuery request,
         CancellationToken cancellationToken
         )
     {
@@ -43,6 +45,6 @@ public abstract class TransactionalHandler<TCommand, TCommandResponse>
                 }
             });
     }
-    protected abstract Task<TCommandResponse> ExecuteCoreAsync(TCommand request, CancellationToken cancellationToken);
+    protected abstract Task<TQueryResponse> ExecuteCoreAsync(TQuery request, CancellationToken cancellationToken);
 
 }
