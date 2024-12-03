@@ -5,7 +5,7 @@ namespace Domain.Interfaces;
 
 public interface IUserProfileRepository
 {
-    Task<UserAccountResult> CreateUserAccountAsync(UserAccountModel createUserAccountDto);
+    Task<UserAccountResult> CreateUserAccountAsync(UserProfileModel createUserAccountDto);
     Task<string> GetUserAccountStatusAsync(string userId);
 
 }

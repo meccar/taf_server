@@ -1,6 +1,6 @@
-namespace Shared.Dtos.UserLoginData;
+namespace Shared.Dtos.UserAccount;
 
-public class UserLoginDataResponseDto
+public class UserAccountResponseDto
 {
     public string Eid { get; set; }
     public string Email { get; set; }

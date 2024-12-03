@@ -10,6 +10,6 @@ public interface IUserLoginDataQueryRepository
     /// <param name="loginCredential">The login credential to check (e.g., email or username).</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// a boolean value indicating whether the user login data exists.</returns>
-    Task<bool> IsUserLoginDataExisted(UserLoginDataModel userLoginDataModel);
+    Task<bool> IsUserLoginDataExisted(UserAccountModel userAccountModel);
     Task<bool> ValidateUserLoginData(string email, string password);
 }

@@ -1,5 +1,4 @@
 using Domain.Interfaces;
-using Domain.Interfaces.Service;
 using Domain.SeedWork.Query;
 using Shared.Dtos.Exceptions;
 using Shared.Model;

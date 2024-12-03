@@ -23,7 +23,7 @@ public class UserAccountAggregate : IdentityUser<int>
     /// Gets or sets the identifier of the associated user account.
     /// </summary>
     [Required]
-    public required int UserAccountId { get; set; }
+    public required int UserProfileId { get; set; }
 
 
     /// <summary>
@@ -60,9 +60,9 @@ public class UserAccountAggregate : IdentityUser<int>
     /// Gets or sets the position of the user within the organization.
     /// </summary>
     
-    [ForeignKey("UserAccountId")]
+    [ForeignKey("UserProfileId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
-    public virtual UserProfileAggregate UserAccount { get; set; } = null!;
+    public virtual UserProfileAggregate UserProfile { get; set; } = null!;
     public List<IdentityUserToken<int>> UserToken { get; set; } = new List<IdentityUserToken<int>>();
 
 }

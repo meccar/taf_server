@@ -125,13 +125,13 @@ public class Callback : PageModel
                     claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             
         var userEntity = await _userManager.FindByEmailAsync(email);
-        var userAccountId = userEntity?.Id ?? 0;
+        var userProfileId = userEntity?.Id ?? 0;
         
         var user = new UserAccountAggregate
         {
             EId = sub,
             UserName = email, // don't need a username, since the user will be using an external provider to login
-            UserAccountId = userAccountId
+            UserProfileId = userProfileId
         };
 
         // email

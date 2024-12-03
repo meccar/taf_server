@@ -5,20 +5,20 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.Enums;
 
 namespace Persistance.Configurations.Entity;
-public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserAccountAggregate>
+public class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountAggregate>
 {
     public void Configure(EntityTypeBuilder<UserAccountAggregate> builder)
     {
-        builder
-            .Property(x => x.Id)
-            .ValueGeneratedOnAdd();
+        // builder
+        //     .Property(x => x.Id)
+        //     .ValueGeneratedOnAdd();
 
         builder
             .Property(x => x.EId)
             .IsRequired(false);
         
         builder
-            .Property(x => x.UserAccountId)
+            .Property(x => x.UserProfileId)
             .IsRequired();
         
         builder
@@ -43,10 +43,10 @@ public class UserLoginDataConfiguration : IEntityTypeConfiguration<UserAccountAg
             .HasDefaultValue(EEmailStatus.Pending.ToString());
         
         builder
-            .HasOne(x => x.UserAccount)
-            .WithOne(x => x.UserLoginData)
-            .HasForeignKey<UserAccountAggregate>(x => x.UserAccountId)
-            .HasPrincipalKey<UserProfileAggregate>(x => x.Id)
+            .HasOne(x => x.UserProfile)
+            .WithOne(x => x.UserAccount)
+            .HasForeignKey<UserAccountAggregate>(x => x.UserProfileId)
+            // .HasPrincipalKey<UserProfileAggregate>(x => x.Id)
             .IsRequired();
 
     }

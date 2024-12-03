@@ -1,9 +1,9 @@
 using Domain.Entities;
-using Domain.Interfaces.Service;
+using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Shared.Model;
 
-namespace Infrastructure.Repositories.Service;
+namespace Infrastructure.Repositories;
 
 public class MfaRepository : IMfaRepository 
 {
@@ -18,20 +18,15 @@ public class MfaRepository : IMfaRepository
 
     public async Task<bool> MfaSetup(UserAccountAggregate user)
     {
-        var token = await _userManager.GetAuthenticatorKeyAsync(user);
-        
-        if (string.IsNullOrEmpty(token))
-        {
-            return false;
-        }
-        
+        var token = _userManager.GenerateNewAuthenticatorKey();
         var result = await _userManager.ResetAuthenticatorKeyAsync(user);
-
         if (result.Succeeded)
         {
+            await _userManager.SetAuthenticationTokenAsync(user, "Mfa", "Authenticator",token);
             var model = new MfaViewModel { Token = token };
             return true;
         }
+        
         return false;
     }
     

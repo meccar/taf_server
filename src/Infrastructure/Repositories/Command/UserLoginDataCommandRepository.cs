@@ -1,7 +1,7 @@
 using AutoMapper;
 using Domain.Entities;
+using Domain.Interfaces;
 using Domain.Interfaces.Command;
-using Domain.Interfaces.Service;
 using Domain.SeedWork.Results;
 using Microsoft.AspNetCore.Identity;
 using Shared.Enums;
@@ -52,7 +52,7 @@ public class UserLoginDataCommandRepository
     /// </summary>
     /// <param name="userLoginDataDto">The DTO containing user login data details.</param>
     /// <returns>The created user login data model.</returns>
-    public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserLoginDataModel request)
+    public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserAccountModel request)
     {
         var (userAccountAggregate, createResult) = await CreateUserAccountAsync(request);
         if (!createResult.Succeeded)
@@ -68,7 +68,7 @@ public class UserLoginDataCommandRepository
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
 
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userAccountAggregate);
+        var userLoginDataModel = _mapper.Map<UserAccountModel>(userAccountAggregate);
         return UserLoginDataResult.Success(userLoginDataModel);
         // if (await _mfaRepository.MfaSetup(userAccountAggregate))
         // {
@@ -79,7 +79,7 @@ public class UserLoginDataCommandRepository
     }
     
     private async Task<(UserAccountAggregate User, IdentityResult Result)> CreateUserAccountAsync(
-        UserLoginDataModel request)
+        UserAccountModel request)
     {
         var userEntity = _mapper.Map<UserAccountAggregate>(request);
         userEntity.UserName ??= userEntity.Email;

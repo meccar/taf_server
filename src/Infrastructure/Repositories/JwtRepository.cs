@@ -1,7 +1,6 @@
 using System.Text;
 using Domain.Entities;
 using Domain.Interfaces;
-using Domain.Interfaces.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -9,7 +8,7 @@ using Shared.Configurations.Environment;
 using Shared.Enums;
 using Shared.Model;
 
-namespace Infrastructure.Repositories.Service;
+namespace Infrastructure.Repositories;
 
 public class JwtRepository : IJwtRepository
 {
@@ -93,7 +92,7 @@ public class JwtRepository : IJwtRepository
         var accessToken = await _unitOfWork.UserTokenRepository.CreateUserTokenAsync(
             user,
             new UserTokenModel(
-                user.UserAccountId,
+                user.UserProfileId,
                 ETokenName.ACCESS,
                 token.LoginProvider,
                 token.Token.AccessToken,
@@ -104,7 +103,7 @@ public class JwtRepository : IJwtRepository
         var refreshToken = await _unitOfWork.UserTokenRepository.CreateUserTokenAsync(
             user,
             new UserTokenModel(
-                user.UserAccountId,
+                user.UserProfileId,
                 ETokenName.REFRESH,
                 token.LoginProvider,
                 token.Token.RefreshToken,
@@ -123,7 +122,7 @@ public class JwtRepository : IJwtRepository
         var accessToken = await _unitOfWork.UserTokenRepository.UpdateUserTokenAsync(
             user,
             new UserTokenModel(
-                user.UserAccountId,
+                user.UserProfileId,
                 ETokenName.ACCESS,
                 token.LoginProvider,
                 token.Token.AccessToken,
@@ -134,7 +133,7 @@ public class JwtRepository : IJwtRepository
         var refreshToken = await _unitOfWork.UserTokenRepository.UpdateUserTokenAsync(
             user,
             new UserTokenModel(
-                user.UserAccountId,
+                user.UserProfileId,
                 ETokenName.REFRESH,
                 token.LoginProvider,
                 token.Token.RefreshToken,

@@ -12,7 +12,7 @@ public class UserTokenModel
     public List<Claim> Claims { get; set; }
     public EProvider? LoginProvider { get; set; }
     public string? Value { get; set; }
-    public UserAccountModel? UserAccount { get; set; }
+    // public UserAccountModel? UserAccount { get; set; }
     public TokenModel Token { get; set; }
     public UserTokenModel(int? userId, ETokenName? name, EProvider? loginProvider,string? value, List<Claim>? claim)
     {

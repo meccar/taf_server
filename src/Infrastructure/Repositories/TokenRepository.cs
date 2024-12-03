@@ -7,7 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Shared.Configurations.Environment;
 using Shared.Model;
 
-namespace Infrastructure.Repositories.Service;
+namespace Infrastructure.Repositories;
 
 public class TokenRepository : ITokenRepository
 {

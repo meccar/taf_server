@@ -3,7 +3,7 @@
 
 using Application.Usecases.Auth;
 using Domain.Entities;
-using Domain.Interfaces.Service;
+using Domain.Interfaces;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;

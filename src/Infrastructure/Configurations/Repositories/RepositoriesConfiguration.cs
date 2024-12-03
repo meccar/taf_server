@@ -1,9 +1,7 @@
 using Domain.Abstractions;
 using Domain.Interfaces;
-using Domain.Interfaces.Service;
 using Duende.IdentityServer.Services;
 using Infrastructure.Repositories;
-using Infrastructure.Repositories.Service;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Configurations.Environment;
 
@@ -23,6 +21,7 @@ public static class RepositoriesConfiguration
             .AddScoped<IJwtRepository, JwtRepository>()
             .AddScoped<IProfileService, ProfileService>()
             .AddScoped<IMfaRepository, MfaRepository>()
+            .AddScoped<IMailRepository, MailRepository>()
             .AddScoped<ITokenRepository, TokenRepository>();
         
         return services;

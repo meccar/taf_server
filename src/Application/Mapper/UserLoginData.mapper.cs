@@ -1,6 +1,5 @@
 using AutoMapper;
 using Domain.Entities;
-using Shared.Dtos.UserLoginData;
 using Shared.Model;
 
 namespace Application.Mapper;
@@ -22,9 +21,9 @@ public static class UserLoginDataMapper
     /// <param name="config">The AutoMapper configuration expression used to create the mappings.</param>
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<UserLoginDataModel, UserAccountAggregate>()
+        config.CreateMap<UserAccountModel, UserAccountAggregate>()
             .ForMember(dest => dest.EId, opt => opt.Ignore());
-        config.CreateMap<UserAccountAggregate, UserLoginDataModel>()
+        config.CreateMap<UserAccountAggregate, UserAccountModel>()
             .ForMember(dest => dest.Password, opt => opt.Ignore());
     }
 }

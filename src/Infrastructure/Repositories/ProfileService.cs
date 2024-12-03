@@ -5,7 +5,7 @@ using Duende.IdentityServer.Services;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 
-namespace Infrastructure.Repositories.Service;
+namespace Infrastructure.Repositories;
 
 public class ProfileService : IProfileService
 {

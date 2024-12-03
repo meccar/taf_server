@@ -7,7 +7,7 @@ public class LoginQuery : IQuery<TokenModel>
 {
     public string Email { get; set; }
     public string Password { get; set; }
-    public LoginQuery(UserLoginDataModel userLoginDataModel) =>
+    public LoginQuery(UserAccountModel userLoginDataModel) =>
         (Email, Password) = (userLoginDataModel.Email, userLoginDataModel.Password);
     
 }

@@ -39,11 +39,11 @@ public class ApplicationDbContext
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserProfileAggregate}"/> for user accounts.
     /// </summary>
-    public DbSet<UserProfileAggregate> UserAccount { get; set; }
+    public DbSet<UserProfileAggregate> UserProfile { get; set; }
     /// <summary>
     /// Gets or sets the <see cref="DbSet{UserAccountAggregate}"/> for user login data.
     /// </summary>
-    public DbSet<UserAccountAggregate> UserLoginData { get; set; }
+    public DbSet<UserAccountAggregate> UserAccount { get; set; }
 
     #endregion
 
@@ -54,25 +54,6 @@ public class ApplicationDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        
-        // builder.Entity<UserProfileAggregate>()
-        //     .HasQueryFilter(u => u.Status != UserAccountStatus.Inactive.ToString());
-        //
-        // builder.Entity<UserAccountAggregate>()
-        //     .HasQueryFilter(u => u.UserAccount.Status != UserAccountStatus.Inactive.ToString());
-        
-        // builder.Entity<UserAccountAggregate>()
-        //     .HasOne(u => u.UserAccount)
-        //     .WithOne(u => u.UserLoginData)
-        //     .HasForeignKey<UserAccountAggregate>(u => u.UserAccountId)
-        //     .HasPrincipalKey<UserProfileAggregate>(u => u.Id)
-        //     .IsRequired();
-
-        // builder
-        //     .Entity<UserAccountAggregate>()
-        //     .HasMany(u => u.UserToken)
-        //     .WithOne()
-        //     .HasForeignKey(u => u.UserId);
 
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }

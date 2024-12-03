@@ -5,7 +5,7 @@ namespace Domain.Interfaces;
 
 public interface IUserAccountRepository
 {
-    Task<UserLoginDataResult> CreateUserLoginDataAsync(UserLoginDataModel userLoginDataDto);
-    Task<bool> IsUserLoginDataExisted(UserLoginDataModel userLoginDataModel);
+    Task<UserLoginDataResult> CreateUserLoginDataAsync(UserAccountModel userAccountModel);
+    Task<bool> IsUserLoginDataExisted(UserAccountModel userAccountModel);
     Task<bool> ValidateUserLoginData(string email, string password);
 }

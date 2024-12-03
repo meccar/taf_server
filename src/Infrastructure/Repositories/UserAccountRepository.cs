@@ -1,7 +1,6 @@
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using Domain.Interfaces.Service;
 using Domain.SeedWork.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -16,23 +15,26 @@ public class UserAccountRepository
     private readonly IMapper _mapper;
     private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly IMfaRepository _mfaRepository;
+    private readonly IMailRepository _mailRepository;
 
     public UserAccountRepository(
         // ApplicationDbContext context,
         IMapper mapper,
         UserManager<UserAccountAggregate> userManager,
-        IMfaRepository mfaRepository
-
+        IMfaRepository mfaRepository,
+        IMailRepository mailRepository
+            
         // RoleManager<IdentityRole> roleManager
     )
     {
         _mapper = mapper;
         _userManager = userManager;
         _mfaRepository = mfaRepository;
+        _mailRepository = mailRepository;
         // _roleManager = roleManager;
     }
     
-    public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserLoginDataModel request)
+    public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserAccountModel request)
     {
         var (userAccountAggregate, createResult) = await CreateUserAccountAsync(request);
         if (!createResult.Succeeded)
@@ -47,18 +49,21 @@ public class UserAccountRepository
             return UserLoginDataResult.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
-
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userAccountAggregate);
-        return UserLoginDataResult.Success(userLoginDataModel);
-        // if (await _mfaRepository.MfaSetup(userAccountAggregate))
-        // {
-        // }
-
-        // return UserLoginDataResult.Failure(
-        //     createResult.Errors.Select(e => e.Description).ToArray());
+        
+        bool isEmailSent = await _mailRepository.SendEmailConfirmation(userAccountAggregate);
+        bool isMfaSent = await _mfaRepository.MfaSetup(userAccountAggregate);
+        
+        if (isEmailSent && isMfaSent)
+        {
+            var userLoginDataModel = _mapper.Map<UserAccountModel>(userAccountAggregate);
+            return UserLoginDataResult.Success(userLoginDataModel);
+        }
+        
+        return UserLoginDataResult.Failure(
+            createResult.Errors.Select(e => e.Description).ToArray());
     }
     
-    public async Task<bool> IsUserLoginDataExisted(UserLoginDataModel userLoginDataModel)
+    public async Task<bool> IsUserLoginDataExisted(UserAccountModel userLoginDataModel)
     {
         var email = await _userManager.Users
             .AsQueryable()
@@ -72,7 +77,7 @@ public class UserAccountRepository
                 u =>
                     u.PhoneNumber == userLoginDataModel.PhoneNumber);
         
-        return email && email;
+        return email || email;
     }
     public async Task<bool> ValidateUserLoginData(string email, string password)
     {
@@ -103,7 +108,7 @@ public class UserAccountRepository
         return isValid;
     }
     private async Task<(UserAccountAggregate User, IdentityResult Result)> CreateUserAccountAsync(
-        UserLoginDataModel request)
+        UserAccountModel request)
     {
         var userEntity = _mapper.Map<UserAccountAggregate>(request);
         userEntity.UserName ??= userEntity.Email;

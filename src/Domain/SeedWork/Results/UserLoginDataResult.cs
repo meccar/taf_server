@@ -5,17 +5,17 @@ namespace Domain.SeedWork.Results;
 public class UserLoginDataResult
 {
     public bool Succeeded { get; }
-    public UserLoginDataModel? UserData { get; }
+    public UserAccountModel? UserData { get; }
     public IReadOnlyCollection<string> Errors { get; }
 
-    private UserLoginDataResult(bool succeeded, UserLoginDataModel? userData = null, IEnumerable<string>? errors = null)
+    private UserLoginDataResult(bool succeeded, UserAccountModel? userData = null, IEnumerable<string>? errors = null)
     {
         Succeeded = succeeded;
         UserData = userData;
         Errors = errors?.ToArray() ?? Array.Empty<string>();
     }
 
-    public static UserLoginDataResult Success(UserLoginDataModel userData) =>
+    public static UserLoginDataResult Success(UserAccountModel userData) =>
         new(true, userData);
 
     public static UserLoginDataResult Failure(params string[] errors) =>

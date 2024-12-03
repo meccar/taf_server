@@ -46,7 +46,7 @@ public class UserAccountCommandRepository
     /// </summary>
     /// <param name="createUserAccountDto">The DTO containing user account details.</param>
     /// <returns>The created user account model.</returns>
-    public async Task<UserAccountResult> CreateUserAccountAsync(UserAccountModel request)
+    public async Task<UserAccountResult> CreateUserAccountAsync(UserProfileModel request)
     {
         var userAccountEntity = _mapper.Map<UserProfileAggregate>(request);
         
@@ -55,7 +55,7 @@ public class UserAccountCommandRepository
         if(!created)
             return UserAccountResult.Failure("Failed to create user account. Please try again.");
     
-        var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
+        var userAccountModel = _mapper.Map<UserProfileModel>(userAccountEntity);
         
         return UserAccountResult.Success(userAccountModel);
     }

@@ -1,20 +1,20 @@
 using Shared.Dtos.UserAccount;
-using Shared.Dtos.UserLoginData;
+using Shared.Dtos.UserProfile;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Shared.Dtos.Authentication.Register;
 public class RegisterUserRequestDto
 {
-    public RegisterUserRequestDto(CreateUserAccountDto userAccount, CreateUserLoginDataDto userLoginData)
+    public RegisterUserRequestDto(CreateUserProfileDto userProfile, CreateUserAccountDto userAccount)
     {
+        UserProfile = userProfile;
         UserAccount = userAccount;
-        UserLoginData = userLoginData;
     }
+    // [Required]
+    [SwaggerSchema("User profile details")]
+    public CreateUserProfileDto UserProfile { get; set; }
+
     // [Required]
     [SwaggerSchema("User account details")]
     public CreateUserAccountDto UserAccount { get; set; }
-
-    // [Required]
-    [SwaggerSchema("User login details")]
-    public CreateUserLoginDataDto UserLoginData { get; set; }
 }

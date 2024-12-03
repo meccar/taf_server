@@ -1,6 +1,6 @@
 using Shared.Model;
 
-namespace Domain.Interfaces.Service;
+namespace Domain.Interfaces;
 
 public interface IJwtRepository
 {

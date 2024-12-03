@@ -22,9 +22,9 @@ public class LoginUsecase : IUseCase<LoginUserRequestDto, LoginResponseDto>
 
     public async Task<LoginResponseDto> Execute(LoginUserRequestDto request)
     {
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(request);
+        var userAccountModel = _mapper.Map<UserAccountModel>(request);
         
-        var loginResponse = await _mediator.Send(new LoginQuery(userLoginDataModel));
+        var loginResponse = await _mediator.Send(new LoginQuery(userAccountModel));
         
         return _mapper.Map<LoginResponseDto>(loginResponse);
     }

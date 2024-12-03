@@ -13,7 +13,7 @@ public static class UsecasesConfiguration
         services
             .AddScoped<RegisterUsecase>()
             .AddScoped<LoginUsecase>()
-            .AddScoped<ICommandHandler<RegisterCommand, UserAccountModel>, RegisterCommandHandler>()
+            .AddScoped<ICommandHandler<RegisterCommand, UserProfileModel>, RegisterCommandHandler>()
             .AddScoped<RegisterUsecase>()
             .AddScoped<LoginUsecase>();
         

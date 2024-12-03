@@ -30,19 +30,19 @@ public class UserLoginDataQueryRepository
     /// </summary>
     /// <param name="userLoginData">The login credential to check, such as an email.</param>
     /// <returns><c>true</c> if the user login data exists; otherwise, <c>false</c>.</returns>
-    public async Task<bool> IsUserLoginDataExisted(UserLoginDataModel userLoginDataModel)
+    public async Task<bool> IsUserLoginDataExisted(UserAccountModel userAccountModel)
     {
         var email = await _userManager.Users
             .AsQueryable()
             .AnyAsync(
                 u =>
-                    u.Email == userLoginDataModel.Email);
+                    u.Email == userAccountModel.Email);
         
         var phone = await _context.Users
             .AsQueryable()
             .AnyAsync(
                 u =>
-                    u.PhoneNumber == userLoginDataModel.PhoneNumber);
+                    u.PhoneNumber == userAccountModel.PhoneNumber);
         
         return email && email;
     }

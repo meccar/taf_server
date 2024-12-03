@@ -49,7 +49,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserAccountRepository UserAccountRepository { get; set; }
     public IUserProfileRepository UserProfileRepository { get; set; }
     public IUserTokenRepository UserTokenRepository { get; set; }
-    
+
     /// <summary>
     /// Releases the resources used by the <see cref="UnitOfWork"/> class.
     /// </summary>

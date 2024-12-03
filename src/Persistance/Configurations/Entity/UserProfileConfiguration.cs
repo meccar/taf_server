@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Shared.Enums;
 
 namespace Persistance.Configurations.Entity;
-public sealed class UserAccountConfiguration : IEntityTypeConfiguration<UserProfileAggregate>
+public sealed class UserProfileConfiguration : IEntityTypeConfiguration<UserProfileAggregate>
 {
     public void Configure(EntityTypeBuilder<UserProfileAggregate> builder)
     {

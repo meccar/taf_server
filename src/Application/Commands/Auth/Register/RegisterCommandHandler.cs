@@ -16,7 +16,7 @@ namespace Application.Commands.Auth.Register;
 /// Upon successful validation, a new user account and associated login data are created.
 /// </remarks>
 
-public class RegisterCommandHandler : TransactionalCommandHandler<RegisterCommand, UserAccountModel>
+public class RegisterCommandHandler : TransactionalCommandHandler<RegisterCommand, UserProfileModel>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
@@ -35,33 +35,33 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
     /// <param name="cancellationToken">A cancellation token to signal cancellation of the operation.</param>
     /// <returns>A task that represents the asynchronous operation, containing the created <see cref="UserAccountModel"/>.</returns>
     /// <exception cref="BadRequestException">Thrown when the email or phone number is already in use.</exception>
-    protected override async Task<UserAccountModel> ExecuteCoreAsync(RegisterCommand request, CancellationToken cancellationToken)
+    protected override async Task<UserProfileModel> ExecuteCoreAsync(RegisterCommand request, CancellationToken cancellationToken)
     {
         // Validate existing user login data
-        if (await _unitOfWork.UserAccountRepository.IsUserLoginDataExisted(request.UserLoginDataModel))
+        if (await _unitOfWork.UserAccountRepository.IsUserLoginDataExisted(request.UserAccountModel))
             throw new BadRequestException("Either Email or Phone number already exists");
 
         // Create user account
-        var userAccount = await _unitOfWork
+        var userProfile = await _unitOfWork
             .UserProfileRepository
-            .CreateUserAccountAsync(request.UserAccountModel);
+            .CreateUserAccountAsync(request.UserProfileModel);
 
-        if (!userAccount.Succeeded)
+        if (!userProfile.Succeeded)
             throw new BadRequestException("Failed to create user account");
 
         // Associate login data with the new account
-        request.UserLoginDataModel.UserAccountId = userAccount.UserData.Id;
+        request.UserAccountModel.UserProfileId = userProfile.UserData.Id;
 
-        var userLoginData = await _unitOfWork
+        var userAccount = await _unitOfWork
             .UserAccountRepository
-            .CreateUserLoginDataAsync(request.UserLoginDataModel);
+            .CreateUserLoginDataAsync(request.UserAccountModel);
 
-        if (!userLoginData.Succeeded)
+        if (!userAccount.Succeeded)
             throw new BadRequestException("Failed to create user login data");
 
         // Attach login data to the user account
-        userAccount.UserData.UserLoginData = userLoginData.UserData;
+        userProfile.UserData.UserAccount = userAccount.UserData;
 
-        return userAccount.UserData;
+        return userProfile.UserData;
     }
 }

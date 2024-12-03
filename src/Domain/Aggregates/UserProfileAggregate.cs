@@ -59,7 +59,7 @@ public class UserProfileAggregate : EntityBase
     
     // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
 
-    public virtual UserAccountAggregate UserLoginData { get; set; } = null!;
+    public virtual UserAccountAggregate UserAccount { get; set; } = null!;
 
     // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
 
