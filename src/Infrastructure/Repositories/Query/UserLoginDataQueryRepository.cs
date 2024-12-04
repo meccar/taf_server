@@ -44,7 +44,7 @@ public class UserLoginDataQueryRepository
                 u =>
                     u.PhoneNumber == userAccountModel.PhoneNumber);
         
-        return email && email;
+        return email && email && _userManager.Options.SignIn.RequireConfirmedAccount;
     }
     
     public async Task<bool> ValidateUserLoginData(string email, string password)

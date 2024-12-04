@@ -1,11 +1,11 @@
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
-using Domain.SeedWork.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Enums;
 using Shared.Model;
+using Shared.Results;
 
 namespace Infrastructure.Repositories;
 
@@ -34,33 +34,39 @@ public class UserAccountRepository
         // _roleManager = roleManager;
     }
     
-    public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserAccountModel request)
+    public async Task<Result<UserAccountModel>> CreateUserAccountAsync(UserAccountModel request)
     {
-        var (userAccountAggregate, createResult) = await CreateUserAccountAsync(request);
-        if (!createResult.Succeeded)
+        // var (userAccountAggregate, createResult) = await CreateUserAccountAsync(request);
+        var userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);
+        userAccountAggregate.UserName ??= userAccountAggregate.Email;
+
+        var result = await _userManager.CreateAsync(userAccountAggregate, request.Password);
+        request.Password = null;
+        
+        if (!result.Succeeded)
         {
-            return UserLoginDataResult.Failure(
-                createResult.Errors.Select(e => e.Description).ToArray());
+            return Result<UserAccountModel>.Failure(
+                result.Errors.Select(e => e.Description).ToArray());
         }
         
         var roleResult = await AssignRoleAsync(userAccountAggregate);
         if (!roleResult.Succeeded)
         {
-            return UserLoginDataResult.Failure(
+            return Result<UserAccountModel>.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
         
-        bool isEmailSent = await _mailRepository.SendEmailConfirmation(userAccountAggregate);
+        await _mailRepository.SendEmailConfirmation(userAccountAggregate);
         bool isMfaSent = await _mfaRepository.MfaSetup(userAccountAggregate);
         
-        if (isEmailSent && isMfaSent)
+        if (isMfaSent)
         {
             var userLoginDataModel = _mapper.Map<UserAccountModel>(userAccountAggregate);
-            return UserLoginDataResult.Success(userLoginDataModel);
+            return Result<UserAccountModel>.Success(userLoginDataModel);
         }
         
-        return UserLoginDataResult.Failure(
-            createResult.Errors.Select(e => e.Description).ToArray());
+        return Result<UserAccountModel>.Failure(
+            result.Errors.Select(e => e.Description).ToArray());
     }
     
     public async Task<bool> IsUserLoginDataExisted(UserAccountModel userLoginDataModel)
@@ -106,17 +112,6 @@ public class UserAccountRepository
             await _userManager.ResetAccessFailedCountAsync(user);
         
         return isValid;
-    }
-    private async Task<(UserAccountAggregate User, IdentityResult Result)> CreateUserAccountAsync(
-        UserAccountModel request)
-    {
-        var userEntity = _mapper.Map<UserAccountAggregate>(request);
-        userEntity.UserName ??= userEntity.Email;
-
-        var result = await _userManager.CreateAsync(userEntity, request.Password);
-        request.Password = null;
-
-        return (userEntity, result);
     }
     
     private async Task<IdentityResult> AssignRoleAsync(UserAccountAggregate user)

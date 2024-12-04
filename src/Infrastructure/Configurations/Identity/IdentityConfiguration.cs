@@ -39,8 +39,8 @@ public static class IdentityConfiguration
                 // options.SignIn.RequireConfirmedEmail = true;
 
                 // Tokens
-                options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultProvider;
-                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultProvider;
+                options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
+                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
                 options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
             })
             .AddRoles<IdentityRole<int>>()
@@ -54,6 +54,11 @@ public static class IdentityConfiguration
             // services.AddSingleton<IPersonalDataProtector, PersonalDataProtector>();
         
         //.AddTokenProvider<>()
+        
+        services.Configure<DataProtectionTokenProviderOptions>(options =>
+        {
+            options.TokenLifespan = TimeSpan.FromDays(1);
+        });
         
         return services;
     }

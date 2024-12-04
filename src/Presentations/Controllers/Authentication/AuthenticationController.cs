@@ -1,11 +1,10 @@
 using System.Security.Claims;
 using Application.Usecases.Auth;
 using Asp.Versioning;
-using AutoMapper;
 using Infrastructure.Decorators.Guards;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Authentication.Register;
 using Swashbuckle.AspNetCore.Annotations;
@@ -20,23 +19,21 @@ namespace Presentations.Controllers.Authentication;
 public class AuthenticationController
     : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly ILogger<AuthenticationController> _logger;
-    private readonly IMediator _mediator;
     private readonly RegisterUsecase _registerUseCase;
     private readonly LoginUsecase _loginUsecase;
+    private readonly VerifyUserUsecase _verifyUserUsecase;
     public AuthenticationController(
-        IMapper mapper,
         ILogger<AuthenticationController> logger,
         RegisterUsecase registerUsecase,
         LoginUsecase loginUsecase,
-        IMediator mediator)
+        VerifyUserUsecase verifyUserUsecase
+        )
     {
-        _mapper = mapper;
-        _loginUsecase = loginUsecase;
         _logger = logger;
-        _mediator = mediator;
         _registerUseCase = registerUsecase;
+        _loginUsecase = loginUsecase;
+        _verifyUserUsecase = verifyUserUsecase;
     }
 
     [HttpPost("register")]
@@ -104,5 +101,24 @@ public class AuthenticationController
             SessionId = sessionId,
             AllClaims = claims
         });
+    }
+
+    [HttpGet("verify/mail")]
+    [SwaggerOperation(
+        Summary = "Verify User",
+        Description = "Returns a JSON object indicating if email exists"
+    )]
+    [SwaggerResponse(200, "Successfully verify user", typeof(object))]
+    [SwaggerResponse(400, "Unauthorized")]
+    // [UserGuard]
+    public async Task<IActionResult> VerifyUser([FromQuery] VerifyUserRequestDto tokenRequestDto)
+    {
+        _logger.LogInformation("START: Verify User");
+
+        var response = await _verifyUserUsecase.Execute(tokenRequestDto);
+        
+        _logger.LogInformation("END: Verify User");
+        
+        return Ok(response);
     }
 }

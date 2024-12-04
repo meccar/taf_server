@@ -1,22 +1,22 @@
 using Shared.Model;
 
-namespace Domain.SeedWork.Results;
+namespace Shared.Results;
 
 public class UserAccountResult
 {
     public bool Succeeded { get; }
-    public UserProfileModel? UserData { get; }
+    public UserAccountModel? UserAccount { get; }
     public IReadOnlyCollection<string> Errors { get; }
 
-    private UserAccountResult(bool succeeded, UserProfileModel? userData = null, IEnumerable<string>? errors = null)
+    private UserAccountResult(bool succeeded, UserAccountModel? userAccount = null, IEnumerable<string>? errors = null)
     {
         Succeeded = succeeded;
-        UserData = userData;
+        UserAccount = userAccount;
         Errors = errors?.ToArray() ?? Array.Empty<string>();
     }
 
-    public static UserAccountResult Success(UserProfileModel userData) =>
-        new(true, userData);
+    public static UserAccountResult Success(UserAccountModel userAccount) =>
+        new(true, userAccount);
 
     public static UserAccountResult Failure(params string[] errors) =>
         new(false, errors: errors);

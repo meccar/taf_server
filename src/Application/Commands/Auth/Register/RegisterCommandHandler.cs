@@ -44,24 +44,24 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
         // Create user account
         var userProfile = await _unitOfWork
             .UserProfileRepository
-            .CreateUserAccountAsync(request.UserProfileModel);
+            .CreateUserProfileAsync(request.UserProfileModel);
 
         if (!userProfile.Succeeded)
             throw new BadRequestException("Failed to create user account");
 
         // Associate login data with the new account
-        request.UserAccountModel.UserProfileId = userProfile.UserData.Id;
+        request.UserAccountModel.UserProfileId = userProfile.Value.Id;
 
         var userAccount = await _unitOfWork
             .UserAccountRepository
-            .CreateUserLoginDataAsync(request.UserAccountModel);
+            .CreateUserAccountAsync(request.UserAccountModel);
 
         if (!userAccount.Succeeded)
             throw new BadRequestException("Failed to create user login data");
 
         // Attach login data to the user account
-        userProfile.UserData.UserAccount = userAccount.UserData;
+        userProfile.Value.UserAccount = userAccount.Value;
 
-        return userProfile.UserData;
+        return userProfile.Value;
     }
 }

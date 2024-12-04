@@ -1,6 +1,6 @@
 namespace Shared.Dtos.Authentication.Credentials;
 
-public class TokenDto
+public class VerifyUserResponseDto
 {
     public string TokenType { get; set; }
     public string AccessToken { get; set; }

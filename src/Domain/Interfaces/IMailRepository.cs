@@ -1,8 +1,10 @@
 using Domain.Entities;
+using Shared.Results;
 
 namespace Domain.Interfaces;
 
 public interface IMailRepository
 {
-    Task<bool> SendEmailConfirmation(UserAccountAggregate userAccount);
+    Task SendEmailConfirmation(UserAccountAggregate userAccount);
+    Task<string?> VerifyEmailConfirmationToken(string token);
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Authentication.Register;
 using Shared.Dtos.UserAccount;
@@ -13,11 +14,13 @@ public static class AuthMapper
     {
         config.CreateMap<CreateUserProfileDto, UserProfileModel>();
         config.CreateMap<CreateUserAccountDto, UserAccountModel>();
-        config.CreateMap<LoginUserRequestDto, UserAccountModel>();
+        
         config.CreateMap<UserProfileModel, RegisterUserResponseDto>();
         config.CreateMap<UserAccountModel, UserAccountResponseDto>();
+        
+        config.CreateMap<LoginUserRequestDto, UserAccountModel>();
         config.CreateMap<TokenModel, LoginResponseDto>();
         config.CreateMap<TokenModel, UserProfileResponseDto>();
-
+        config.CreateMap<TokenModel, VerifyUserRequestDto>();
     }
 }

@@ -11,11 +11,10 @@ public static class UsecasesConfiguration
     public static IServiceCollection ConfigureUsecases(this IServiceCollection services)
     {
         services
-            .AddScoped<RegisterUsecase>()
-            .AddScoped<LoginUsecase>()
             .AddScoped<ICommandHandler<RegisterCommand, UserProfileModel>, RegisterCommandHandler>()
             .AddScoped<RegisterUsecase>()
-            .AddScoped<LoginUsecase>();
+            .AddScoped<LoginUsecase>()
+            .AddScoped<VerifyUserUsecase>();
         
         return services;
     }

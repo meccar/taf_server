@@ -2,10 +2,10 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using Domain.Interfaces.Command;
-using Domain.SeedWork.Results;
 using Microsoft.AspNetCore.Identity;
 using Shared.Enums;
 using Shared.Model;
+using Shared.Results;
 
 namespace Infrastructure.Repositories.Command;
 
@@ -52,29 +52,29 @@ public class UserLoginDataCommandRepository
     /// </summary>
     /// <param name="userLoginDataDto">The DTO containing user login data details.</param>
     /// <returns>The created user login data model.</returns>
-    public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserAccountModel request)
+    public async Task<Result<UserAccountModel>> CreateUserLoginDataAsync(UserAccountModel request)
     {
         var (userAccountAggregate, createResult) = await CreateUserAccountAsync(request);
         if (!createResult.Succeeded)
         {
-            return UserLoginDataResult.Failure(
+            return Result<UserAccountModel>.Failure(
                 createResult.Errors.Select(e => e.Description).ToArray());
         }
         
         var roleResult = await AssignRoleAsync(userAccountAggregate);
         if (!roleResult.Succeeded)
         {
-            return UserLoginDataResult.Failure(
+            return Result<UserAccountModel>.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
 
         var userLoginDataModel = _mapper.Map<UserAccountModel>(userAccountAggregate);
-        return UserLoginDataResult.Success(userLoginDataModel);
+        return Result<UserAccountModel>.Success(userLoginDataModel);
         // if (await _mfaRepository.MfaSetup(userAccountAggregate))
         // {
         // }
 
-        // return UserLoginDataResult.Failure(
+        // return UserAccountResult.Failure(
         //     createResult.Errors.Select(e => e.Description).ToArray());
     }
     
