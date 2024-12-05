@@ -20,6 +20,8 @@ public static class ControllersConfiguration
                 options.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                options.JsonSerializerOptions.MaxDepth = 64;
             });
             // .ConfigureApiBehaviorOptions(options => options.SuppressModelStateInvalidFilter = true);
                 

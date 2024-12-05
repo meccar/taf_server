@@ -109,47 +109,47 @@
             An object that provides additional information about the unauthorized request. This value is passed to the base exception class.
             </param>
         </member>
-        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.FirstName">
-            <summary>
-            User's FirstName
-            </summary>
-            <example>John</example>
-        </member>
-        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.LastName">
-            <summary>
-            User's LastName
-            </summary>
-            <example>Smith</example>
-        </member>
-        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.Gender">
-            <summary>
-            User's Gender
-            </summary>
-            <example>Male</example>
-        </member>
-        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.DateOfBirth">
-            <summary>
-            User's DateOfBirth
-            </summary>
-            <example>07/14/1999</example>
-        </member>
-        <member name="P:Shared.Dtos.UserLoginData.CreateUserLoginDataDto.Email">
+        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.Email">
             <summary>
             User's Email
             </summary>
             <example>john.smith@gmail.com</example>
         </member>
-        <member name="P:Shared.Dtos.UserLoginData.CreateUserLoginDataDto.Password">
+        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.Password">
             <summary>
             User's Password
             </summary>
             <example>Password@1234</example>
         </member>
-        <member name="P:Shared.Dtos.UserLoginData.CreateUserLoginDataDto.PhoneNumber">
+        <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.PhoneNumber">
             <summary>
             User's PhoneNumber
             </summary>
             <example>098765432123</example>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.CreateUserProfileDto.FirstName">
+            <summary>
+            User's FirstName
+            </summary>
+            <example>John</example>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.CreateUserProfileDto.LastName">
+            <summary>
+            User's LastName
+            </summary>
+            <example>Smith</example>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.CreateUserProfileDto.Gender">
+            <summary>
+            User's Gender
+            </summary>
+            <example>Male</example>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.CreateUserProfileDto.DateOfBirth">
+            <summary>
+            User's DateOfBirth
+            </summary>
+            <example>07/14/1999</example>
         </member>
         <member name="T:Shared.HttpResponses.HttpResponseException">
             <summary>
@@ -180,7 +180,7 @@
             Gets a new message that provides additional context.
             </summary>
         </member>
-        <member name="T:Shared.Model.UserAccountModel">
+        <member name="T:Shared.Model.UserProfileModel">
             <summary>
             
             </summary>

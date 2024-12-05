@@ -1,3 +1,4 @@
+using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using Application;
 using Infrastructure;
@@ -11,7 +12,7 @@ namespace Presentations;
 
 public static class HostingExtensions
 {
-    private static readonly string _appCors = "AppCors";
+    private static readonly string _appCors = "AllowLocalhost";
     
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
@@ -50,7 +51,12 @@ public static class HostingExtensions
             options.ConfigureHttpsDefaults(httpsOptions =>
             {
                 httpsOptions.ServerCertificate = cert;
-                httpsOptions.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+                httpsOptions.SslProtocols = System.Security.Authentication.SslProtocols.Tls12 | System.Security.Authentication.SslProtocols.Tls13;
+            });
+            
+            options.Listen(IPAddress.Any, 7293, listenOptions =>
+            {
+                listenOptions.UseHttps(kestrelConfig["Path"]!, kestrelConfig["Password"]);
             });
         });
         

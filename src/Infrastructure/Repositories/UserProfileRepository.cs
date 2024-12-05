@@ -1,9 +1,9 @@
 using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces;
-using Domain.SeedWork.Results;
 using Persistance.Data;
 using Shared.Model;
+using Shared.Results;
 
 namespace Infrastructure.Repositories;
 
@@ -21,18 +21,18 @@ public class UserProfileRepository
         _mapper = mapper;
 
     }
-    public async Task<UserAccountResult> CreateUserAccountAsync(UserAccountModel request)
+    public async Task<Result<UserProfileModel>> CreateUserProfileAsync(UserProfileModel request)
     {
-        var userAccountEntity = _mapper.Map<UserProfileAggregate>(request);
+        var userProfileEntity = _mapper.Map<UserProfileAggregate>(request);
         
-        var created = await CreateAsync(userAccountEntity);
+        var created = await CreateAsync(userProfileEntity);
         
         if(!created)
-            return UserAccountResult.Failure("Failed to create user account. Please try again.");
+            return Result<UserProfileModel>.Failure("Failed to create user account. Please try again.");
     
-        var userAccountModel = _mapper.Map<UserAccountModel>(userAccountEntity);
+        var userProfileModel = _mapper.Map<UserProfileModel>(userProfileEntity);
         
-        return UserAccountResult.Success(userAccountModel);
+        return Result<UserProfileModel>.Success(userProfileModel);
     }
     public async Task<string> GetUserAccountStatusAsync(string userId)
     {

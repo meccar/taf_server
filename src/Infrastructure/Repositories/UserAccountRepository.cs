@@ -1,12 +1,11 @@
 using AutoMapper;
-using Domain.Entities;
+using Domain.Aggregates;
 using Domain.Interfaces;
-using Domain.Interfaces.Service;
-using Domain.SeedWork.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Enums;
 using Shared.Model;
+using Shared.Results;
 
 namespace Infrastructure.Repositories;
 
@@ -16,81 +15,89 @@ public class UserAccountRepository
     private readonly IMapper _mapper;
     private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly IMfaRepository _mfaRepository;
+    private readonly IMailRepository _mailRepository;
 
     public UserAccountRepository(
-        // ApplicationDbContext context,
         IMapper mapper,
         UserManager<UserAccountAggregate> userManager,
-        IMfaRepository mfaRepository
-
-        // RoleManager<IdentityRole> roleManager
+        IMfaRepository mfaRepository,
+        IMailRepository mailRepository
+            
     )
     {
         _mapper = mapper;
         _userManager = userManager;
         _mfaRepository = mfaRepository;
-        // _roleManager = roleManager;
+        _mailRepository = mailRepository;
     }
     
-    public async Task<UserLoginDataResult> CreateUserLoginDataAsync(UserLoginDataModel request)
+    public async Task<Result<UserAccountModel>> CreateUserAccountAsync(UserAccountModel request)
     {
-        var (userAccountAggregate, createResult) = await CreateUserAccountAsync(request);
-        if (!createResult.Succeeded)
+        UserAccountAggregate userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);
+        userAccountAggregate.UserName ??= userAccountAggregate.Email;
+
+        IdentityResult result = await _userManager.CreateAsync(userAccountAggregate, request.Password);
+        request.Password = null;
+        
+        if (!result.Succeeded)
         {
-            return UserLoginDataResult.Failure(
-                createResult.Errors.Select(e => e.Description).ToArray());
+            return Result<UserAccountModel>.Failure(
+                result.Errors.Select(e => e.Description).ToArray());
         }
         
-        var roleResult = await AssignRoleAsync(userAccountAggregate);
+        IdentityResult roleResult = await AssignRoleAsync(userAccountAggregate);
         if (!roleResult.Succeeded)
         {
-            return UserLoginDataResult.Failure(
+            return Result<UserAccountModel>.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         }
-
-        var userLoginDataModel = _mapper.Map<UserLoginDataModel>(userAccountAggregate);
-        return UserLoginDataResult.Success(userLoginDataModel);
-        // if (await _mfaRepository.MfaSetup(userAccountAggregate))
-        // {
-        // }
-
-        // return UserLoginDataResult.Failure(
-        //     createResult.Errors.Select(e => e.Description).ToArray());
+        
+        MfaViewModel mfaViewModel = await _mfaRepository.MfaSetup(userAccountAggregate);
+        Result isMailSent =  await _mailRepository.SendEmailConfirmation(userAccountAggregate, mfaViewModel);
+        
+        if (isMailSent.Succeeded)
+        {
+            UserAccountModel userLoginDataModel = _mapper.Map<UserAccountModel>(userAccountAggregate);
+            return Result<UserAccountModel>.Success(userLoginDataModel);
+        }
+        
+        return Result<UserAccountModel>.Failure(
+            result.Errors.Select(e => e.Description).ToArray());
     }
     
-    public async Task<bool> IsUserLoginDataExisted(UserLoginDataModel userLoginDataModel)
+    public async Task<bool> IsUserLoginDataExisted(UserAccountModel userLoginDataModel)
     {
-        var email = await _userManager.Users
+        bool email = await _userManager.Users
             .AsQueryable()
             .AnyAsync(
                 u =>
                     u.Email == userLoginDataModel.Email);
         
-        var phone = await _userManager.Users
+        bool phone = await _userManager.Users
             .AsQueryable()
             .AnyAsync(
                 u =>
                     u.PhoneNumber == userLoginDataModel.PhoneNumber);
         
-        return email && email;
+        return email || email;
     }
     public async Task<bool> ValidateUserLoginData(string email, string password)
     {
-        var user = await _userManager.FindByEmailAsync(email);
+        UserAccountAggregate? user = await _userManager.FindByEmailAsync(email);
         
         if (user == null)
         {
             return false;
         }
         
-        var validationResults = await Task.WhenAll(
+        bool[] validationResults = await Task.WhenAll(
             _userManager.IsEmailConfirmedAsync(user),
             _userManager.IsLockedOutAsync(user),
             _userManager.CheckPasswordAsync(user, password),
             _userManager.IsPhoneNumberConfirmedAsync(user)
         );
         
-        var isValid = validationResults[0] && // isEmailConfirmed
+        bool isValid = validationResults[0] && // isEmailConfirmed
                       !validationResults[1] && // !isLockedOut
                       validationResults[2] && // isPasswordValid
                       validationResults[3] && // isPhoneNumberConfirmed
@@ -101,17 +108,6 @@ public class UserAccountRepository
             await _userManager.ResetAccessFailedCountAsync(user);
         
         return isValid;
-    }
-    private async Task<(UserAccountAggregate User, IdentityResult Result)> CreateUserAccountAsync(
-        UserLoginDataModel request)
-    {
-        var userEntity = _mapper.Map<UserAccountAggregate>(request);
-        userEntity.UserName ??= userEntity.Email;
-
-        var result = await _userManager.CreateAsync(userEntity, request.Password);
-        request.Password = null;
-
-        return (userEntity, result);
     }
     
     private async Task<IdentityResult> AssignRoleAsync(UserAccountAggregate user)

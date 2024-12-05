@@ -1,10 +1,9 @@
-using Shared.Dtos.UserLoginData;
+using Shared.Dtos.UserAccount;
 
 namespace Shared.Dtos.Authentication.Register;
 
 public class RegisterUserResponseDto
 {
-    // public UserAccountResponseDto UserAccount { get; set; }
     public string Eid { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
@@ -13,6 +12,6 @@ public class RegisterUserResponseDto
     // public string PhoneNumber { get; set; }
     public string Avatar { get; set; }
     public string Status { get; set; }
-    public UserLoginDataResponseDto? UserLoginData { get; set; }
+    public UserAccountResponseDto? UserAccount { get; set; }
     // public CompanyResponseDto Company { get; set; }
 }

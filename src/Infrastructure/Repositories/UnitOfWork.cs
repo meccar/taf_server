@@ -32,7 +32,6 @@ public class UnitOfWork : IUnitOfWork
     /// 
     public UnitOfWork(
         ApplicationDbContext context,
-        // IDbConnection connection,
         
         IUserAccountRepository userAccountRepository,
         IUserProfileRepository userProfileRepository,
@@ -40,8 +39,7 @@ public class UnitOfWork : IUnitOfWork
         )
     {
         _context = context;
-        // _connection = connection;
-        
+
         UserAccountRepository = userAccountRepository;
         UserProfileRepository = userProfileRepository;
         UserTokenRepository = userTokenRepository;
@@ -49,7 +47,7 @@ public class UnitOfWork : IUnitOfWork
     public IUserAccountRepository UserAccountRepository { get; set; }
     public IUserProfileRepository UserProfileRepository { get; set; }
     public IUserTokenRepository UserTokenRepository { get; set; }
-    
+
     /// <summary>
     /// Releases the resources used by the <see cref="UnitOfWork"/> class.
     /// </summary>
@@ -79,12 +77,6 @@ public class UnitOfWork : IUnitOfWork
     /// <returns>A task representing the asynchronous operation, with the task result containing the database transaction.</returns>
     public async Task BeginTransactionAsync()
     {
-        // if (_connection.State != ConnectionState.Open)
-        // { 
-        //     _connection.Open();
-        // }s
-        //
-        // return await Task.FromResult(_connection.BeginTransaction());
         await _context.Database.BeginTransactionAsync();
     }
 
@@ -100,8 +92,6 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task CommitTransactionAsync()
     {
-        // transaction.Commit();
-        // await Task.CompletedTask;
         await CommitAsync();
         await _context.Database.CommitTransactionAsync();
     }
@@ -112,19 +102,8 @@ public class UnitOfWork : IUnitOfWork
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task RollbackTransactionAsync()
     {
-        // return _context.Database.RollbackTransactionAsync();
-        // transaction.Rollback();
-        // await Task.CompletedTask;
         await _context.Database.RollbackTransactionAsync();
     }
-
-    // public async Task DisposeAsync()
-    // {
-    //     // return _context.Database.RollbackTransactionAsync();
-    //     // transaction.Dispose();
-    //     // await Task.CompletedTask;
-    //     return _context.Database.
-    // }
     
     /// <summary>
     /// Disposes the resources used by the unit of work.

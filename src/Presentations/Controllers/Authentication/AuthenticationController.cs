@@ -1,13 +1,17 @@
 using System.Security.Claims;
-using Application.Usecases.Auth;
+using Application.Commands.Auth.Register;
+using Application.Queries.Auth.Login;
+using Application.Queries.Auth.VerifyUser;
 using Asp.Versioning;
 using AutoMapper;
 using Infrastructure.Decorators.Guards;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Authentication.Register;
+using Shared.Model;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Presentations.Controllers.Authentication;
@@ -20,23 +24,16 @@ namespace Presentations.Controllers.Authentication;
 public class AuthenticationController
     : ControllerBase
 {
-    private readonly IMapper _mapper;
     private readonly ILogger<AuthenticationController> _logger;
     private readonly IMediator _mediator;
-    private readonly RegisterUsecase _registerUseCase;
-    private readonly LoginUsecase _loginUsecase;
+
     public AuthenticationController(
-        IMapper mapper,
         ILogger<AuthenticationController> logger,
-        RegisterUsecase registerUsecase,
-        LoginUsecase loginUsecase,
-        IMediator mediator)
+        IMediator mediator
+        )
     {
-        _mapper = mapper;
-        _loginUsecase = loginUsecase;
         _logger = logger;
         _mediator = mediator;
-        _registerUseCase = registerUsecase;
     }
 
     [HttpPost("register")]
@@ -54,11 +51,11 @@ public class AuthenticationController
     {
         _logger.LogInformation("START: Register");
 
-        var response = await _registerUseCase.Execute(registerDto);
-
+        var loginResponse = await _mediator.Send(new RegisterCommand(registerDto.UserProfile, registerDto.UserAccount));
+        
         _logger.LogInformation("END: Register");
 
-        return Created(response.Eid, response);
+        return Created(loginResponse.Eid, loginResponse);
     }
 
     [HttpPost("login")]
@@ -71,12 +68,11 @@ public class AuthenticationController
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     [AllowAnonymous]
-    //[ApiValidationFilter]
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
     {
         _logger.LogInformation("START: Login");
 
-        var response = await _loginUsecase.Execute(loginDto);
+        var response = await _mediator.Send(new LoginQuery(loginDto));
         
         _logger.LogInformation("END: Login");
         
@@ -104,5 +100,42 @@ public class AuthenticationController
             SessionId = sessionId,
             AllClaims = claims
         });
+    }
+
+    [HttpGet("verify/mail")]
+    [SwaggerOperation(
+        Summary = "Verify User",
+        Description = "Returns a JSON object indicating if email exists"
+    )]
+    [SwaggerResponse(200, "Successfully verify user", typeof(object))]
+    [SwaggerResponse(400, "Unauthorized")]
+    // [UserGuard]
+    public async Task<IActionResult> VerifyUserEmail([FromQuery] VerifyUserEmailRequestDto tokenRequestDto)
+    {
+        _logger.LogInformation("START: Verify User");
+
+        var response = await _mediator.Send(new VerifyUserQuery(tokenRequestDto));
+        
+        _logger.LogInformation("END: Verify User");
+        
+        return Ok(response);
+    }
+    [HttpPost("verify/mail")]
+    [SwaggerOperation(
+        Summary = "Verify User",
+        Description = "Returns a JSON object indicating if email exists"
+    )]
+    [SwaggerResponse(200, "Successfully verify user", typeof(object))]
+    [SwaggerResponse(400, "Unauthorized")]
+    // [UserGuard]
+    public async Task<IActionResult> VerifyUserByAuthenticator([FromQuery] VerifyUserEmailRequestDto tokenRequestDto)
+    {
+        _logger.LogInformation("START: Verify User");
+
+        var response = await _mediator.Send(new VerifyUserQuery(tokenRequestDto));
+        
+        _logger.LogInformation("END: Verify User");
+        
+        return Ok(response);
     }
 }

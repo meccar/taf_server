@@ -1,9 +1,10 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
-using Application.Usecases.Auth;
+using Application.Queries.Auth.Login;
+using Domain.Aggregates;
 using Domain.Entities;
-using Domain.Interfaces.Service;
+using Domain.Interfaces;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
@@ -15,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using IdentityServer.Pages.Login;
+using MediatR;
 using Shared.Dtos.Authentication.Login;
 using Telemetry = IdentityServer.Pages.Telemetry;
 
@@ -29,7 +31,7 @@ public class Index : PageModel
     private readonly IEventService _events;
     private readonly IAuthenticationSchemeProvider _schemeProvider;
     private readonly IIdentityProviderStore _identityProviderStore;
-    private readonly LoginUsecase _loginUsecase;
+    private readonly IMediator _mediator;
 
     public ViewModel View { get; set; } = default!;
         
@@ -43,8 +45,8 @@ public class Index : PageModel
         IEventService events,
         UserManager<UserAccountAggregate> userManager,
         SignInManager<UserAccountAggregate> signInManager,
-        LoginUsecase loginUsecase,
-        IJwtRepository jwtTokenRepository
+        IJwtRepository jwtTokenRepository,
+        IMediator mediator
         )
     {
         _userManager = userManager;
@@ -52,7 +54,7 @@ public class Index : PageModel
         _schemeProvider = schemeProvider;
         _identityProviderStore = identityProviderStore;
         _events = events;
-        _loginUsecase = loginUsecase;
+        _mediator = mediator;
     }
 
     public async Task<IActionResult> OnGet(string? returnUrl)
@@ -105,7 +107,7 @@ public class Index : PageModel
             RememberUser = Input.RememberLogin
         };
         
-        var response = await _loginUsecase.Execute(loginDto);
+        var response = await _mediator.Send(new LoginQuery(loginDto));
         
         if (response == null)
         {

@@ -1,28 +1,22 @@
-using Shared.Enums;
-
 namespace Shared.Model;
-/// <summary>
-/// 
-/// </summary>
+
 public class UserAccountModel
 {
     public string Id { get; set; }
     public string EId { get; set; }
-    public string FirstName { get; set; } = "";
-    public string LastName { get; set; } = "";
-    public EGender Gender { get; set; }
-    public string DateOfBirth { get; set; }
-    public string Avatar { get; set; } = "";
-    public string Status { get; set; }
-    // public int CompanyId { get; set; }
+    public string UserProfileId { get; set; }
+    public string PhoneNumber { get; set; } = null!;
+    public string Password { get; set; }
+    public string PasswordHash { get; set; } = null!;
+    public string? SecurityStamp { get; set; }
+    public string Email { get; set; }
+    public string EmailStatus { get; set; }
+    public string PasswordRecoveryToken { get; set; }
+    public string ConfirmationToken { get; set; }
+    public bool IsTwoFactorEnabled { get; set; }
+    public bool IsTwoFactorVerified { get; set; }
+    public UserProfileModel UserAccount { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }
-    // public UserLoginDataExternalEntity UserLoginDataExternal { get; set; }
-    public UserLoginDataModel? UserLoginData { get; set; }
-    // public List<BlacklistTokenModel> BlacklistedTokens { get; set; }
-    // public List<UserTokenModel> Tokens { get; set; }
-    // public List<RoleModel> Roles { get; set; }
-    // public CompanyModel Company { get; set; }
-
 }

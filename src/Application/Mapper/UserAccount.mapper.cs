@@ -12,9 +12,9 @@ public static class UserAccountMapper
     /// <param name="config">The AutoMapper configuration expression used to create the mappings.</param>
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        config.CreateMap<UserProfileAggregate, UserAccountModel>()
-            .ForMember(dest => dest.UserLoginData, opt => opt.MapFrom(src => src.UserLoginData));
-        config.CreateMap<UserAccountModel, UserProfileAggregate>()
+        config.CreateMap<UserProfileAggregate, UserProfileModel>()
+            .ForMember(dest => dest.UserAccount, opt => opt.MapFrom(src => src.UserAccount));
+        config.CreateMap<UserProfileModel, UserProfileAggregate>()
             .ForMember(dest => dest.EId, opt => opt.Ignore());
     }
 }

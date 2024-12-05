@@ -1,5 +1,4 @@
-using AutoMapper;
-using Domain.Entities;
+using Domain.Aggregates;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
@@ -13,7 +12,6 @@ namespace Infrastructure.Repositories;
 public class UserTokenRepository
     : IUserTokenRepository
 {
-    private readonly IMapper _mapper;
     private readonly ApplicationDbContext _context;
     private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly SignInManager<UserAccountAggregate> _signInManager;
@@ -22,11 +20,9 @@ public class UserTokenRepository
         ApplicationDbContext context,
         UserManager<UserAccountAggregate> userManager,
         EnvironmentConfiguration environment,
-        SignInManager<UserAccountAggregate> signInManager,
-        IMapper mapper
+        SignInManager<UserAccountAggregate> signInManager
     )
     {
-        _mapper = mapper;
         _context = context;
         _signInManager = signInManager;
         _userManager = userManager;
@@ -95,12 +91,6 @@ public class UserTokenRepository
     }
     public async Task<bool> TokenExistsAsync(UserAccountAggregate user, UserTokenModel token)
     {
-        // var existingLogins = await _userManager.GetLoginsAsync(user);
-        // var existingLogin = existingLogins
-        //     .FirstOrDefault(l => l.LoginProvider == token.LoginProvider.ToString());
-        //
-        // if (existingLogin == null) return false;
-        
         var accessToken = await _userManager.GetAuthenticationTokenAsync(
             user,
             token.LoginProvider.ToString(),
@@ -118,7 +108,7 @@ public class UserTokenRepository
 
         return true;
     }
-        private async Task<SignInResult> SignInAsync(UserAccountAggregate userLoginDataModel, UserTokenModel token)
+    private async Task<SignInResult> SignInAsync(UserAccountAggregate userLoginDataModel, UserTokenModel token)
     {
         var loginInfo = new UserLoginInfo(
             token.LoginProvider.ToString(),
@@ -137,7 +127,6 @@ public class UserTokenRepository
         };
         
         await _signInManager.SignInWithClaimsAsync(userLoginDataModel, authenticationProperties, token.Claims);
-        // await _signInManager.SignInAsync(userLoginDataModel, isPersistent: false);
         
         foreach (var claim in token.Claims)
         {
@@ -171,7 +160,6 @@ public class UserTokenRepository
         };
         
         await _signInManager.SignInWithClaimsAsync(userLoginDataModel, authenticationProperties, token.Claims);
-        // await _signInManager.RefreshSignInAsync(userLoginDataModel);
 
         foreach (var claim in token.Claims)
         {

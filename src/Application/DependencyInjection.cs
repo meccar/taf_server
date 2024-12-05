@@ -18,7 +18,6 @@ public static class DependencyInjection
         services.ConfigureSwagger();
         services.ConfigureMapper();
         services.ConfigureValidatiors();
-        services.ConfigureUsecases();
         services.ConfigureMediatR();
         
         return services;

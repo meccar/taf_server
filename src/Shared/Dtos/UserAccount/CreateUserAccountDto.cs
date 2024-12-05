@@ -1,43 +1,30 @@
 using System.ComponentModel.DataAnnotations;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Shared.Dtos.UserAccount;
 
 public class CreateUserAccountDto
 {
     /// <summary>
-    /// User's FirstName
+    /// User's Email
     /// </summary>
-    /// <example>John</example>
-    [Required] 
-    [StringLength(255)]
-    [SwaggerSchema("FirstName details")]
-
-    public string FirstName { get; set; } = "";
-    
-    /// <summary>
-    /// User's LastName
-    /// </summary>
-    /// <example>Smith</example>
-    [Required] 
-    [StringLength(255)] 
-    [SwaggerSchema("LastName details")]
-
-    public string LastName { get; set; } = "";
-
-    /// <summary>
-    /// User's Gender
-    /// </summary>
-    /// <example>Male</example>
-    [Required] 
-    [SwaggerSchema("Gender details")]
-    public string Gender { get; set; } = "";
-    
-    /// <summary>
-    /// User's DateOfBirth
-    /// </summary>
-    /// <example>07/14/1999</example>
+    /// <example>john.smith@gmail.com</example>
     [Required]
-    [SwaggerSchema("DateOfBirth details")]
-    public string DateOfBirth { get; set; } = "";
+    [EmailAddress]
+    public string Email { get; set; }
+    
+    /// <summary>
+    /// User's Password
+    /// </summary>
+    /// <example>Password@1234</example>
+    [Required]
+    [StringLength(100, MinimumLength =12)]
+    public string Password { get; set; }
+        
+    /// <summary>
+    /// User's PhoneNumber
+    /// </summary>
+    /// <example>098765432123</example>
+    [Required] 
+    [Phone] 
+    public string PhoneNumber { get; set; } = "";
 }
