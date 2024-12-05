@@ -1,11 +1,12 @@
 using Domain.SeedWork.Query;
+using Shared.Dtos.Authentication.Credentials;
 using Shared.Model;
 
 namespace Application.Queries.Auth.VerifyUser;
 
-public class VerifyUserQuery : IQuery<TokenModel>
+public class VerifyUserQuery : IQuery<VerifyUserRequestDto>
 {
-    public string Token { get; set; }
-    public VerifyUserQuery(string token) =>
+    public VerifyUserRequestDto Token { get; set; }
+    public VerifyUserQuery(VerifyUserRequestDto token) =>
         Token = token;
 }

@@ -1,34 +1,43 @@
 using System.Text;
+using AutoMapper;
 using Domain.Interfaces;
 using Domain.SeedWork.Query;
 using Microsoft.AspNetCore.WebUtilities;
+using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Exceptions;
 using Shared.Model;
 
 namespace Application.Queries.Auth.VerifyUser;
 
-public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, TokenModel>
+public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, VerifyUserRequestDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMailRepository _mailRepository;
     private readonly IJwtRepository _jwtTokenRepository;
+    private readonly IMapper _mapper;
 
     public VerifyUserQueryHandler(
         IUnitOfWork unitOfWork,
         IMailRepository mailRepository,
-        IJwtRepository jwtTokenRepository
+        IJwtRepository jwtTokenRepository,
+        IMapper mapper
     )
     {
         _unitOfWork = unitOfWork;
         _mailRepository = mailRepository;
         _jwtTokenRepository = jwtTokenRepository;
+        _mapper = mapper;
+
     }
-    public async Task<TokenModel> Handle(VerifyUserQuery request, CancellationToken cancellationToken)
+    public async Task<VerifyUserRequestDto> Handle(VerifyUserQuery request, CancellationToken cancellationToken)
     {
-        string? result = await _mailRepository.VerifyEmailConfirmationToken(request.Token);
+        string? result = await _mailRepository.VerifyEmailConfirmationToken(request.Token.Token);
 
         if (result != null)
-            return await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(result);
+        {
+            var tokenModel = await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(result);
+            return _mapper.Map<VerifyUserRequestDto>(tokenModel);
+        }
 
         throw new BadRequestException("Bad request");
     }

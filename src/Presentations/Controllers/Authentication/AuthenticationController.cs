@@ -1,12 +1,17 @@
 using System.Security.Claims;
-using Application.Usecases.Auth;
+using Application.Commands.Auth.Register;
+using Application.Queries.Auth.Login;
+using Application.Queries.Auth.VerifyUser;
 using Asp.Versioning;
+using AutoMapper;
 using Infrastructure.Decorators.Guards;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Authentication.Register;
+using Shared.Model;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Presentations.Controllers.Authentication;
@@ -20,20 +25,15 @@ public class AuthenticationController
     : ControllerBase
 {
     private readonly ILogger<AuthenticationController> _logger;
-    private readonly RegisterUsecase _registerUseCase;
-    private readonly LoginUsecase _loginUsecase;
-    private readonly VerifyUserUsecase _verifyUserUsecase;
+    private readonly IMediator _mediator;
+
     public AuthenticationController(
         ILogger<AuthenticationController> logger,
-        RegisterUsecase registerUsecase,
-        LoginUsecase loginUsecase,
-        VerifyUserUsecase verifyUserUsecase
+        IMediator mediator
         )
     {
         _logger = logger;
-        _registerUseCase = registerUsecase;
-        _loginUsecase = loginUsecase;
-        _verifyUserUsecase = verifyUserUsecase;
+        _mediator = mediator;
     }
 
     [HttpPost("register")]
@@ -51,11 +51,11 @@ public class AuthenticationController
     {
         _logger.LogInformation("START: Register");
 
-        var response = await _registerUseCase.Execute(registerDto);
-
+        var loginResponse = await _mediator.Send(new RegisterCommand(registerDto.UserProfile, registerDto.UserAccount));
+        
         _logger.LogInformation("END: Register");
 
-        return Created(response.Eid, response);
+        return Created(loginResponse.Eid, loginResponse);
     }
 
     [HttpPost("login")]
@@ -68,12 +68,11 @@ public class AuthenticationController
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     [AllowAnonymous]
-    //[ApiValidationFilter]
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
     {
         _logger.LogInformation("START: Login");
 
-        var response = await _loginUsecase.Execute(loginDto);
+        var response = await _mediator.Send(new LoginQuery(loginDto));
         
         _logger.LogInformation("END: Login");
         
@@ -115,7 +114,7 @@ public class AuthenticationController
     {
         _logger.LogInformation("START: Verify User");
 
-        var response = await _verifyUserUsecase.Execute(tokenRequestDto);
+        var response = await _mediator.Send(new VerifyUserQuery(tokenRequestDto));
         
         _logger.LogInformation("END: Verify User");
         
