@@ -9,10 +9,6 @@ public class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountAggr
 {
     public void Configure(EntityTypeBuilder<UserAccountAggregate> builder)
     {
-        // builder
-        //     .Property(x => x.Id)
-        //     .ValueGeneratedOnAdd();
-
         builder
             .Property(x => x.EId)
             .IsRequired(false);

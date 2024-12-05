@@ -29,7 +29,6 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
     public RegisterCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper
-
         ) : base(unitOfWork)
     {
         _mapper = mapper;

@@ -1,14 +1,15 @@
-using Domain.Entities;
+using System.Net;
+using Domain.Aggregates;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Shared.Model;
+using Shared.Results;
 
 namespace Infrastructure.Repositories;
 
 public class MfaRepository : IMfaRepository 
 {
     private readonly UserManager<UserAccountAggregate> _userManager;
-
     public MfaRepository(
         UserManager<UserAccountAggregate> userManager
     )
@@ -16,35 +17,52 @@ public class MfaRepository : IMfaRepository
         _userManager = userManager;
     }
 
-    public async Task<bool> MfaSetup(UserAccountAggregate user)
+    public async Task<MfaViewModel> MfaSetup(UserAccountAggregate user)
     {
-        var token = _userManager.GenerateNewAuthenticatorKey();
-        var result = await _userManager.ResetAuthenticatorKeyAsync(user);
-        if (result.Succeeded)
+        string? unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+        if (string.IsNullOrEmpty(unformattedKey))
         {
-            await _userManager.SetAuthenticationTokenAsync(user, "Mfa", "Authenticator",token);
-            var model = new MfaViewModel { Token = token };
-            return true;
+            await _userManager.ResetAuthenticatorKeyAsync(user);
+            unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
         }
         
-        return false;
+        return new MfaViewModel
+        {
+            SharedKey = FormatKey(unformattedKey),
+            AuthenticatorUri = GenerateQrCodeUri(user.Email!, unformattedKey)
+        };
+    }
+
+    public async Task<Result> ValidateMfa(string email, string token)
+    {
+        UserAccountAggregate? user = await _userManager.FindByEmailAsync(email);
+        
+        if (user == null)
+            return Result.Failure("Account does not exist");
+        
+        bool isValidToken = await _userManager.VerifyTwoFactorTokenAsync(user, "Authenticator", token);
+
+        if (isValidToken)
+        {
+
+            return Result.Success();
+        }
+        
+        return Result.Failure("Invalid authenticator key.");
     }
     
-    public async Task<bool> MfaSetup(MfaViewModel model,UserAccountAggregate user)
+    private string GenerateQrCodeUri(string email, string unformattedKey)
     {
-
-        var result = await _userManager.VerifyUserTokenAsync(
-            user, 
-            _userManager.Options.Tokens.AuthenticatorTokenProvider,
-            model.Code,
-            model.Token
-        );
-        if (result)
-        {
-            await _userManager.SetTwoFactorEnabledAsync(user, true);
-            return true;
-        }
-
-        return false;
+        const string AuthenticatorUriFormat = "otpauth://totp/{0}:{1}?secret={2}&issuer={0}&digits=6";
+ 
+        return string.Format(
+            AuthenticatorUriFormat,
+            WebUtility.UrlEncode("TAF Việt"),
+            WebUtility.UrlEncode(email),
+            unformattedKey);
+    }
+    private string FormatKey(string unformattedKey)
+    {
+        return unformattedKey;
     }
 }

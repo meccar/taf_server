@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using Domain.Entities;
+using Domain.Aggregates;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Persistance.Data;
@@ -45,6 +45,8 @@ public static class IdentityConfiguration
             })
             .AddRoles<IdentityRole<int>>()
             .AddRoleManager<RoleManager<IdentityRole<int>>>()
+            .AddSignInManager<SignInManager<UserAccountAggregate>>()
+            .AddUserManager<UserManager<UserAccountAggregate>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
             // .AddErrorDescriber<CustomIdentityErrorDescriber>();/

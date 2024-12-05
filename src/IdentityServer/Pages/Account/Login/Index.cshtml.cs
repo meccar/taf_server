@@ -2,6 +2,7 @@
 // See LICENSE in the project root for license information.
 
 using Application.Queries.Auth.Login;
+using Domain.Aggregates;
 using Domain.Entities;
 using Domain.Interfaces;
 using Duende.IdentityServer;

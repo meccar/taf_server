@@ -1,14 +1,15 @@
 using System.Net;
 using System.Net.Mail;
-using System.Security.Policy;
 using System.Text;
-using Domain.Entities;
+using Domain.Aggregates;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
 using Shared.Configurations.Environment;
-using Microsoft.AspNetCore.Mvc;
+using Shared.Model;
+using Shared.Results;
 
 namespace Infrastructure.Repositories;
 
@@ -16,27 +17,26 @@ public class MailRepository : IMailRepository
 {
     private readonly EnvironmentConfiguration _environment;
     private readonly UserManager<UserAccountAggregate> _userManager;
-    private readonly SignInManager<UserAccountAggregate> _signInManager;
 
     public MailRepository(
         EnvironmentConfiguration environment,
-        UserManager<UserAccountAggregate> userManager,
-        SignInManager<UserAccountAggregate> signInManager
+        UserManager<UserAccountAggregate> userManager
     )
     {
         _environment = environment;
         _userManager = userManager;
-        _signInManager = signInManager;
     }
 
-    public async Task SendEmailConfirmation(UserAccountAggregate userAccount)
+    public async Task<Result> SendEmailConfirmation(UserAccountAggregate userAccount, MfaViewModel mfaViewModel)
     {
         string baseToken = await _userManager.GenerateEmailConfirmationTokenAsync(userAccount);
-        string token = $"{userAccount.EId}:{baseToken}";
+        string token = $"{userAccount.Email}:{baseToken}";
         
         token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
         
         string url = $"https://localhost:7293?token={token}";
+        
+        string qrCodeImageUrl = GenerateQrCode(mfaViewModel.AuthenticatorUri);
         
         string body = $@"
             <html>
@@ -44,6 +44,12 @@ public class MailRepository : IMailRepository
                     <p>Hello {userAccount.UserName},</p>
                     <p>Thank you for registering with us. Please confirm your email address by clicking the link below:</p>
                     <p><a href='{url}'>Click here to confirm your email</a></p>
+                    <p>Please scan the QR code below to set up MFA on your authenticator app:</p>
+                    <p>
+                        <img src='data:image/png;base64,{qrCodeImageUrl}' 
+                        alt='MFA QR Code'
+                        style='width:150px; height:150px;' />
+                    </p>
                     <p>If you didn't create an account, you can ignore this email.</p>
                 </body>
             </html>";
@@ -75,6 +81,7 @@ public class MailRepository : IMailRepository
         mailMessage.IsBodyHtml = true;
             
         await smtpClient.SendMailAsync(mailMessage);
+        return Result.Success();
     }
 
     public async Task<string?> VerifyEmailConfirmationToken(string token)
@@ -83,15 +90,13 @@ public class MailRepository : IMailRepository
 
         string[] parts = decodedToken.Split(':');
 
-        string userEId = parts[0];
+        string email = parts[0];
         string baseToken = parts[1];
         
         var tokenProvider = _userManager.Options.Tokens.EmailConfirmationTokenProvider;
         var purpose = UserManager<UserAccountAggregate>.ConfirmEmailTokenPurpose;
-        
-        var user = await _userManager.Users
-            .AsQueryable()
-            .FirstOrDefaultAsync(x => x.EId == userEId);
+
+        var user = await _userManager.FindByEmailAsync(email);
 
         if (user == null)
             return null;
@@ -122,5 +127,19 @@ public class MailRepository : IMailRepository
         }
 
         return validation && confirmResult.Succeeded ? user.Email : null;
+    }
+    
+    private string GenerateQrCode(string authenticatorUri)
+    {
+        // Create a QR code for the Authenticator URI
+        using (var qrGenerator = new QRCodeGenerator())
+        {
+            var qrCodeData = qrGenerator.CreateQrCode(authenticatorUri, QRCodeGenerator.ECCLevel.Q);
+            using (var qrCode = new PngByteQRCode(qrCodeData))
+            {
+                byte[] qrCodeBytes = qrCode.GetGraphic(10);
+                return Convert.ToBase64String(qrCodeBytes);
+            }
+        }
     }
 }

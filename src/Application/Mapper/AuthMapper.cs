@@ -21,6 +21,6 @@ public static class AuthMapper
         config.CreateMap<LoginUserRequestDto, UserAccountModel>();
         config.CreateMap<TokenModel, LoginResponseDto>();
         config.CreateMap<TokenModel, UserProfileResponseDto>();
-        config.CreateMap<TokenModel, VerifyUserRequestDto>();
+        config.CreateMap<TokenModel, VerifyUserEmailRequestDto>();
     }
 }

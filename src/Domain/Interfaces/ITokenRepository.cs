@@ -1,3 +1,4 @@
+using Domain.Aggregates;
 using Domain.Entities;
 using Shared.Model;
 

@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Domain.Entities;
+using Domain.Aggregates;
 using Domain.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Configurations.Environment;
@@ -45,15 +45,10 @@ public class TokenRepository : ITokenRepository
     
     private async Task<List<Claim>> CreateUserClaims(UserAccountAggregate user)
     {
-        // var systemInfo = GetSystemInfo();
-        // var localIpAddress = GetLocalIPAddress();
-
         return new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.EId),
             new Claim(ClaimTypes.Email, user.Email),
-            // new Claim("SystemInfo", systemInfo),
-            // new Claim("LocalIPAddress", localIpAddress)
         };
     }
     

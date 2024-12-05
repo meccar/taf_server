@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Domain.Aggregates;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Enums;
 
-namespace Domain.Entities;
+namespace Domain.Aggregates;
 
 /// <summary>
 /// Represents the login data associated with a user account.
@@ -24,8 +23,7 @@ public class UserAccountAggregate : IdentityUser<int>
     /// </summary>
     [Required]
     public required int UserProfileId { get; set; }
-
-
+    
     /// <summary>
     /// Gets or sets the status of the user's email verification.
     /// </summary>
@@ -63,6 +61,6 @@ public class UserAccountAggregate : IdentityUser<int>
     [ForeignKey("UserProfileId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
     public virtual UserProfileAggregate UserProfile { get; set; } = null!;
-    public List<IdentityUserToken<int>> UserToken { get; set; } = new List<IdentityUserToken<int>>();
+    // public List<IdentityUserToken<int>> UserToken { get; set; } = new List<IdentityUserToken<int>>();
 
 }

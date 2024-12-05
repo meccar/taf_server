@@ -24,15 +24,10 @@ public static class DependencyInjection
         // services.ConfigureAppSettings(configuration);
 
         services.ConfigureDbContext(config);
-        // services.ConfigureCors(appCors);
-        // services.ConfigureApi();
         services.ConfigureOpenTelemetry();
         services.ConfigureAuthentication(config);
         services.ConfigureAuthorization(config);
-        // services.ConfigureTransaction();
-        // services.ConfigureSwagger();
         services.ConfigureIdentity();
-        // services.ConfigureIdentityServer(config);
         services.ConfigureRepositories();
 
         return services;

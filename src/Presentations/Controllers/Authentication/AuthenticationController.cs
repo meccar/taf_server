@@ -110,7 +110,25 @@ public class AuthenticationController
     [SwaggerResponse(200, "Successfully verify user", typeof(object))]
     [SwaggerResponse(400, "Unauthorized")]
     // [UserGuard]
-    public async Task<IActionResult> VerifyUser([FromQuery] VerifyUserRequestDto tokenRequestDto)
+    public async Task<IActionResult> VerifyUserEmail([FromQuery] VerifyUserEmailRequestDto tokenRequestDto)
+    {
+        _logger.LogInformation("START: Verify User");
+
+        var response = await _mediator.Send(new VerifyUserQuery(tokenRequestDto));
+        
+        _logger.LogInformation("END: Verify User");
+        
+        return Ok(response);
+    }
+    [HttpPost("verify/mail")]
+    [SwaggerOperation(
+        Summary = "Verify User",
+        Description = "Returns a JSON object indicating if email exists"
+    )]
+    [SwaggerResponse(200, "Successfully verify user", typeof(object))]
+    [SwaggerResponse(400, "Unauthorized")]
+    // [UserGuard]
+    public async Task<IActionResult> VerifyUserByAuthenticator([FromQuery] VerifyUserEmailRequestDto tokenRequestDto)
     {
         _logger.LogInformation("START: Verify User");
 

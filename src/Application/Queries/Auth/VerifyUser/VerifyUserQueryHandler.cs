@@ -9,7 +9,7 @@ using Shared.Model;
 
 namespace Application.Queries.Auth.VerifyUser;
 
-public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, VerifyUserRequestDto>
+public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, VerifyUserEmailRequestDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMailRepository _mailRepository;
@@ -29,14 +29,14 @@ public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, VerifyUserR
         _mapper = mapper;
 
     }
-    public async Task<VerifyUserRequestDto> Handle(VerifyUserQuery request, CancellationToken cancellationToken)
+    public async Task<VerifyUserEmailRequestDto> Handle(VerifyUserQuery request, CancellationToken cancellationToken)
     {
         string? result = await _mailRepository.VerifyEmailConfirmationToken(request.Token.Token);
 
         if (result != null)
         {
             var tokenModel = await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(result);
-            return _mapper.Map<VerifyUserRequestDto>(tokenModel);
+            return _mapper.Map<VerifyUserEmailRequestDto>(tokenModel);
         }
 
         throw new BadRequestException("Bad request");

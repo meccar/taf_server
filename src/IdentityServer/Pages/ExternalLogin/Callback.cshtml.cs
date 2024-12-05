@@ -2,6 +2,7 @@
 // See LICENSE in the project root for license information.
 
 using System.Security.Claims;
+using Domain.Aggregates;
 using Domain.Entities;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;

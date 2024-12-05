@@ -1,10 +1,12 @@
+using Domain.Aggregates;
 using Domain.Entities;
 using Shared.Model;
+using Shared.Results;
 
 namespace Domain.Interfaces;
 
 public interface IMfaRepository
 {
-    Task<bool> MfaSetup(UserAccountAggregate user);
-    Task<bool> MfaSetup(MfaViewModel model, UserAccountAggregate user);
+    Task<MfaViewModel> MfaSetup(UserAccountAggregate user);
+    Task<Result> ValidateMfa(string email, string token);
 }

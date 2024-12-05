@@ -1,6 +1,3 @@
-using System.Data;
-using Domain.Interfaces.Command;
-using Domain.Interfaces.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Domain.Interfaces;

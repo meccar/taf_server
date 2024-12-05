@@ -5,8 +5,8 @@ namespace Shared.Model;
 public class MfaViewModel
 {
     [Required] 
-    public string Token { get; set; }
+    public string SharedKey { get; set; }
 
     [Required] 
-    public string Code { get; set; }
+    public string AuthenticatorUri { get; set; }
 }

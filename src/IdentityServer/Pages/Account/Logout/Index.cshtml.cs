@@ -1,6 +1,7 @@
 // Copyright (c) Duende Software. All rights reserved.
 // See LICENSE in the project root for license information.
 
+using Domain.Aggregates;
 using Domain.Entities;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;

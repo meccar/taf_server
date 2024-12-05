@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Domain.Entities;
+using Domain.Aggregates;
 using Microsoft.AspNetCore.Identity;
 using Shared.Enums;
 using Shared.FileObjects;
