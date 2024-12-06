@@ -4,6 +4,396 @@
         <name>Shared</name>
     </assembly>
     <members>
+        <member name="T:Shared.Configurations.Environment.EnvironmentConfiguration">
+            <summary>
+            Provides configuration values for various system settings including JWT, SMTP, OAuth, IdentityServer, Database, and TypeORM.
+            This class interacts with the application configuration and retrieves relevant settings.
+            </summary>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Configurations.Environment.EnvironmentConfiguration"/> class with the specified configuration.
+            </summary>
+            <param name="configuration">The configuration instance to retrieve settings from.</param>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetSmtpServer">
+            <summary>
+            Gets the SMTP server address from the configuration.
+            </summary>
+            <returns>The SMTP server address.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetSmtpPort">
+            <summary>
+            Gets the SMTP server port from the configuration.
+            </summary>
+            <returns>The SMTP server port.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetSmtpUsername">
+            <summary>
+            Gets the SMTP username from the configuration.
+            </summary>
+            <returns>The SMTP username.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetSmtpPassword">
+            <summary>
+            Gets the SMTP password from the configuration.
+            </summary>
+            <returns>The SMTP password.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetSmtpEmail">
+            <summary>
+            Gets the sender's email address from the configuration.
+            </summary>
+            <returns>The sender's email address.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetGoogleClientId">
+            <summary>
+            Gets the Google OAuth client ID from the configuration.
+            </summary>
+            <returns>The Google OAuth client ID.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetGoogleClientSecret">
+            <summary>
+            Gets the Google OAuth client secret from the configuration.
+            </summary>
+            <returns>The Google OAuth client secret.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetIdentityServerAuthority">
+            <summary>
+            Gets the IdentityServer authority from the configuration.
+            </summary>
+            <returns>The IdentityServer authority.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetIdentityServerClientId">
+            <summary>
+            Gets the IdentityServer client ID from the configuration.
+            </summary>
+            <returns>The IdentityServer client ID.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetIdentityServerClientName">
+            <summary>
+            Gets the IdentityServer client name from the configuration.
+            </summary>
+            <returns>The IdentityServer client name.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetIdentityServerClientSecret">
+            <summary>
+            Gets the IdentityServer client secret from the configuration.
+            </summary>
+            <returns>The IdentityServer client secret.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetIdentityServerInteractiveClientName">
+            <summary>
+            Gets the IdentityServer interactive client name from the configuration.
+            </summary>
+            <returns>The IdentityServer interactive client name.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetIdentityServerInteractiveClientId">
+            <summary>
+            Gets the IdentityServer interactive client ID from the configuration.
+            </summary>
+            <returns>The IdentityServer interactive client ID.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetIdentityServerInteractiveClientSecret">
+            <summary>
+            Gets the IdentityServer interactive client secret from the configuration.
+            </summary>
+            <returns>The IdentityServer interactive client secret.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetIdentityServerScopes">
+            <summary>
+            Gets the IdentityServer scopes from the configuration.
+            </summary>
+            <returns>The IdentityServer scopes.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetDatabaseHost">
+            <summary>
+            Gets the database host from the configuration.
+            </summary>
+            <returns>The database host address.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetDatabasePort">
+            <summary>
+            Gets the database port from the configuration.
+            </summary>
+            <returns>The database port number.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetDatabaseName">
+            <summary>
+            Gets the database name from the configuration.
+            </summary>
+            <returns>The database name.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetDatabaseUserId">
+            <summary>
+            Gets the database user ID from the configuration.
+            </summary>
+            <returns>The database user ID.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetDatabasePassword">
+            <summary>
+            Gets the database password from the configuration.
+            </summary>
+            <returns>The database password.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetMultipleActiveResultSets">
+            <summary>
+            Gets the "MultipleActiveResultSets" setting from the configuration.
+            </summary>
+            <returns>The "MultipleActiveResultSets" setting value.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetTrustServerCertificate">
+            <summary>
+            Gets the "TrustServerCertificate" setting from the configuration.
+            </summary>
+            <returns>The "TrustServerCertificate" setting value.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetDatabaseSchema">
+            <summary>
+            Gets the default database schema from the configuration.
+            </summary>
+            <returns>The database schema.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetTypeOrmSync">
+            <summary>
+            Gets the sync setting for TypeORM from the configuration.
+            </summary>
+            <returns>The TypeORM sync setting.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetTypeOrmLogging">
+            <summary>
+            Gets the logging setting for TypeORM from the configuration.
+            </summary>
+            <returns>The TypeORM logging setting.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetTypeOrmMigrationsRun">
+            <summary>
+            Gets the migrations run setting for TypeORM from the configuration.
+            </summary>
+            <returns>The TypeORM migrations run setting.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtSecret">
+            <summary>
+            Gets the JWT secret from the configuration.
+            </summary>
+            <returns>The JWT secret key.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtExpirationTime">
+            <summary>
+            Gets the JWT expiration time from the configuration.
+            </summary>
+            <returns>The JWT expiration time in seconds.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtRefreshSecret">
+            <summary>
+            Gets the JWT refresh token secret from the configuration.
+            </summary>
+            <returns>The JWT refresh token secret key.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtRefreshCookieKey">
+            <summary>
+            Gets the JWT refresh token cookie key from the configuration.
+            </summary>
+            <returns>The JWT refresh token cookie key.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtRefreshExpirationTime">
+            <summary>
+            Gets the JWT refresh token expiration time from the configuration.
+            </summary>
+            <returns>The JWT refresh token expiration time in seconds.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtRefreshTokenCookieMaxAge">
+            <summary>
+            Gets the JWT refresh token cookie max age from the configuration.
+            </summary>
+            <returns>The JWT refresh token cookie max age.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtType">
+            <summary>
+            Gets the JWT token type from the configuration.
+            </summary>
+            <returns>The JWT token type.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtPasswordExpirationTime">
+            <summary>
+            Gets the password reset JWT expiration time from the configuration.
+            </summary>
+            <returns>The JWT password reset expiration time in seconds.</returns>
+        </member>
+        <member name="M:Shared.Configurations.Environment.EnvironmentConfiguration.GetJwtPasswordSecret">
+            <summary>
+            Gets the JWT password reset secret from the configuration.
+            </summary>
+            <returns>The JWT password reset secret key.</returns>
+        </member>
+        <member name="T:Shared.Constants.PasswordConstants">
+            <summary>
+            Contains regular expression patterns for password validation rules.
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.PasswordConstants.Uppercase">
+            <summary>
+            Regular expression to ensure a password contains at least one uppercase letter.
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.PasswordConstants.Lowercase">
+            <summary>
+            Regular expression to ensure a password contains at least one lowercase letter.
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.PasswordConstants.Digit">
+            <summary>
+            Regular expression to ensure a password contains at least one digit.
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.PasswordConstants.SpecialCharacter">
+            <summary>
+            Regular expression to ensure a password contains at least one special character.
+            </summary>
+        </member>
+        <member name="T:Shared.Constants.TimeConstants">
+            <summary>
+            Contains regex patterns for validating date, time, and datetime formats.
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.TimeConstants.DateFormatRegex">
+            <summary>
+            Regular expression for validating a date in MM/DD/YYYY or MM-DD-YYYY format.
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.TimeConstants.DateTimeFormatRegex">
+            <summary>
+            Regular expression for validating a datetime in YYYY-MM-DD HH:mm:ss format.
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.TimeConstants.TimeFormatRegex">
+            <summary>
+            Regular expression for validating a time in HH:mm:ss format.
+            </summary>
+        </member>
+        <member name="T:Shared.Constants.TimerConstants">
+            <summary>
+            Provides commonly used date and time format constants.
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.TimerConstants.FormatDatetime">
+            <summary>
+            Represents the datetime format as "YYYY-MM-DD HH:mm:ss".
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.TimerConstants.FormatTime">
+            <summary>
+            Represents the time format as "HH:mm:ss".
+            </summary>
+        </member>
+        <member name="F:Shared.Constants.TimerConstants.FormatDate">
+            <summary>
+            Represents the date format as "MM/DD/YYYY".
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Authentication.Credentials.VerifyUserByAuthenticatorRequestDto">
+            <summary>
+            Represents a request to verify a user by their email and authenticator code.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserByAuthenticatorRequestDto.Email">
+            <summary>
+            Gets or sets the email address of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserByAuthenticatorRequestDto.Token">
+            <summary>
+            Gets or sets the authenticator Token provided by the user.
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Authentication.Credentials.VerifyUserEmailRequestDto">
+            <summary>
+            Represents a request to verify a user's email using a verification token.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserEmailRequestDto.Token">
+            <summary>
+            Gets or sets the token used to verify the user's email.
+            This token is typically sent to the user via email to confirm ownership.
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto">
+            <summary>
+            Represents the response DTO for a successful login, containing the authentication tokens 
+            and their expiration times, which are returned to the client after a successful authentication process.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.TokenType">
+            <summary>
+            Gets or sets the type of the token (e.g., "Bearer").
+            This field is required and indicates the authentication scheme that should be used with the access token.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.AccessToken">
+            <summary>
+            Gets or sets the access token that is used to authenticate the user on subsequent API requests.
+            This field is required and represents a bearer token that grants access to protected resources.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.AccessTokenExpires">
+            <summary>
+            Gets or sets the expiration time of the access token.
+            This field is required and represents the time at which the access token will expire, typically in ISO 8601 format.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.RefreshToken">
+            <summary>
+            Gets or sets the refresh token used to obtain a new access token once the current access token expires.
+            This field is required and is typically used to maintain a session without requiring the user to log in again.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.RefreshTokenExpires">
+            <summary>
+            Gets or sets the expiration time of the refresh token.
+            This field is required and represents the time at which the refresh token will expire, typically in ISO 8601 format.
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Authentication.Login.LoginResponseDto">
+            <summary>
+            Represents the response DTO for a successful login, containing the authentication tokens 
+            and their expiration times, which are returned to the client after a successful authentication process.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Login.LoginResponseDto.TokenType">
+            <summary>
+            Gets or sets the type of the token (e.g., "Bearer").
+            This field is required and indicates the authentication scheme that should be used with the access token.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Login.LoginResponseDto.AccessToken">
+            <summary>
+            Gets or sets the access token that is used to authenticate the user on subsequent API requests.
+            This field is required and represents a bearer token that grants access to protected resources.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Login.LoginResponseDto.AccessTokenExpires">
+            <summary>
+            Gets or sets the expiration time of the access token.
+            This field is required and represents the time at which the access token will expire, typically in ISO 8601 format.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Login.LoginResponseDto.RefreshToken">
+            <summary>
+            Gets or sets the refresh token used to obtain a new access token once the current access token expires.
+            This field is required and is typically used to maintain a session without requiring the user to log in again.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Login.LoginResponseDto.RefreshTokenExpires">
+            <summary>
+            Gets or sets the expiration time of the refresh token.
+            This field is required and represents the time at which the refresh token will expire, typically in ISO 8601 format.
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Authentication.Login.LoginUserRequestDto">
+            <summary>
+            Represents a request to Login.
+            </summary>
+        </member>
         <member name="P:Shared.Dtos.Authentication.Login.LoginUserRequestDto.Email">
             <summary>
             User's Email
@@ -21,6 +411,78 @@
             Remember User
             </summary>
             <example>true</example>
+        </member>
+        <member name="T:Shared.Dtos.Authentication.Register.RegisterUserRequestDto">
+            <summary>
+            Represents the request data required to register a new user,
+            including both user profile and user account details.
+            </summary>
+        </member>
+        <member name="M:Shared.Dtos.Authentication.Register.RegisterUserRequestDto.#ctor(Shared.Dtos.UserProfile.CreateUserProfileDto,Shared.Dtos.UserAccount.CreateUserAccountDto)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Dtos.Authentication.Register.RegisterUserRequestDto"/> class.
+            </summary>
+            <param name="userProfile">The user profile details.</param>
+            <param name="userAccount">The user account details.</param>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserRequestDto.UserProfile">
+            <summary>
+            Gets or sets the user profile details for the registration process.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserRequestDto.UserAccount">
+            <summary>
+            Gets or sets the user account details for the registration process.
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Authentication.Register.RegisterUserResponseDto">
+            <summary>
+            Represents the response DTO for a newly registered user, containing the user's personal details such as their name, gender, 
+            date of birth, optional avatar, and associated user account information.
+            This class is used to return the registered user details after a successful registration process.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserResponseDto.Eid">
+            <summary>
+            Gets or sets the unique employee identifier (Eid) for the user.
+            This field is required and represents the user's unique employee ID or another type of identifier.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserResponseDto.FirstName">
+            <summary>
+            Gets or sets the user's first name.
+            This field is required and represents the user's given name.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserResponseDto.LastName">
+            <summary>
+            Gets or sets the user's last name.
+            This field is required and represents the user's surname or family name.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserResponseDto.Gender">
+            <summary>
+            Gets or sets the user's gender.
+            This field is required and represents the gender identity of the user (e.g., "Male", "Female", "Non-binary").
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserResponseDto.DateOfBirth">
+            <summary>
+            Gets or sets the user's date of birth.
+            This field is required and represents the user's birthdate, typically in a standard date format (e.g., "yyyy-MM-dd").
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserResponseDto.Avatar">
+            <summary>
+            Gets or sets the URL of the user's avatar image.
+            This field is optional and may be null if the user has not set an avatar.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Authentication.Register.RegisterUserResponseDto.UserAccount">
+            <summary>
+            Gets or sets the user account details associated with the registered user.
+            This field is optional and may be null if no account details are provided at the time of registration.
+            </summary>
         </member>
         <member name="T:Shared.Dtos.Exceptions.BadRequestException">
             <summary>
@@ -48,6 +510,12 @@
         <member name="M:Shared.Dtos.Exceptions.ExpiredTokenException.#ctor">
             <summary>
             Initializes a new instance of the <see cref="T:Shared.Dtos.Exceptions.ExpiredTokenException"/> class with a default message indicating an expired token.
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Exceptions.ForbiddenException">
+            <summary>
+            Represents an exception that is thrown when a forbidden action is attempted.
+            The HTTP status code associated with this exception is 403 (Forbidden).
             </summary>
         </member>
         <member name="M:Shared.Dtos.Exceptions.ForbiddenException.#ctor">
@@ -109,6 +577,11 @@
             An object that provides additional information about the unauthorized request. This value is passed to the base exception class.
             </param>
         </member>
+        <member name="T:Shared.Dtos.UserAccount.CreateUserAccountDto">
+            <summary>
+            DTO for creating a new user account, containing the necessary information for registration.
+            </summary>
+        </member>
         <member name="P:Shared.Dtos.UserAccount.CreateUserAccountDto.Email">
             <summary>
             User's Email
@@ -126,6 +599,29 @@
             User's PhoneNumber
             </summary>
             <example>098765432123</example>
+        </member>
+        <member name="T:Shared.Dtos.UserAccount.UserAccountResponseDto">
+            <summary>
+            Represents the response DTO for a user account, which includes essential account details such as employee ID (Eid) and email.
+            This class is used to transfer user account data from the backend to the client.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.UserAccount.UserAccountResponseDto.Eid">
+            <summary>
+            Gets or sets the unique employee identifier (Eid) for the user.
+            This field is required and represents the user's employee ID or another unique account identifier.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.UserAccount.UserAccountResponseDto.Email">
+            <summary>
+            Gets or sets the email address associated with the user's account.
+            This field is required and represents the user's contact email.
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.UserProfile.CreateUserProfileDto">
+            <summary>
+            DTO for creating a new user profile, containing the necessary information for registration.
+            </summary>
         </member>
         <member name="P:Shared.Dtos.UserProfile.CreateUserProfileDto.FirstName">
             <summary>
@@ -150,6 +646,515 @@
             User's DateOfBirth
             </summary>
             <example>07/14/1999</example>
+        </member>
+        <member name="T:Shared.Dtos.UserProfile.UserProfileResponseDto">
+            <summary>
+            Represents the response DTO for a user profile, containing personal and optional avatar information.
+            This DTO is used to transfer user profile data from the backend to the client.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.UserProfileResponseDto.Uuid">
+            <summary>
+            Gets or sets the unique identifier for the user.
+            This field is required and represents a globally unique identifier (UUID) for the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.UserProfileResponseDto.FirstName">
+            <summary>
+            Gets or sets the user's first name.
+            This field is required and represents the user's given name.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.UserProfileResponseDto.LastName">
+            <summary>
+            Gets or sets the user's last name.
+            This field is required and represents the user's family name or surname.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.UserProfileResponseDto.Gender">
+            <summary>
+            Gets or sets the user's gender.
+            This field is required and represents the gender identity of the user (e.g., "Male", "Female", "Non-binary", etc.).
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.UserProfileResponseDto.DateOfBirth">
+            <summary>
+            Gets or sets the user's date of birth.
+            This field is required and represents the user's birthdate in a standard date format (e.g., "yyyy-MM-dd").
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.UserProfile.UserProfileResponseDto.Avatar">
+            <summary>
+            Gets or sets the URL of the user's avatar image.
+            This field is optional and may be null if no avatar is set for the user.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.EClaimTypes">
+            <summary>
+            Enumeration for different types of claims used in the application.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EClaimTypes.Permission">
+            <summary>
+            Represents a claim for the user's permissions.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EClaimTypes.Email">
+            <summary>
+            Represents a claim for the user's email address.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EClaimTypes.SubscriptionLevel">
+            <summary>
+            Represents a claim for the user's subscription level.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EClaimTypes.Role">
+            <summary>
+            Represents a claim for the user's role.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.EEmailStatus">
+            <summary>
+            Enumeration for different email statuses used in the application.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EEmailStatus.Pending">
+            <summary>
+            Represents an email that is pending verification or processing.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EEmailStatus.Valid">
+            <summary>
+            Represents a valid email that has been successfully verified.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EEmailStatus.Invalid">
+            <summary>
+            Represents an email that is invalid or cannot be verified.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EEmailStatus.Expired">
+            <summary>
+            Represents an email that has expired, typically after a certain period of time.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EEmailStatus.Error">
+            <summary>
+            Represents an error in email verification or processing.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.EGender">
+            <summary>
+            Enumeration for representing gender.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EGender.Male">
+            <summary>
+            Represents the male gender.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EGender.Female">
+            <summary>
+            Represents the female gender.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.EProvider">
+            <summary>
+            Enumeration for different authentication providers.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EProvider.FACEBOOK">
+            <summary>
+            Represents Facebook as the authentication provider.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EProvider.GOOGLE">
+            <summary>
+            Represents Google as the authentication provider.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EProvider.LINLEDIN">
+            <summary>
+            Represents LinkedIn as the authentication provider.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EProvider.TWITTER">
+            <summary>
+            Represents Twitter as the authentication provider.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EProvider.PASSWORD">
+            <summary>
+            Represents the traditional password-based authentication provider.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.ERequestMethod">
+            <summary>
+            Enumeration for the various HTTP request methods.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.ERequestMethod.GET">
+            <summary>
+            Represents an HTTP GET request, typically used to retrieve data from the server.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.ERequestMethod.POST">
+            <summary>
+            Represents an HTTP POST request, commonly used to send data to the server.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.ERequestMethod.PUT">
+            <summary>
+            Represents an HTTP PUT request, usually used to update or replace data on the server.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.ERequestMethod.DELETE">
+            <summary>
+            Represents an HTTP DELETE request, typically used to remove data from the server.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.ERequestMethod.PATCH">
+            <summary>
+            Represents an HTTP PATCH request, used for partial updates to data on the server.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.ERoleWithClaims">
+            <summary>
+            Represents roles and their associated claims in the system.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.ERoleWithClaims.RoleClaims">
+            <summary>
+            A dictionary that maps roles to their corresponding claims.
+            Each role is associated with a set of actions that can be performed.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.ETokenName">
+            <summary>
+            Represents the types of tokens used in the authentication system.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.ETokenName.REFRESH">
+            <summary>
+            The refresh token, used to obtain a new access token.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.ETokenName.ACCESS">
+            <summary>
+            The access token, used to authenticate API requests.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.EUserAccountStatus">
+            <summary>
+            Represents the possible status of a user account.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EUserAccountStatus.Active">
+            <summary>
+            The user account is active and can perform actions.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EUserAccountStatus.Blocked">
+            <summary>
+            The user account is blocked and cannot perform actions.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EUserAccountStatus.Inactive">
+            <summary>
+            The user account is inactive, likely due to inactivity or suspension.
+            </summary>
+        </member>
+        <member name="T:Shared.Enums.EUserPosition">
+            <summary>
+            Represents the different positions a user can hold within a system.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EUserPosition.USER">
+            <summary>
+            A general user with no special role or privileges.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EUserPosition.COMPANY_USER">
+            <summary>
+            A user associated with a company, typically with limited access to certain resources.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EUserPosition.COMPANY_MANAGER">
+            <summary>
+            A manager role within a company, with additional permissions over company users and resources.
+            </summary>
+        </member>
+        <member name="F:Shared.Enums.EUserPosition.ADMIN">
+            <summary>
+            An admin with the highest level of access and control over the system.
+            </summary>
+        </member>
+        <member name="T:Shared.FileObjects.FoClaimeActionsValue">
+            <summary>
+            Represents predefined action constants that can be associated with user roles for resource permissions.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoClaimeActionsValue.View">
+            <summary>
+            Action to view a resource.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoClaimeActionsValue.Read">
+            <summary>
+            Action to read a resource.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoClaimeActionsValue.Update">
+            <summary>
+            Action to update a resource.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoClaimeActionsValue.Delete">
+            <summary>
+            Action to delete a resource.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoClaimeActionsValue.Upload">
+            <summary>
+            Action to upload a resource.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoClaimeActionsValue.Download">
+            <summary>
+            Action to download a resource.
+            </summary>
+        </member>
+        <member name="T:Shared.FileObjects.FoRole">
+            <summary>
+            Represents predefined role constants used within the system.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoRole.Admin">
+            <summary>
+            The Admin role, with the highest level of access and privileges.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoRole.CompanyManager">
+            <summary>
+            The CompanyManager role, typically responsible for managing users and resources within a company.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoRole.CompanyUser">
+            <summary>
+            The CompanyUser role, typically a regular user within a company with limited access.
+            </summary>
+        </member>
+        <member name="F:Shared.FileObjects.FoRole.User">
+            <summary>
+            The User role, a general user with basic access to the system.
+            </summary>
+        </member>
+        <member name="T:Shared.HttpResponses.ApiBadRequestResponse">
+            <summary>
+            Represents a standardized response for HTTP 400 Bad Request errors.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiBadRequestResponse.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiBadRequestResponse"/> class using a <see cref="T:Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary"/>.
+            </summary>
+            <param name="modelState">The model state containing validation errors.</param>
+            <exception cref="T:System.ArgumentException">Thrown if the provided <paramref name="modelState"/> is valid.</exception>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiBadRequestResponse.#ctor(Microsoft.AspNetCore.Identity.IdentityResult)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiBadRequestResponse"/> class using an <see cref="T:Microsoft.AspNetCore.Identity.IdentityResult"/>.
+            </summary>
+            <param name="identityResult">The result of an identity operation containing errors.</param>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiBadRequestResponse.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiBadRequestResponse"/> class with a custom error message.
+            </summary>
+            <param name="message">A message describing the error.</param>
+        </member>
+        <member name="T:Shared.HttpResponses.ApiCreatedResponse">
+            <summary>
+            Represents a response with a 201 Created status code, commonly used for successful creation operations.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiCreatedResponse.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiCreatedResponse"/> class with a 201 status code.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiCreatedResponse.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiCreatedResponse"/> class with a 201 status code and a specified data payload.
+            </summary>
+            <param name="data">The data to be included in the response payload.</param>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiCreatedResponse.#ctor(System.Object,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiCreatedResponse"/> class with a 201 status code, a specified message, and data payload.
+            </summary>
+            <param name="data">The data to be included in the response payload.</param>
+            <param name="message">The custom message to be included in the response.</param>
+        </member>
+        <member name="T:Shared.HttpResponses.ApiForbiddenResponse">
+            <summary>
+            Represents a response with a 403 Forbidden status code, commonly used when access to a resource is forbidden.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiForbiddenResponse.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiForbiddenResponse"/> class with a 403 status code based on the provided ModelState.
+            </summary>
+            <param name="modelState">The model state containing errors to include in the response.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the ModelState is valid instead of invalid.</exception>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiForbiddenResponse.#ctor(Microsoft.AspNetCore.Identity.IdentityResult)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiForbiddenResponse"/> class with a 403 status code based on the provided IdentityResult.
+            </summary>
+            <param name="identityResult">The IdentityResult containing errors to include in the response.</param>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiForbiddenResponse.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiForbiddenResponse"/> class with a 403 status code and a custom message.
+            </summary>
+            <param name="message">The custom message to include in the response.</param>
+        </member>
+        <member name="T:Shared.HttpResponses.ApiNotFoundResponse">
+            <summary>
+            Represents a response with a 404 Not Found status code, commonly used when a requested resource cannot be found.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiNotFoundResponse.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiNotFoundResponse"/> class with a 404 status code based on the provided ModelState.
+            </summary>
+            <param name="modelState">The model state containing errors to include in the response.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the ModelState is valid instead of invalid.</exception>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiNotFoundResponse.#ctor(Microsoft.AspNetCore.Identity.IdentityResult)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiNotFoundResponse"/> class with a 404 status code based on the provided IdentityResult.
+            </summary>
+            <param name="identityResult">The IdentityResult containing errors to include in the response.</param>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiNotFoundResponse.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiNotFoundResponse"/> class with a 404 status code and a custom message.
+            </summary>
+            <param name="message">The custom message to include in the response.</param>
+        </member>
+        <member name="T:Shared.HttpResponses.ApiOkResponse">
+            <summary>
+            Represents a response with a 200 OK status code, commonly used when the request was successful.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiOkResponse.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiOkResponse"/> class with a 200 status code.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiOkResponse.#ctor(System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiOkResponse"/> class with a 200 status code and the provided data.
+            </summary>
+            <param name="data">The data to include in the response.</param>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiOkResponse.#ctor(System.Object,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiOkResponse"/> class with a 200 status code, the provided data, and a custom message.
+            </summary>
+            <param name="data">The data to include in the response.</param>
+            <param name="message">The custom message to include in the response.</param>
+        </member>
+        <member name="T:Shared.HttpResponses.ApiResponse">
+            <summary>
+            Represents a standard API response.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiResponse.#ctor(System.Int32,System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiResponse"/> class.
+            </summary>
+            <param name="statusCode">The HTTP status code of the response.</param>
+            <param name="message">An optional message describing the response.</param>
+            <param name="data">Optional data associated with the response.</param>
+        </member>
+        <member name="P:Shared.HttpResponses.ApiResponse.StatusCode">
+            <summary>
+            Gets the HTTP status code of the response.
+            </summary>
+        </member>
+        <member name="P:Shared.HttpResponses.ApiResponse.Message">
+            <summary>
+            Gets the message associated with the response.
+            </summary>
+        </member>
+        <member name="P:Shared.HttpResponses.ApiResponse.Data">
+            <summary>
+            Gets or sets the data associated with the response.
+            </summary>
+        </member>
+        <member name="P:Shared.HttpResponses.ApiResponse.Errors">
+            <summary>
+            Gets or sets the collection of error messages associated with the response.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiResponse.GetDefaultMessageForStatusCode(System.Int32)">
+            <summary>
+            Retrieves the default message for a given HTTP status code.
+            </summary>
+            <param name="statusCode">The HTTP status code.</param>
+            <returns>A default message for the status code.</returns>
+        </member>
+        <member name="T:Shared.HttpResponses.ApiServerErrorResponse">
+            <summary>
+            Represents a response with a 500 Internal Server Error status code, indicating a server-side error.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiServerErrorResponse.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiServerErrorResponse"/> class with a 500 status code and errors from the ModelState.
+            </summary>
+            <param name="modelState">The model state containing validation errors that led to the server error.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the modelState is valid.</exception>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiServerErrorResponse.#ctor(Microsoft.AspNetCore.Identity.IdentityResult)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiServerErrorResponse"/> class with a 500 status code and errors from an IdentityResult.
+            </summary>
+            <param name="identityResult">The IdentityResult containing errors related to the user creation or validation process.</param>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiServerErrorResponse.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiServerErrorResponse"/> class with a 500 status code and a custom error message.
+            </summary>
+            <param name="message">A custom message describing the error.</param>
+        </member>
+        <member name="T:Shared.HttpResponses.ApiUnauthorizedResponse">
+            <summary>
+            Represents a response with a 401 Unauthorized status code, indicating that the request lacks proper authentication or authorization.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiUnauthorizedResponse.#ctor(Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiUnauthorizedResponse"/> class with a 401 status code and errors from the ModelState.
+            </summary>
+            <param name="modelState">The model state containing validation errors that led to the unauthorized response.</param>
+            <exception cref="T:System.ArgumentException">Thrown when the modelState is valid.</exception>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiUnauthorizedResponse.#ctor(Microsoft.AspNetCore.Identity.IdentityResult)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiUnauthorizedResponse"/> class with a 401 status code and errors from an IdentityResult.
+            </summary>
+            <param name="identityResult">The IdentityResult containing errors related to user authentication or authorization failure.</param>
+        </member>
+        <member name="M:Shared.HttpResponses.ApiUnauthorizedResponse.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.ApiUnauthorizedResponse"/> class with a 401 status code and a custom error message.
+            </summary>
+            <param name="message">A custom message describing the unauthorized error.</param>
         </member>
         <member name="T:Shared.HttpResponses.HttpResponseException">
             <summary>
@@ -180,10 +1185,502 @@
             Gets a new message that provides additional context.
             </summary>
         </member>
+        <member name="T:Shared.Model.MfaViewModel">
+            <summary>
+            Represents a model for multi-factor authentication (MFA) setup details.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.MfaViewModel.SharedKey">
+            <summary>
+            Gets or sets the shared key used for generating MFA codes.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.MfaViewModel.AuthenticatorUri">
+            <summary>
+            Gets or sets the URI for configuring an authenticator application.
+            </summary>
+        </member>
+        <member name="T:Shared.Model.UserAccountModel">
+            <summary>
+            Represents a user account with associated details.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.Id">
+            <summary>
+            Gets or sets the unique identifier for the user account.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.EId">
+            <summary>
+            Gets or sets the external identifier for the user account.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.UserProfileId">
+            <summary>
+            Gets or sets the unique identifier of the associated user profile.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.PhoneNumber">
+            <summary>
+            Gets or sets the phone number of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.Password">
+            <summary>
+            Gets or sets the plaintext password of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.PasswordHash">
+            <summary>
+            Gets or sets the hashed password of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.SecurityStamp">
+            <summary>
+            Gets or sets the security stamp used for security purposes.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.Email">
+            <summary>
+            Gets or sets the email address of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.EmailStatus">
+            <summary>
+            Gets or sets the status of the email (e.g., verified, unverified).
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.PasswordRecoveryToken">
+            <summary>
+            Gets or sets the token used for password recovery.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.ConfirmationToken">
+            <summary>
+            Gets or sets the token used for email confirmation.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.IsTwoFactorEnabled">
+            <summary>
+            Gets or sets a value indicating whether two-factor authentication is enabled.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.IsTwoFactorVerified">
+            <summary>
+            Gets or sets a value indicating whether two-factor authentication has been verified.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.UserAccount">
+            <summary>
+            Gets or sets the associated user profile.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.CreatedAt">
+            <summary>
+            Gets or sets the date and time when the user account was created.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.UpdatedAt">
+            <summary>
+            Gets or sets the date and time when the user account was last updated.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserAccountModel.DeletedAt">
+            <summary>
+            Gets or sets the date and time when the user account was deleted.
+            </summary>
+        </member>
         <member name="T:Shared.Model.UserProfileModel">
             <summary>
-            
+            Represents the profile of a user.
             </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.Id">
+            <summary>
+            Gets or sets the unique identifier of the user profile.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.EId">
+            <summary>
+            Gets or sets the external identifier of the user profile.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.LastName">
+            <summary>
+            Gets or sets the first name of the user.
+            </summary>
+            <summary>
+            Gets or sets the last name of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.Gender">
+            <summary>
+            Gets or sets the gender of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.DateOfBirth">
+            <summary>
+            Gets or sets the date of birth of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.Avatar">
+            <summary>
+            Gets or sets the avatar of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.Status">
+            <summary>
+            Gets or sets the status of the user.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.CreatedAt">
+            <summary>
+            Gets or sets the creation date and time of the user profile.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.UpdatedAt">
+            <summary>
+            Gets or sets the last update date and time of the user profile.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.DeletedAt">
+            <summary>
+            Gets or sets the deletion date and time of the user profile.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.UserAccount">
+            <summary>
+            Gets or sets the associated user account, if any.
+            </summary>
+        </member>
+        <member name="T:Shared.Model.UserTokenModel">
+            <summary>
+            Represents a user token model that stores authentication-related information, including the user ID,
+            token name, claims, login provider, token value, and associated token details.
+            This class is used to store information related to a user's authentication token.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserTokenModel.EId">
+            <summary>
+            Gets or sets the employee ID (EId) associated with the user.
+            This field represents a unique identifier for the user, such as an employee ID or other system identifier.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserTokenModel.UserId">
+            <summary>
+            Gets or sets the user ID associated with the token.
+            This field is nullable and can be used to store the unique identifier for the user in the system.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserTokenModel.Name">
+            <summary>
+            Gets or sets the name of the token.
+            This field is nullable and can be used to represent the token's type, for example, access or refresh token.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserTokenModel.Claims">
+            <summary>
+            Gets or sets the list of claims associated with the token.
+            Claims represent pieces of information related to the user (e.g., roles, permissions, etc.) embedded in the token.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserTokenModel.LoginProvider">
+            <summary>
+            Gets or sets the login provider associated with the token.
+            This field is nullable and can be used to identify the provider (e.g., Google, Facebook, custom provider).
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserTokenModel.Value">
+            <summary>
+            Gets or sets the value of the token.
+            This field is nullable and typically holds the actual string value of the token.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserTokenModel.Token">
+            <summary>
+            Gets or sets the associated token model.
+            This field is required and stores details about the token, such as creation time, expiration time, etc.
+            </summary>
+        </member>
+        <member name="M:Shared.Model.UserTokenModel.#ctor(System.Nullable{System.Int32},System.Nullable{Shared.Enums.ETokenName},System.Nullable{Shared.Enums.EProvider},System.String,System.Collections.Generic.List{System.Security.Claims.Claim})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Model.UserTokenModel"/> class.
+            </summary>
+            <param name="userId">The unique user identifier associated with the token.</param>
+            <param name="name">The name of the token (e.g., access or refresh token).</param>
+            <param name="loginProvider">The login provider used to authenticate the user (e.g., Google, Facebook, etc.).</param>
+            <param name="value">The value of the token.</param>
+            <param name="claim">A list of claims associated with the token.</param>
+        </member>
+        <member name="T:Shared.SeedWork.Interfaces.IDatabaseConfig">
+            <summary>
+            Represents the configuration settings for a database connection.
+            </summary>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetDatabaseHost">
+            <summary>
+            Gets the database host address.
+            </summary>
+            <returns>The database host as a string, or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetDatabasePort">
+            <summary>
+            Gets the port number used for the database connection.
+            </summary>
+            <returns>The port number as an integer.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetDatabasePassword">
+            <summary>
+            Gets the password for the database user.
+            </summary>
+            <returns>The database password as a string, or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetDatabaseName">
+            <summary>
+            Gets the name of the database to connect to.
+            </summary>
+            <returns>The database name as a string, or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetDatabaseSchema">
+            <summary>
+            Gets the schema used by the database.
+            </summary>
+            <returns>The database schema as a string, or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetDatabaseUserId">
+            <summary>
+            Gets the user ID for the database connection.
+            </summary>
+            <returns>The database user ID as a string, or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetMultipleActiveResultSets">
+            <summary>
+            Gets the configuration for multiple active result sets (MARS).
+            </summary>
+            <returns>A string indicating whether MARS is enabled, or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetTrustServerCertificate">
+            <summary>
+            Determines whether the server certificate should be trusted without validation.
+            </summary>
+            <returns>True if the server certificate should be trusted; otherwise, false.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetTypeOrmSync">
+            <summary>
+            Determines whether TypeORM synchronization is enabled.
+            </summary>
+            <returns>True if TypeORM synchronization is enabled; otherwise, false.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetTypeOrmLogging">
+            <summary>
+            Determines whether TypeORM logging is enabled.
+            </summary>
+            <returns>True if TypeORM logging is enabled; otherwise, false.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IDatabaseConfig.GetTypeOrmMigrationsRun">
+            <summary>
+            Determines whether TypeORM migrations should run automatically.
+            </summary>
+            <returns>True if migrations should run automatically; otherwise, false.</returns>
+        </member>
+        <member name="T:Shared.SeedWork.Interfaces.IIdentityServer">
+            <summary>
+            Represents a configuration interface for IdentityServer settings.
+            This interface defines methods to retrieve various configuration values required for interacting with IdentityServer, 
+            such as authority, client IDs, client secrets, and scopes for both interactive and non-interactive clients.
+            </summary>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IIdentityServer.GetIdentityServerAuthority">
+            <summary>
+            Gets the IdentityServer authority URL.
+            This method returns the authority URL used to interact with the IdentityServer.
+            It may return null if the authority is not configured.
+            </summary>
+            <returns>The IdentityServer authority URL or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IIdentityServer.GetIdentityServerClientId">
+            <summary>
+            Gets the IdentityServer client ID for non-interactive clients.
+            This method returns the client ID used by a non-interactive client to authenticate with IdentityServer.
+            It may return null if the client ID is not configured.
+            </summary>
+            <returns>The IdentityServer client ID for non-interactive clients or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IIdentityServer.GetIdentityServerClientName">
+            <summary>
+            Gets the IdentityServer client name for non-interactive clients.
+            This method returns the client name used for the non-interactive client.
+            It may return null if the client name is not configured.
+            </summary>
+            <returns>The IdentityServer client name for non-interactive clients or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IIdentityServer.GetIdentityServerClientSecret">
+            <summary>
+            Gets the IdentityServer client secret for non-interactive clients.
+            This method returns the client secret used by a non-interactive client to authenticate with IdentityServer.
+            It may return null if the client secret is not configured.
+            </summary>
+            <returns>The IdentityServer client secret for non-interactive clients or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IIdentityServer.GetIdentityServerInteractiveClientId">
+            <summary>
+            Gets the IdentityServer client ID for interactive clients.
+            This method returns the client ID used by an interactive client (e.g., web apps or mobile apps) to authenticate with IdentityServer.
+            It may return null if the client ID is not configured.
+            </summary>
+            <returns>The IdentityServer client ID for interactive clients or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IIdentityServer.GetIdentityServerInteractiveClientName">
+            <summary>
+            Gets the IdentityServer client name for interactive clients.
+            This method returns the client name used for the interactive client (e.g., web apps or mobile apps).
+            It may return null if the client name is not configured.
+            </summary>
+            <returns>The IdentityServer client name for interactive clients or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IIdentityServer.GetIdentityServerInteractiveClientSecret">
+            <summary>
+            Gets the IdentityServer client secret for interactive clients.
+            This method returns the client secret used by interactive clients to authenticate with IdentityServer.
+            It may return null if the client secret is not configured.
+            </summary>
+            <returns>The IdentityServer client secret for interactive clients or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IIdentityServer.GetIdentityServerScopes">
+            <summary>
+            Gets the IdentityServer scopes.
+            This method returns the scopes required for access to various protected resources in IdentityServer.
+            It may return null if the scopes are not configured.
+            </summary>
+            <returns>The IdentityServer scopes or null if not configured.</returns>
+        </member>
+        <member name="T:Shared.SeedWork.Interfaces.IJWTConfig">
+            <summary>
+            Defines the configuration settings required for JWT (JSON Web Token) handling.
+            </summary>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtSecret">
+            <summary>
+            Gets the secret key used to sign JWTs.
+            </summary>
+            <returns>The secret key for JWT signing.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtExpirationTime">
+            <summary>
+            Gets the expiration time (in minutes) for the JWT.
+            </summary>
+            <returns>The expiration time for JWT in minutes.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtRefreshSecret">
+            <summary>
+            Gets the secret key used to sign refresh tokens.
+            </summary>
+            <returns>The secret key for signing refresh tokens.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtRefreshCookieKey">
+            <summary>
+            Gets the key used to store the refresh token in cookies.
+            </summary>
+            <returns>The key for storing the refresh token in cookies.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtRefreshExpirationTime">
+            <summary>
+            Gets the expiration time (in minutes) for the refresh token.
+            </summary>
+            <returns>The expiration time for refresh tokens in minutes.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtRefreshTokenCookieMaxAge">
+            <summary>
+            Gets the maximum age for the refresh token cookie.
+            </summary>
+            <returns>The max age for the refresh token cookie as a string (e.g., "30d", "1h").</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtType">
+            <summary>
+            Gets the type or category of the JWT (e.g., "Bearer").
+            </summary>
+            <returns>The type or category of the JWT.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtPasswordExpirationTime">
+            <summary>
+            Gets the expiration time (in minutes) for the JWT password reset token.
+            </summary>
+            <returns>The expiration time for password reset tokens in minutes.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IJWTConfig.GetJwtPasswordSecret">
+            <summary>
+            Gets the secret key used to sign JWT password reset tokens.
+            </summary>
+            <returns>The secret key for signing password reset tokens.</returns>
+        </member>
+        <member name="T:Shared.SeedWork.Interfaces.IOAuth">
+            <summary>
+            Represents a configuration interface for OAuth settings, specifically for Google authentication.
+            This interface defines methods to retrieve the client ID and client secret for OAuth authentication with Google.
+            </summary>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IOAuth.GetGoogleClientId">
+            <summary>
+            Gets the Google OAuth client ID.
+            This method returns the client ID used for authenticating with Google services.
+            It may return null if the client ID is not configured.
+            </summary>
+            <returns>The Google OAuth client ID or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.IOAuth.GetGoogleClientSecret">
+            <summary>
+            Gets the Google OAuth client secret.
+            This method returns the client secret used for authenticating with Google services.
+            It may return null if the client secret is not configured.
+            </summary>
+            <returns>The Google OAuth client secret or null if not configured.</returns>
+        </member>
+        <member name="T:Shared.SeedWork.Interfaces.ISmtpConfig">
+            <summary>
+            Represents a configuration interface for SMTP (Simple Mail Transfer Protocol) settings.
+            This interface defines the methods to retrieve SMTP server-related configuration values
+            required for sending emails, such as the server address, port, username, password, and email.
+            </summary>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.ISmtpConfig.GetSmtpServer">
+            <summary>
+            Gets the SMTP server address.
+            This method returns the address of the SMTP server used for sending emails.
+            It may return null if no server address is configured.
+            </summary>
+            <returns>The SMTP server address or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.ISmtpConfig.GetSmtpPort">
+            <summary>
+            Gets the SMTP server port.
+            This method returns the port number used by the SMTP server. Typically, this would be 25, 587, or 465.
+            It may return null if no port is configured.
+            </summary>
+            <returns>The SMTP port or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.ISmtpConfig.GetSmtpUsername">
+            <summary>
+            Gets the SMTP server username.
+            This method returns the username used for authenticating with the SMTP server.
+            It may return null if no username is configured.
+            </summary>
+            <returns>The SMTP username or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.ISmtpConfig.GetSmtpPassword">
+            <summary>
+            Gets the SMTP server password.
+            This method returns the password used for authenticating with the SMTP server.
+            It may return null if no password is configured.
+            </summary>
+            <returns>The SMTP password or null if not configured.</returns>
+        </member>
+        <member name="M:Shared.SeedWork.Interfaces.ISmtpConfig.GetSmtpEmail">
+            <summary>
+            Gets the email address associated with the SMTP server.
+            This method returns the email address that will be used as the sender for outgoing emails.
+            It may return null if no email address is configured.
+            </summary>
+            <returns>The SMTP email address or null if not configured.</returns>
         </member>
     </members>
 </doc>

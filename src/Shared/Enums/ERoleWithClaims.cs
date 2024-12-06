@@ -2,46 +2,53 @@ using Shared.FileObjects;
 
 namespace Shared.Enums;
 
+/// <summary>
+/// Represents roles and their associated claims in the system.
+/// </summary>
 public class ERoleWithClaims
 {
+    /// <summary>
+    /// A dictionary that maps roles to their corresponding claims.
+    /// Each role is associated with a set of actions that can be performed.
+    /// </summary>
     public static readonly IReadOnlyDictionary<string, IReadOnlyCollection<string>> RoleClaims = 
         new Dictionary<string, IReadOnlyCollection<string>>
         {
             { 
-                FORole.Admin, 
+                FoRole.Admin, 
                 new[] 
                 {
-                    FOClaimeActionsValue.View,
-                    FOClaimeActionsValue.Read,
-                    FOClaimeActionsValue.Update,
-                    FOClaimeActionsValue.Delete
+                    FoClaimeActionsValue.View,
+                    FoClaimeActionsValue.Read,
+                    FoClaimeActionsValue.Update,
+                    FoClaimeActionsValue.Delete
                 }
             },
             { 
-                FORole.CompanyManager, 
+                FoRole.CompanyManager, 
                 new[] 
                 {
-                    FOClaimeActionsValue.View,
-                    FOClaimeActionsValue.Read,
-                    FOClaimeActionsValue.Update
+                    FoClaimeActionsValue.View,
+                    FoClaimeActionsValue.Read,
+                    FoClaimeActionsValue.Update
                 }
             },
             { 
-                FORole.CompanyUser, 
+                FoRole.CompanyUser, 
                 new[] 
                 {
-                    FOClaimeActionsValue.View,
-                    FOClaimeActionsValue.Read,
-                    FOClaimeActionsValue.Update
+                    FoClaimeActionsValue.View,
+                    FoClaimeActionsValue.Read,
+                    FoClaimeActionsValue.Update
                 }
             },
             { 
-                FORole.User, 
+                FoRole.User, 
                 new[] 
                 {
-                    FOClaimeActionsValue.View,
-                    FOClaimeActionsValue.Read,
-                    FOClaimeActionsValue.Update
+                    FoClaimeActionsValue.View,
+                    FoClaimeActionsValue.Read,
+                    FoClaimeActionsValue.Update
                 }
             },
         };

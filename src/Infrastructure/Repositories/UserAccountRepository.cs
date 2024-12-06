@@ -4,6 +4,7 @@ using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Enums;
+using Shared.FileObjects;
 using Shared.Model;
 using Shared.Results;
 
@@ -37,7 +38,7 @@ public class UserAccountRepository
         userAccountAggregate.UserName ??= userAccountAggregate.Email;
 
         IdentityResult result = await _userManager.CreateAsync(userAccountAggregate, request.Password);
-        request.Password = null;
+        request.Password = null!;
         
         if (!result.Succeeded)
         {
@@ -112,6 +113,6 @@ public class UserAccountRepository
     
     private async Task<IdentityResult> AssignRoleAsync(UserAccountAggregate user)
     {
-        return await _userManager.AddToRoleAsync(user, FORole.User);
+        return await _userManager.AddToRoleAsync(user, FoRole.User);
     }
 }

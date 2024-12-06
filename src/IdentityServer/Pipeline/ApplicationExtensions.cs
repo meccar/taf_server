@@ -1,10 +1,17 @@
 using System.Security.Claims;
-using Microsoft.Extensions.FileProviders;
 
 namespace IdentityServer.Pipeline;
 
+/// <summary>
+/// Provides extension methods for configuring the application pipeline.
+/// </summary>
 public static class ApplicationExtensions
 {
+    /// <summary>
+    /// Configures the application setup by adding middleware components to the HTTP request pipeline.
+    /// </summary>
+    /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
+    /// <param name="appCors">The name of the CORS policy to apply.</param>
     public static void UseApplicationSetup(this WebApplication app, string appCors)
     {
         

@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages;
 
+/// <summary>
+/// A set of extension methods for common operations related to authentication and redirects in IdentityServer.
+/// </summary>
 public static class Extensions
 {
     /// <summary>

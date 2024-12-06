@@ -5,24 +5,24 @@ namespace IdentityServer.Pages;
 
 internal static class Log
 {
-	private static readonly Action<ILogger, string?, Exception?> _invalidId = LoggerMessage.Define<string?>(
+	private static readonly Action<ILogger, string?, Exception?> InvalidIdAction = LoggerMessage.Define<string?>(
 	    LogLevel.Error,
 	    EventIds.InvalidId,
 	    "Invalid id {Id}");
 
     public static void InvalidId(this ILogger logger, string? id)
     {
-        _invalidId(logger, id, null);
+	    InvalidIdAction(logger, id, null);
     }
 
-	private static readonly Action<ILogger, string?, Exception?> _invalidBackchannelLoginId = LoggerMessage.Define<string?>(
+	private static readonly Action<ILogger, string?, Exception?> InvalidBackchannelLoginIdAction = LoggerMessage.Define<string?>(
 	LogLevel.Warning,
 	EventIds.InvalidBackchannelLoginId,
 	"Invalid backchannel login id {Id}");
 
 	public static void InvalidBackchannelLoginId(this ILogger logger, string? id)
 	{
-		_invalidBackchannelLoginId(logger, id, null);
+		InvalidBackchannelLoginIdAction(logger, id, null);
 	}
 
 	private static Action<ILogger, IEnumerable<string>, Exception?> _externalClaims = LoggerMessage.Define<IEnumerable<string>>(
@@ -60,25 +60,25 @@ internal static class Log
 
 internal static class EventIds
 {
-	private const int UIEventsStart = 10000;
+	private const int UiEventsStart = 10000;
 
     //////////////////////////////
     // Consent
     //////////////////////////////
-    private const int ConsentEventsStart = UIEventsStart + 1000;
+    private const int ConsentEventsStart = UiEventsStart + 1000;
     public const int InvalidId = ConsentEventsStart + 0;
 	public const int NoConsentMatchingRequest = ConsentEventsStart + 1;
 
 	//////////////////////////////
 	// External Login
 	//////////////////////////////
-	private const int ExternalLoginEventsStart = UIEventsStart + 2000;
+	private const int ExternalLoginEventsStart = UiEventsStart + 2000;
     public const int ExternalClaims = ExternalLoginEventsStart + 0;
 
 	//////////////////////////////
     // CIBA
 	//////////////////////////////
-	private const int CibaEventsStart = UIEventsStart + 3000;
+	private const int CibaEventsStart = UiEventsStart + 3000;
 	public const int InvalidBackchannelLoginId = CibaEventsStart + 0;
     public const int NoMatchingBackchannelLoginRequest = CibaEventsStart + 1;
 

@@ -1,6 +1,7 @@
 using MediatR;
 
 namespace Domain.SeedWork.Query;
+
 /// <summary>
 /// Represents a query that performs an action and returns a result of type <typeparamref name="T"/>.
 /// </summary>

@@ -3,7 +3,6 @@
 
 using System.Security.Claims;
 using Domain.Aggregates;
-using Domain.Entities;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Services;
@@ -16,6 +15,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.ExternalLogin;
 
+/// <summary>
+/// Handles the external login callback from external identity providers. This page processes the authentication result,
+/// creates or updates the user, and signs the user in locally.
+/// </summary>
 [AllowAnonymous]
 [SecurityHeaders]
 public class Callback : PageModel
@@ -26,6 +29,14 @@ public class Callback : PageModel
     private readonly ILogger<Callback> _logger;
     private readonly IEventService _events;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Callback"/> class.
+    /// </summary>
+    /// <param name="interaction">The identity server interaction service.</param>
+    /// <param name="events">The event service to raise login events.</param>
+    /// <param name="logger">The logger to log events and errors.</param>
+    /// <param name="userManager">The user manager to handle user-related operations.</param>
+    /// <param name="signInManager">The sign-in manager to handle user sign-in operations.</param>
     public Callback(
         IIdentityServerInteractionService interaction,
         IEventService events,
@@ -40,6 +51,10 @@ public class Callback : PageModel
         _events = events;
     }
         
+    /// <summary>
+    /// Handles the GET request to process the external authentication result, create or update the user, and sign in the user.
+    /// </summary>
+    /// <returns>An action result that may redirect or render a page.</returns>
     public async Task<IActionResult> OnGet()
     {
         // read external identity from the temporary cookie
@@ -103,7 +118,7 @@ public class Callback : PageModel
         // check if external login is in the context of an OIDC request
         var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
         await _events.RaiseAsync(new UserLoginSuccessEvent(provider, providerUserId, user.EId, user.UserName, true, context?.Client.ClientId));
-        Telemetry.Metrics.UserLogin(context?.Client.ClientId, provider!);
+        Telemetry.Metrics.UserLogin(context?.Client.ClientId, provider);
 
         if (context != null)
         {
@@ -122,10 +137,13 @@ public class Callback : PageModel
     private async Task<UserAccountAggregate> AutoProvisionUserAsync(string provider, string providerUserId, IEnumerable<Claim> claims)
     {
         var sub = Ulid.NewUlid().ToString();
-        var email = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ??
-                    claims.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
+
+        var enumerable = claims as Claim[] ?? claims.ToArray();
+        
+        var email = enumerable.FirstOrDefault(x => x.Type == JwtClaimTypes.Email)?.Value ??
+                    enumerable.FirstOrDefault(x => x.Type == ClaimTypes.Email)?.Value;
             
-        var userEntity = await _userManager.FindByEmailAsync(email);
+        var userEntity = await _userManager.FindByEmailAsync(email!);
         var userProfileId = userEntity?.Id ?? 0;
         
         var user = new UserAccountAggregate
@@ -136,27 +154,24 @@ public class Callback : PageModel
         };
 
         // email
-        if (email != null)
-        {
-            user.Email = email;
-        }
-            
+        user.Email = email;
+
         // create a list of claims that we want to transfer into our store
         var filtered = new List<Claim>();
 
         // user's display name
-        var name = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.Name)?.Value ??
-                   claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
+        var name = enumerable.FirstOrDefault(x => x.Type == JwtClaimTypes.Name)?.Value ??
+                   enumerable.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
         if (name != null)
         {
             filtered.Add(new Claim(JwtClaimTypes.Name, name));
         }
         else
         {
-            var first = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.GivenName)?.Value ??
-                        claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
-            var last = claims.FirstOrDefault(x => x.Type == JwtClaimTypes.FamilyName)?.Value ??
-                       claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value;
+            var first = enumerable.FirstOrDefault(x => x.Type == JwtClaimTypes.GivenName)?.Value ??
+                        enumerable.FirstOrDefault(x => x.Type == ClaimTypes.GivenName)?.Value;
+            var last = enumerable.FirstOrDefault(x => x.Type == JwtClaimTypes.FamilyName)?.Value ??
+                       enumerable.FirstOrDefault(x => x.Type == ClaimTypes.Surname)?.Value;
             if (first != null && last != null)
             {
                 filtered.Add(new Claim(JwtClaimTypes.Name, first + " " + last));

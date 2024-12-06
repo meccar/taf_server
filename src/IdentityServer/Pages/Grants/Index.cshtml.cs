@@ -11,6 +11,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.Grants;
 
+/// <summary>
+/// The page model for managing user grants in IdentityServer.
+/// Provides functionality to view and revoke user grants.
+/// </summary>
 [SecurityHeaders]
 [Authorize]
 public class Index : PageModel
@@ -20,6 +24,13 @@ public class Index : PageModel
     private readonly IResourceStore _resources;
     private readonly IEventService _events;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Index"/> class.
+    /// </summary>
+    /// <param name="interaction">The interaction service used to manage user grants.</param>
+    /// <param name="clients">The client store used to retrieve client details.</param>
+    /// <param name="resources">The resource store used to retrieve resource details.</param>
+    /// <param name="events">The event service used to raise events.</param>
     public Index(IIdentityServerInteractionService interaction,
         IClientStore clients,
         IResourceStore resources,
@@ -31,8 +42,15 @@ public class Index : PageModel
         _events = events;
     }
 
+    /// <summary>
+    /// Gets or sets the view model containing information about the user's grants.
+    /// </summary>
     public ViewModel View { get; set; } = default!;
         
+    /// <summary>
+    /// Handles the GET request to retrieve all user grants and client information.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task OnGet()
     {
         var grants = await _interaction.GetAllUserGrantsAsync();
@@ -68,9 +86,16 @@ public class Index : PageModel
         };
     }
 
+    /// <summary>
+    /// Gets or sets the client ID for which the user wishes to revoke consent.
+    /// </summary>
     [BindProperty]
     public string? ClientId { get; set; }
 
+    /// <summary>
+    /// Handles the POST request to revoke user consent for a specific client.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation and a redirect to the grants index page.</returns>
     public async Task<IActionResult> OnPost()
     {
         await _interaction.RevokeUserConsentAsync(ClientId);

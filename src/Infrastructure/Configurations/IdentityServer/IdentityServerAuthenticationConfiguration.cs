@@ -27,7 +27,7 @@ public static class IdentityServerAuthenticationConfiguration
                     options.DefaultSignOutScheme = OpenIdConnectDefaults.AuthenticationScheme;
                 }
             )
-            .AddJwtBearer(configuration.GetJwtType(), options =>
+            .AddJwtBearer(configuration.GetJwtType() ?? string.Empty, options =>
             {
                 options.Authority = configuration.GetIdentityServerAuthority();
                 options.RequireHttpsMetadata = false;
@@ -36,7 +36,7 @@ public static class IdentityServerAuthenticationConfiguration
                 {
                     NameClaimType = JwtClaimTypes.Email,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetJwtSecret())),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetJwtSecret() ?? string.Empty)),
                     ValidateAudience = true,
                     ValidateIssuer = false,
                     ValidIssuer = configuration.GetIdentityServerAuthority(),
@@ -63,8 +63,8 @@ public static class IdentityServerAuthenticationConfiguration
             {
                 options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
 
-                options.ClientId = configuration.GetGoogleClientId();
-                options.ClientSecret = configuration.GetGoogleClientSecret();
+                options.ClientId = configuration.GetGoogleClientId() ?? string.Empty;
+                options.ClientSecret = configuration.GetGoogleClientSecret() ?? string.Empty;
 
             })
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>

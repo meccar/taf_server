@@ -9,32 +9,46 @@ using Shared.Model;
 
 namespace Infrastructure.Repositories;
 
+/// <summary>
+/// Repository for generating and managing tokens.
+/// </summary>
 public class TokenRepository : ITokenRepository
 {
     private readonly byte[] _secret;
     private readonly JwtSecurityTokenHandler _jwtHandler;
     private readonly EnvironmentConfiguration _environment;
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TokenRepository"/> class.
+    /// </summary>
+    /// <param name="environment">The environment configuration.</param>
     public TokenRepository
     (
         EnvironmentConfiguration environment
     )
     {
-        _secret = Encoding.UTF8.GetBytes(environment.GetJwtSecret());
+        _secret = Encoding.UTF8.GetBytes(environment.GetJwtSecret()!);
         _jwtHandler = new JwtSecurityTokenHandler();
         _environment = environment;
     }
-    public async Task<UserTokenModel> GenerateTokenPair(UserAccountAggregate user)
+    
+    /// <summary>
+    /// Generates a token pair (access and refresh tokens) for the specified user.
+    /// </summary>
+    /// <param name="user">The user account aggregate.</param>
+    /// <returns>A <see cref="UserTokenModel"/> containing the token pair and related information.</returns>
+    public UserTokenModel GenerateTokenPair(UserAccountAggregate user)
     {
-        var claims = await CreateUserClaims(user);
+        var claims = CreateUserClaims(user);
         var tokenType = _environment.GetJwtType();
         
-        var (accessToken, accessExpiration) = await CreateToken(user, claims, _environment.GetJwtExpirationTime());
-        var (refreshToken, refreshExpiration) = await CreateToken(user, claims, _environment.GetJwtRefreshExpirationTime());
+        var (accessToken, accessExpiration) = CreateToken(claims, _environment.GetJwtExpirationTime());
+        var (refreshToken, refreshExpiration) = CreateToken(claims, _environment.GetJwtRefreshExpirationTime());
 
         return new UserTokenModel(null, null, null, null, claims)
         {
             Token = new TokenModel(
-                tokenType,
+                tokenType!,
                 accessToken,
                 (int)accessExpiration.TotalSeconds,
                 refreshToken,
@@ -43,23 +57,23 @@ public class TokenRepository : ITokenRepository
         };
     }
     
-    private async Task<List<Claim>> CreateUserClaims(UserAccountAggregate user)
+    private List<Claim> CreateUserClaims(UserAccountAggregate user)
     {
         return new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.EId),
-            new Claim(ClaimTypes.Email, user.Email),
+            new Claim(ClaimTypes.Email, user.Email!),
         };
     }
     
-    private async Task<(string token, TimeSpan expiration)> CreateToken(UserAccountAggregate user, List<Claim> claims, double expirationTimeInHours)
+    private (string token, TimeSpan expiration) CreateToken(List<Claim> claims, double expirationTimeInHours)
     {
         var expiration = TimeSpan.FromHours(expirationTimeInHours);
-        var token = await GenerateToken(user, claims, expiration);
+        var token = GenerateToken(claims, expiration);
         return (token, expiration);
     }
 
-    private async Task<string> GenerateToken(UserAccountAggregate user, List<Claim> claims, TimeSpan expiration)
+    private string GenerateToken(List<Claim> claims, TimeSpan expiration)
     {
         var credentials = new SigningCredentials(
             new SymmetricSecurityKey(_secret),

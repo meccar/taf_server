@@ -1,5 +1,6 @@
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Configuration;
+using Duende.IdentityServer.Models;
 using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -54,10 +55,10 @@ public static class IdentityServerConfiguration
                 // options.LicenseKey = "eyJhbG...";
             })
             .AddSigningCredential(cert)
-            .AddInMemoryClients(IdentityServerConfig.Clients)
-            .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
-            .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
-            .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
+            .AddInMemoryClients(IdentityServerConfig.Clients ?? Array.Empty<Client>())
+            .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources ?? Array.Empty<IdentityResource>())
+            .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes ?? Array.Empty<ApiScope>())
+            .AddInMemoryApiResources(IdentityServerConfig.ApiResources ?? Array.Empty<ApiResource>())
             .AddTestUsers(IdentityServerConfig.TestUsers)
             .AddProfileService<ProfileService>()
             .AddServerSideSessions()

@@ -28,8 +28,8 @@ public class MfaRepository : IMfaRepository
         
         return new MfaViewModel
         {
-            SharedKey = FormatKey(unformattedKey),
-            AuthenticatorUri = GenerateQrCodeUri(user.Email!, unformattedKey)
+            SharedKey = FormatKey(unformattedKey!),
+            AuthenticatorUri = GenerateQrCodeUri(user.Email!, unformattedKey!)
         };
     }
 

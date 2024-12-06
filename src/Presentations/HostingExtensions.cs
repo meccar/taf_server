@@ -44,7 +44,7 @@ public static class HostingExtensions
                 serviceVersion: serviceVersion))
             .AddConsoleExporter());
     
-        builder.Host.AddAppConfigurations();
+        builder.AddAppConfigurations();
         
         builder.WebHost.ConfigureKestrel(options =>
         {

@@ -27,16 +27,19 @@ public class UserAccountAggregate : IdentityUser<int>
     /// <summary>
     /// Gets or sets the status of the user's email verification.
     /// </summary>
+    [MaxLength(7)]
     public string EmailStatus { get; set; } = EEmailStatus.Pending.ToString();
 
     /// <summary>
     /// Gets or sets the token used for password recovery.
     /// </summary>
-    public string PasswordRecoveryToken { get; set; } = null;
+    [MaxLength(50)]
+    public string? PasswordRecoveryToken { get; set; } = null;
 
     /// <summary>
     /// Gets or sets the token used for email confirmation.
     /// </summary>
+    [MaxLength(50)]
     public string? ConfirmationToken { get; set; } = null;
 
     /// <summary>
@@ -52,7 +55,8 @@ public class UserAccountAggregate : IdentityUser<int>
     /// <summary>
     /// Gets or sets the secret used for two-factor authentication.
     /// </summary>
-    public string TwoFactorSecret { get; set; } = "";
+    [MaxLength(50)]
+    public string? TwoFactorSecret { get; set; } = null;
 
     /// <summary>
     /// Gets or sets the position of the user within the organization.

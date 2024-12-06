@@ -7,14 +7,40 @@ using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
 
+/// <summary>
+/// Configuration class for IdentityServer4 settings, including clients, resources, and test users.
+/// </summary>
 public static class IdentityServerConfig
     {
-        public static IEnumerable<IdentityResource> IdentityResources { get; set; }
-        public static IEnumerable<ApiScope> ApiScopes { get; set; }
-        public static IEnumerable<Client> Clients { get; set; }
-        public static IEnumerable<ApiResource> ApiResources { get; set; }
-        public static List<TestUser> TestUsers { get; set; }
+        /// <summary>
+        /// Gets or sets the identity resources available in IdentityServer.
+        /// </summary>
+        public static IEnumerable<IdentityResource>? IdentityResources { get; set; }
 
+        /// <summary>
+        /// Gets or sets the API scopes available in IdentityServer.
+        /// </summary>
+        public static IEnumerable<ApiScope>? ApiScopes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the clients configured for IdentityServer.
+        /// </summary>
+        public static IEnumerable<Client>? Clients { get; set; }
+
+        /// <summary>
+        /// Gets or sets the API resources available in IdentityServer.
+        /// </summary>
+        public static IEnumerable<ApiResource>? ApiResources { get; set; }
+
+        /// <summary>
+        /// Gets or sets the test users for IdentityServer.
+        /// </summary>
+        public static List<TestUser>? TestUsers { get; set; }
+
+        /// <summary>
+        /// Initializes the IdentityServer configuration with the specified environment configuration.
+        /// </summary>
+        /// <param name="configuration">The environment configuration.</param>
         public static void Initialize(EnvironmentConfiguration configuration)
         {
             // Identity resources
@@ -82,7 +108,7 @@ public static class IdentityServerConfig
                 // interactive client using code flow + pkce
                 new Client
                 {
-                    ClientId = configuration.GetIdentityServerInteractiveClientId(),
+                    ClientId = configuration.GetIdentityServerInteractiveClientId()!,
                     ClientName = configuration.GetIdentityServerInteractiveClientName(),
                     
                     // AllowedGrantTypes = GrantTypes.Code,

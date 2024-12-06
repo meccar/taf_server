@@ -3,7 +3,6 @@
 
 using Application.Queries.Auth.Login;
 using Domain.Aggregates;
-using Domain.Entities;
 using Domain.Interfaces;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
@@ -15,13 +14,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using IdentityServer.Pages.Login;
 using MediatR;
 using Shared.Dtos.Authentication.Login;
-using Telemetry = IdentityServer.Pages.Telemetry;
 
 namespace IdentityServer.Pages.Account.Login;
 
+/// <summary>
+/// Represents the login page model for the identity server.
+/// This model handles the login process, including authentication with external providers and local login.
+/// </summary>
 [SecurityHeaders]
 [AllowAnonymous]
 public class Index : PageModel
@@ -33,11 +34,28 @@ public class Index : PageModel
     private readonly IIdentityProviderStore _identityProviderStore;
     private readonly IMediator _mediator;
 
+    /// <summary>
+    /// The view model that is used to display the login page.
+    /// </summary>
     public ViewModel View { get; set; } = default!;
-        
+    
+    /// <summary>
+    /// The input model for the login form.
+    /// </summary>
     [BindProperty]
     public InputModel Input { get; set; } = default!;
-        
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Index"/> page model.
+    /// </summary>
+    /// <param name="interaction">The interaction service for IdentityServer.</param>
+    /// <param name="schemeProvider">The authentication scheme provider.</param>
+    /// <param name="identityProviderStore">The identity provider store.</param>
+    /// <param name="events">The event service.</param>
+    /// <param name="userManager">The user manager for managing user accounts.</param>
+    /// <param name="signInManager">The sign-in manager for handling user sign-ins.</param>
+    /// <param name="jwtTokenRepository">The JWT token repository for token generation.</param>
+    /// <param name="mediator">The mediator for handling application requests.</param>
     public Index(
         IIdentityServerInteractionService interaction,
         IAuthenticationSchemeProvider schemeProvider,
@@ -47,7 +65,7 @@ public class Index : PageModel
         SignInManager<UserAccountAggregate> signInManager,
         IJwtRepository jwtTokenRepository,
         IMediator mediator
-        )
+    )
     {
         _userManager = userManager;
         _interaction = interaction;
@@ -57,25 +75,36 @@ public class Index : PageModel
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Handles the GET request to display the login page.
+    /// If an external login is required, the user will be redirected to the external login page.
+    /// </summary>
+    /// <param name="returnUrl">The URL to return to after successful login.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an IActionResult.</returns>
     public async Task<IActionResult> OnGet(string? returnUrl)
     {
         await BuildModelAsync(returnUrl);
-            
+        
         if (View.IsExternalLoginOnly)
         {
-            // we only have one option for logging in and it's an external provider
+            // We only have one option for logging in and it's an external provider.
             return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, returnUrl });
         }
 
         return Page();
     }
-        
+
+    /// <summary>
+    /// Handles the POST request to process the login form submission.
+    /// It validates the login credentials and handles both successful and failed login attempts.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an IActionResult.</returns>
     public async Task<IActionResult> OnPost()
     {
-        // check if we are in the context of an authorization request
+        // Check if we are in the context of an authorization request
         var context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
 
-        // the user clicked the "cancel" button
+        // The user clicked the "cancel" button
         if (Input.Button != "login")
         {
             return await HandleCancelButton(context);
@@ -95,9 +124,14 @@ public class Index : PageModel
             return Page();
         }
 
-        return await HandleSuccessfulLogin(context);
+        return HandleSuccessfulLogin(context);
     }
-    
+
+    /// <summary>
+    /// Attempts to log in the user with the provided credentials.
+    /// </summary>
+    /// <param name="context">The authorization request context, if any.</param>
+    /// <returns>A tuple indicating the success of the login and the user account, if successful.</returns>
     private async Task<(bool Success, UserAccountAggregate? User)> AttemptLogin(AuthorizationRequest? context)
     {
         var loginDto = new LoginUserRequestDto
@@ -107,13 +141,7 @@ public class Index : PageModel
             RememberUser = Input.RememberLogin
         };
         
-        var response = await _mediator.Send(new LoginQuery(loginDto));
-        
-        if (response == null)
-        {
-            await LogFailedLogin(context, "invalid credentials");
-            return (false, null);
-        }
+        await _mediator.Send(new LoginQuery(loginDto));
 
         var user = await _userManager.FindByNameAsync(Input.Username!);
         if (user == null)
@@ -126,6 +154,11 @@ public class Index : PageModel
         return (true, user);
     }
 
+    /// <summary>
+    /// Logs a successful login attempt.
+    /// </summary>
+    /// <param name="context">The authorization request context, if any.</param>
+    /// <param name="user">The user account that was successfully logged in.</param>
     private async Task LogSuccessfulLogin(AuthorizationRequest? context, UserAccountAggregate user)
     {
         await _events.RaiseAsync(new UserLoginSuccessEvent(
@@ -133,42 +166,47 @@ public class Index : PageModel
             user.EId,
             user.Email,
             clientId: context?.Client.ClientId));
-                
+            
         Telemetry.Metrics.UserLogin(
             context?.Client.ClientId,
             IdentityServerConstants.LocalIdentityProvider);
     }
 
+    /// <summary>
+    /// Logs a failed login attempt.
+    /// </summary>
+    /// <param name="context">The authorization request context, if any.</param>
+    /// <param name="error">The reason for the failed login attempt.</param>
     private async Task LogFailedLogin(AuthorizationRequest? context, string error)
     {
         await _events.RaiseAsync(new UserLoginFailureEvent(
             Input.Username,
             error,
             clientId: context?.Client.ClientId));
-            
+        
         Telemetry.Metrics.UserLoginFailure(
             context?.Client.ClientId,
             IdentityServerConstants.LocalIdentityProvider,
             error);
     }
-    
+
+    /// <summary>
+    /// Handles the scenario when the user cancels the login process.
+    /// </summary>
+    /// <param name="context">The authorization request context, if any.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an IActionResult.</returns>
     private async Task<IActionResult> HandleCancelButton(AuthorizationRequest? context)
     {
         if (context != null)
         {
-            // This "can't happen", because if the ReturnUrl was null, then the context would be null
+            // If the user cancels, deny authorization and send an "Access Denied" response
             ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
 
-            // if the user cancels, send a result back into IdentityServer as if they 
-            // denied the consent (even if this client does not require consent).
-            // this will send back an access denied OIDC error response to the client.
             await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
 
-            // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
             if (context.IsNativeClient())
             {
-                // The client is native, so this change in how to
-                // return the response is for better UX for the end user.
+                // For native clients, the UX is improved by showing a loading page
                 return this.LoadingPage(Input.ReturnUrl);
             }
 
@@ -177,25 +215,27 @@ public class Index : PageModel
         return Redirect("~/");
     }
 
-    private async Task<IActionResult> HandleSuccessfulLogin(AuthorizationRequest? context)
+    /// <summary>
+    /// Handles the scenario when the login is successful.
+    /// Redirects the user to the appropriate URL after login.
+    /// </summary>
+    /// <param name="context">The authorization request context, if any.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an IActionResult.</returns>
+    private IActionResult HandleSuccessfulLogin(AuthorizationRequest? context)
     {
         if (context != null)
         {
-            // This "can't happen", because if the ReturnUrl was null, then the context would be null
             ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
 
             if (context.IsNativeClient())
             {
-                // The client is native, so this change in how to
-                // return the response is for better UX for the end user.
                 return this.LoadingPage(Input.ReturnUrl);
             }
 
-            // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
             return Redirect(Input.ReturnUrl ?? "~/");
         }
 
-        // request for a local page
+        // If no context, handle as a local page redirect
         if (Url.IsLocalUrl(Input.ReturnUrl))
         {
             return Redirect(Input.ReturnUrl);
@@ -206,25 +246,35 @@ public class Index : PageModel
         }
         else
         {
-            // user might have clicked on a malicious link - should be logged
             throw new ArgumentException("invalid return URL");
         }
     }
+
+    /// <summary>
+    /// Builds the model for the login page.
+    /// </summary>
+    /// <param name="returnUrl">The return URL after a successful login.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task BuildModelAsync(string? returnUrl)
     {
         Input = new InputModel { ReturnUrl = returnUrl };
-            
+
         var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
         if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
         {
-            await HandleIdentityProvider(context);
+            HandleIdentityProvider(context);
             return;
         }
 
         await BuildProvidersModel(context);
     }
-    
-    private async Task HandleIdentityProvider(AuthorizationRequest context)
+
+    /// <summary>
+    /// Handles the identity provider specific setup for the login page.
+    /// </summary>
+    /// <param name="context">The authorization request context.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
+    private void HandleIdentityProvider(AuthorizationRequest context)
     {
         var local = context.IdP == IdentityServerConstants.LocalIdentityProvider;
 
@@ -237,10 +287,15 @@ public class Index : PageModel
 
         if (!local)
         {
-            View.ExternalProviders = new[] { new ViewModel.ExternalProvider(context.IdP) };
+            View.ExternalProviders = new[] { new ViewModel.ExternalProvider(context.IdP!) };
         }
     }
 
+    /// <summary>
+    /// Builds the model for external login providers.
+    /// </summary>
+    /// <param name="context">The authorization request context.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     private async Task BuildProvidersModel(AuthorizationRequest? context)
     {
         var providers = await GetExternalProviders();
@@ -249,7 +304,7 @@ public class Index : PageModel
         if (context?.Client != null)
         {
             allowLocal = context.Client.EnableLocalLogin;
-            if (context.Client.IdentityProviderRestrictions?.Count > 0)
+            if (context.Client.IdentityProviderRestrictions.Count > 0)
             {
                 providers = providers.Where(provider => 
                     context.Client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
@@ -264,6 +319,10 @@ public class Index : PageModel
         };
     }
 
+    /// <summary>
+    /// Gets a list of external login providers.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation. The task result contains the list of external providers.</returns>
     private async Task<List<ViewModel.ExternalProvider>> GetExternalProviders()
     {
         var schemes = await _schemeProvider.GetAllSchemesAsync();

@@ -8,24 +8,18 @@ using Shared.Model;
 namespace Application.Commands.Auth.Register;
 
 /// <summary>
-/// Handles the registration process for new user accounts.
+/// Handles the execution of the <see cref="RegisterCommand"/> to register a new user.
+/// This handler orchestrates the creation of both the user profile and user account, including validation of existing data.
 /// </summary>
-/// <remarks>
-/// This command handler is responsible for validating user input during the registration process.
-/// It checks for the existence of a user's email and phone number to prevent duplicate accounts.
-/// If the provided email or phone number already exists in the system, a 
-/// <see cref="BadRequestException"/> is thrown with an appropriate message. 
-/// Upon successful validation, a new user account and associated login data are created.
-/// </remarks>
-
 public class RegisterCommandHandler : TransactionalCommandHandler<RegisterCommand, RegisterUserResponseDto>
 {
     private readonly IMapper _mapper;
-
+    
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
     /// </summary>
-    /// <param name="unitOfWork">The unit of work instance to manage data transactions.</param>
+    /// <param name="unitOfWork">The unit of work that coordinates the transaction scope for the command execution.</param>
+    /// <param name="mapper">The AutoMapper instance used to map between different data models and DTOs.</param>
     public RegisterCommandHandler(
         IUnitOfWork unitOfWork,
         IMapper mapper
@@ -33,25 +27,29 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
     {
         _mapper = mapper;
     }
-
+    
     /// <summary>
-    /// Handles the registration command by validating user data and creating a new account.
+    /// Executes the core logic for handling the registration of a user.
+    /// It validates the user's login data, creates a new user profile, associates the profile with the user account,
+    /// and returns a <see cref="RegisterUserResponseDto"/> containing the created user's information.
     /// </summary>
-    /// <param name="request">The registration command containing user details.</param>
-    /// <param name="cancellationToken">A cancellation token to signal cancellation of the operation.</param>
-    /// <returns>A task that represents the asynchronous operation, containing the created <see cref="UserAccountModel"/>.</returns>
-    /// <exception cref="BadRequestException">Thrown when the email or phone number is already in use.</exception>
+    /// <param name="request">The command request containing the user profile and user account data to be registered.</param>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for asynchronous operations to complete.</param>
+    /// <returns>A <see cref="Task{RegisterUserResponseDto}"/> representing the asynchronous operation, with the registered user's data as the result.</returns>
+    /// <exception cref="BadRequestException">
+    /// Thrown if the user's login data (email or phone number) already exists or if the creation of the user profile or account fails.
+    /// </exception>
     protected override async Task<RegisterUserResponseDto> ExecuteCoreAsync(RegisterCommand request, CancellationToken cancellationToken)
     {
         var userProfileModel = _mapper.Map<UserProfileModel>(request.UserProfileModel);
         var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccountModel);
         
         // Validate existing user login data
-        if (await _unitOfWork.UserAccountRepository.IsUserLoginDataExisted(userAccountModel))
+        if (await UnitOfWork.UserAccountRepository.IsUserLoginDataExisted(userAccountModel))
             throw new BadRequestException("Either Email or Phone number already exists");
 
         // Create user account
-        var userProfile = await _unitOfWork
+        var userProfile = await UnitOfWork
             .UserProfileRepository
             .CreateUserProfileAsync(userProfileModel);
 
@@ -59,9 +57,9 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
             throw new BadRequestException("Failed to create user account");
 
         // Associate login data with the new account
-        userAccountModel.UserProfileId = userProfile.Value.Id;
+        userAccountModel.UserProfileId = userProfile.Value!.Id;
 
-        var userAccount = await _unitOfWork
+        var userAccount = await UnitOfWork
             .UserAccountRepository
             .CreateUserAccountAsync(userAccountModel);
 

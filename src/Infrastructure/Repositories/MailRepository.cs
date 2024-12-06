@@ -54,11 +54,11 @@ public class MailRepository : IMailRepository
                 </body>
             </html>";
         
-        string smtpServer = _environment.GetSmtpServer();
-        int smtpPort = int.Parse(_environment.GetSmtpPort());
-        string smtpPassword = _environment.GetSmtpPassword();
-        string smtpUsername = _environment.GetSmtpUsername();
-        string fromEmail = _environment.GetSmtpEmail();
+        string smtpServer = _environment.GetSmtpServer() ?? string.Empty;
+        int smtpPort = int.Parse(_environment.GetSmtpPort() ?? string.Empty);
+        string smtpPassword = _environment.GetSmtpPassword() ?? string.Empty;
+        string smtpUsername = _environment.GetSmtpUsername() ?? string.Empty;
+        string fromEmail = _environment.GetSmtpEmail() ?? string.Empty;
             
         SmtpClient smtpClient = new SmtpClient(smtpServer)
         {
@@ -73,7 +73,7 @@ public class MailRepository : IMailRepository
         MailMessage mailMessage = new MailMessage();
 
         mailMessage.From = new MailAddress(fromEmail);
-        mailMessage.To.Add(userAccount.Email);
+        mailMessage.To.Add(userAccount.Email!);
         mailMessage.Subject = "Welcome to Our App! Please confirm your Email";
         mailMessage.SubjectEncoding = Encoding.UTF8;
         mailMessage.Body = body;
