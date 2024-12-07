@@ -5,8 +5,17 @@ using Microsoft.Extensions.DependencyInjection;
 using Persistance.Data;
 
 namespace Infrastructure.Configurations.Identity;
+
+/// <summary>
+/// Provides extension methods to configure ASP.NET Core Identity for the application.
+/// </summary>
 public static class IdentityConfiguration
 {
+    /// <summary>
+    /// Configures ASP.NET Core Identity services with customized options for user and role management.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
+    /// <returns>The modified <see cref="IServiceCollection"/> for chaining.</returns>
     public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
     {
         services

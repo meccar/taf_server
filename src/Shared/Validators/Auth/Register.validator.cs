@@ -4,8 +4,15 @@ using Shared.Dtos.Authentication.Register;
 
 namespace Shared.Validators.Auth;
 
+/// <summary>
+/// Validator for registering a new user.
+/// </summary>
 public class RegisterValidator : AbstractValidator<RegisterUserRequestDto>
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegisterValidator"/> class.
+    /// Defines validation rules for the <see cref="RegisterUserRequestDto"/> object.
+    /// </summary>
     public RegisterValidator()
     {
         RuleFor(x => x.UserAccount.Email)

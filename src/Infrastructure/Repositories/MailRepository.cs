@@ -5,7 +5,6 @@ using Domain.Aggregates;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
 using QRCoder;
 using Shared.Configurations.Environment;
 using Shared.Model;
@@ -13,11 +12,19 @@ using Shared.Results;
 
 namespace Infrastructure.Repositories;
 
+/// <summary>
+/// Provides methods for sending email confirmations and verifying email confirmation tokens.
+/// </summary>
 public class MailRepository : IMailRepository
 {
     private readonly EnvironmentConfiguration _environment;
     private readonly UserManager<UserAccountAggregate> _userManager;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MailRepository"/> class.
+    /// </summary>
+    /// <param name="environment">The environment configuration used for SMTP settings.</param>
+    /// <param name="userManager">The UserManager to manage user-related tasks.</param>
     public MailRepository(
         EnvironmentConfiguration environment,
         UserManager<UserAccountAggregate> userManager
@@ -27,6 +34,12 @@ public class MailRepository : IMailRepository
         _userManager = userManager;
     }
 
+    /// <summary>
+    /// Sends an email confirmation message to the user with a link to confirm their email address.
+    /// </summary>
+    /// <param name="userAccount">The user account to send the confirmation email to.</param>
+    /// <param name="mfaViewModel">The MFA view model containing MFA information.</param>
+    /// <returns>A <see cref="Result"/> indicating the success or failure of the operation.</returns>
     public async Task<Result> SendEmailConfirmation(UserAccountAggregate userAccount, MfaViewModel mfaViewModel)
     {
         string baseToken = await _userManager.GenerateEmailConfirmationTokenAsync(userAccount);
@@ -84,6 +97,11 @@ public class MailRepository : IMailRepository
         return Result.Success();
     }
 
+    /// <summary>
+    /// Verifies the email confirmation token and confirms the user's email address.
+    /// </summary>
+    /// <param name="token">The confirmation token received by the user.</param>
+    /// <returns>The email of the user if the token is valid, or null if the token is invalid.</returns>
     public async Task<string?> VerifyEmailConfirmationToken(string token)
     {
         string decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
@@ -116,19 +134,24 @@ public class MailRepository : IMailRepository
             {
                 Console.WriteLine($"Token Verification Error: {error.Description}");
             }
-            string test = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var testResult = await _userManager.ConfirmEmailAsync(user, test); 
-            bool testValidation = await _userManager.VerifyUserTokenAsync(
-                user, 
-                tokenProvider, 
-                purpose,
-                test
-            );
+            // string test = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            // var testResult = await _userManager.ConfirmEmailAsync(user, test); 
+            // bool testValidation = await _userManager.VerifyUserTokenAsync(
+            //     user, 
+            //     tokenProvider, 
+            //     purpose,
+            //     test
+            // );
         }
 
         return validation && confirmResult.Succeeded ? user.Email : null;
     }
     
+    /// <summary>
+    /// Generates a QR code image for setting up MFA using the provided authenticator URI.
+    /// </summary>
+    /// <param name="authenticatorUri">The URI used for MFA setup in the authenticator app.</param>
+    /// <returns>A Base64-encoded string representing the QR code image.</returns>
     private string GenerateQrCode(string authenticatorUri)
     {
         // Create a QR code for the Authenticator URI

@@ -11,9 +11,18 @@ using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
 
+/// <summary>
+/// Provides extension methods to configure IdentityServer authentication in the application.
+/// </summary>
 public static class IdentityServerAuthenticationConfiguration
 {
-        public static IServiceCollection ConfigureIdentityServerAuthentication(this IServiceCollection services, EnvironmentConfiguration configuration)
+    /// <summary>
+    /// Configures IdentityServer authentication and related authentication schemes.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add the authentication configuration to.</param>
+    /// <param name="configuration">The environment configuration containing IdentityServer settings.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/> with IdentityServer authentication configured.</returns>
+    public static IServiceCollection ConfigureIdentityServerAuthentication(this IServiceCollection services, EnvironmentConfiguration configuration)
     {
         services
             .AddAuthentication(options =>

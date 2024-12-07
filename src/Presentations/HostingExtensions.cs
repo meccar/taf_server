@@ -10,17 +10,30 @@ using Serilog;
 
 namespace Presentations;
 
+/// <summary>
+/// Provides extension methods for configuring and setting up the application hosting pipeline.
+/// </summary>
 public static class HostingExtensions
 {
-    private static readonly string _appCors = "AllowLocalhost";
+    private static readonly string AppCors = "AllowLocalhost";
     
+    /// <summary>
+    /// Configures the HTTP request pipeline for the application by calling the ApplicationSetup method.
+    /// </summary>
+    /// <param name="app">The <see cref="WebApplication"/> to configure.</param>
+    /// <returns>The configured <see cref="WebApplication"/>.</returns>
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
-        app.ApplicationSetup(_appCors);
+        app.ApplicationSetup(AppCors);
         
         return app;
     }
     
+    /// <summary>
+    /// Configures the application builder by setting up services, logging, Kestrel, and other configurations.
+    /// </summary>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/> to configure.</param>
+    /// <returns>The configured <see cref="WebApplication"/>.</returns>
     public static WebApplication ConfigureBuilder(this WebApplicationBuilder builder)
     {
         var serviceName = "taf_server";
@@ -31,7 +44,7 @@ public static class HostingExtensions
         var cert = new X509Certificate2(kestrelConfig["Path"]!, kestrelConfig["Password"]);
         
         builder.Services.ConfigureInfrastructureDependencyInjection(builder.Configuration);
-        builder.Services.ConfigureApplicationDependencyInjection(builder.Configuration, _appCors);
+        builder.Services.ConfigureApplicationDependencyInjection(builder.Configuration, AppCors);
         // builder.Services.ConfigurePresentationsServices(builder.Configuration);
         // builder.Services.ConfigureHttpException();
         builder.Services.ConfigureControllers();

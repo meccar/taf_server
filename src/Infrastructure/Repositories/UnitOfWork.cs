@@ -23,13 +23,9 @@ public class UnitOfWork : IUnitOfWork
     /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
     /// </summary>
     /// <param name="context">The database context used for data operations.</param>
-    /// 
-    /// <param name="userAccountCommandRepository">The repository for user account commands.</param>
-    /// <param name="userLoginDataCommandRepository">The repository for user login data commands.</param>
-    /// 
-    /// <param name="userAccountQueryRepository">The repository for user account queries.</param>
-    /// <param name="userLoginDataQueryRepository">The repository for user login data queries.</param>
-    /// 
+    /// <param name="userAccountRepository">The repository for user account commands.</param>
+    /// <param name="userProfileRepository">The repository for user profile commands.</param>
+    /// <param name="userTokenRepository">The repository for user token commands.</param>
     public UnitOfWork(
         ApplicationDbContext context,
         
@@ -44,8 +40,19 @@ public class UnitOfWork : IUnitOfWork
         UserProfileRepository = userProfileRepository;
         UserTokenRepository = userTokenRepository;
     }
+    /// <summary>
+    /// Gets the repository for user account commands.
+    /// </summary>
     public IUserAccountRepository UserAccountRepository { get; set; }
+    
+    /// <summary>
+    /// Gets the repository for user profile commands.
+    /// </summary>
     public IUserProfileRepository UserProfileRepository { get; set; }
+    
+    /// <summary>
+    /// Gets the repository for user token commands.
+    /// </summary>
     public IUserTokenRepository UserTokenRepository { get; set; }
 
     /// <summary>
@@ -66,6 +73,10 @@ public class UnitOfWork : IUnitOfWork
         return _context.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// Creates a new execution strategy for the database.
+    /// </summary>
+    /// <returns>An <see cref="IExecutionStrategy"/> that can be used to execute database operations with a strategy.</returns>
     public IExecutionStrategy CreateExecutionStrategy()
     {
         return _context.Database.CreateExecutionStrategy();
@@ -90,6 +101,10 @@ public class UnitOfWork : IUnitOfWork
         await _context.Database.CommitTransactionAsync();
     }
 
+    /// <summary>
+    /// Commits the current transaction and saves changes to the database.
+    /// </summary>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public async Task CommitTransactionAsync()
     {
         await CommitAsync();

@@ -3,13 +3,15 @@ using Domain.Aggregates;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shared.Enums;
 using Shared.FileObjects;
 using Shared.Model;
 using Shared.Results;
 
 namespace Infrastructure.Repositories;
 
+/// <summary>
+/// Repository for managing user accounts, including creation, validation, and login data checks.
+/// </summary>
 public class UserAccountRepository
     : IUserAccountRepository
 {
@@ -18,6 +20,13 @@ public class UserAccountRepository
     private readonly IMfaRepository _mfaRepository;
     private readonly IMailRepository _mailRepository;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UserAccountRepository"/> class.
+    /// </summary>
+    /// <param name="mapper">The AutoMapper instance for mapping models.</param>
+    /// <param name="userManager">The UserManager for managing user accounts.</param>
+    /// <param name="mfaRepository">The repository responsible for MFA setup.</param>
+    /// <param name="mailRepository">The repository responsible for sending confirmation emails.</param>
     public UserAccountRepository(
         IMapper mapper,
         UserManager<UserAccountAggregate> userManager,
@@ -32,6 +41,11 @@ public class UserAccountRepository
         _mailRepository = mailRepository;
     }
     
+    /// <summary>
+    /// Creates a new user account asynchronously.
+    /// </summary>
+    /// <param name="request">The user account model containing the details of the account to be created.</param>
+    /// <returns>A result containing the created user account model or a failure message.</returns>
     public async Task<Result<UserAccountModel>> CreateUserAccountAsync(UserAccountModel request)
     {
         UserAccountAggregate userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);
@@ -66,6 +80,11 @@ public class UserAccountRepository
             result.Errors.Select(e => e.Description).ToArray());
     }
     
+    /// <summary>
+    /// Checks whether a user with the same login data (email or phone number) already exists.
+    /// </summary>
+    /// <param name="userLoginDataModel">The user account model to check for existing login data.</param>
+    /// <returns>True if the login data already exists; otherwise, false.</returns>
     public async Task<bool> IsUserLoginDataExisted(UserAccountModel userLoginDataModel)
     {
         bool email = await _userManager.Users
@@ -80,8 +99,15 @@ public class UserAccountRepository
                 u =>
                     u.PhoneNumber == userLoginDataModel.PhoneNumber);
         
-        return email || email;
+        return email || phone;
     }
+    
+    /// <summary>
+    /// Validates the user's login data (email and password).
+    /// </summary>
+    /// <param name="email">The user's email.</param>
+    /// <param name="password">The user's password.</param>
+    /// <returns>True if the login data is valid; otherwise, false.</returns>
     public async Task<bool> ValidateUserLoginData(string email, string password)
     {
         UserAccountAggregate? user = await _userManager.FindByEmailAsync(email);

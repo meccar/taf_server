@@ -5,8 +5,17 @@ using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.DataBase;
 
+/// <summary>
+/// Provides methods for configuring database context and related services.
+/// </summary>
 public static class DbContextConfiguration
 {
+    /// <summary>
+    /// Configures the application's database context using the specified environment configuration.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add the database configuration to.</param>
+    /// <param name="configuration">The environment configuration containing database settings.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/> with the database context configured.</returns>
     public static IServiceCollection ConfigureDbContext(this IServiceCollection services, EnvironmentConfiguration configuration)
         // {
         //     // services.AddSingleton<ConvertDomainEventsToOutboxMessagesInterceptor>();

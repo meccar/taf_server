@@ -1156,6 +1156,25 @@
             </summary>
             <param name="message">A custom message describing the unauthorized error.</param>
         </member>
+        <member name="T:Shared.HttpResponses.HttpExceptionFilter">
+            <summary>
+            A custom exception filter that handles specific exceptions and returns appropriate HTTP responses.
+            </summary>
+        </member>
+        <member name="M:Shared.HttpResponses.HttpExceptionFilter.#ctor(Microsoft.Extensions.Logging.ILogger{Shared.HttpResponses.HttpExceptionFilter})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.HttpResponses.HttpExceptionFilter"/> class.
+            </summary>
+            <param name="logger">The logger instance for logging error details.</param>
+        </member>
+        <member name="M:Shared.HttpResponses.HttpExceptionFilter.OnActionExecutionAsync(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext,Microsoft.AspNetCore.Mvc.Filters.ActionExecutionDelegate)">
+            <summary>
+            Executes the action and handles exceptions that occur during action execution.
+            </summary>
+            <param name="context">The context for the current action being executed.</param>
+            <param name="next">The delegate to the next action filter in the pipeline.</param>
+            <returns>A task representing the asynchronous operation.</returns>
+        </member>
         <member name="T:Shared.HttpResponses.HttpResponseException">
             <summary>
             Represents an exception that can be thrown to return a specific HTTP response status code and optional value.
@@ -1185,6 +1204,11 @@
             Gets a new message that provides additional context.
             </summary>
         </member>
+        <member name="T:Shared.Model.CompanyModel">
+            <summary>
+            Represents a company entity with relevant business properties.
+            </summary>
+        </member>
         <member name="T:Shared.Model.MfaViewModel">
             <summary>
             Represents a model for multi-factor authentication (MFA) setup details.
@@ -1199,6 +1223,46 @@
             <summary>
             Gets or sets the URI for configuring an authenticator application.
             </summary>
+        </member>
+        <member name="T:Shared.Model.TokenModel">
+            <summary>
+            Represents a model containing token information for authentication, including access and refresh tokens.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.TokenModel.TokenType">
+            <summary>
+            Gets or sets the type of the token (e.g., Bearer).
+            </summary>
+        </member>
+        <member name="P:Shared.Model.TokenModel.AccessToken">
+            <summary>
+            Gets or sets the access token used for authenticating API requests.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.TokenModel.AccessTokenExpires">
+            <summary>
+            Gets or sets the expiration time in seconds for the access token.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.TokenModel.RefreshToken">
+            <summary>
+            Gets or sets the refresh token used to obtain a new access token when the original one expires.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.TokenModel.RefreshTokenExpires">
+            <summary>
+            Gets or sets the expiration time in seconds for the refresh token.
+            </summary>
+        </member>
+        <member name="M:Shared.Model.TokenModel.#ctor(System.String,System.String,System.Int32,System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Model.TokenModel"/> class.
+            </summary>
+            <param name="tokenType">The type of the token (e.g., Bearer).</param>
+            <param name="accessToken">The access token.</param>
+            <param name="accessTokenExpires">The expiration time of the access token in seconds.</param>
+            <param name="refreshToken">The refresh token.</param>
+            <param name="refreshTokenExpires">The expiration time of the refresh token in seconds.</param>
         </member>
         <member name="T:Shared.Model.UserAccountModel">
             <summary>
@@ -1411,6 +1475,95 @@
             <param name="loginProvider">The login provider used to authenticate the user (e.g., Google, Facebook, etc.).</param>
             <param name="value">The value of the token.</param>
             <param name="claim">A list of claims associated with the token.</param>
+        </member>
+        <member name="T:Shared.Policies.PolicyKey">
+            <summary>
+            Represents a policy key associated with a specific role.
+            </summary>
+        </member>
+        <member name="M:Shared.Policies.PolicyKey.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Policies.PolicyKey"/> class with the specified role.
+            </summary>
+            <param name="role">The role associated with the policy key.</param>
+        </member>
+        <member name="M:Shared.Policies.PolicyKey.ToString">
+            <summary>
+            Returns the string representation of the policy key, which is the role.
+            </summary>
+            <returns>The role as a string.</returns>
+        </member>
+        <member name="T:Shared.Results.Result`1">
+            <summary>
+            Represents the result of an operation, with a value of type <typeparamref name="T"/>.
+            </summary>
+            <typeparam name="T">The type of the value returned in case of a successful result.</typeparam>
+        </member>
+        <member name="P:Shared.Results.Result`1.Succeeded">
+            <summary>
+            Gets a value indicating whether the operation was successful.
+            </summary>
+        </member>
+        <member name="P:Shared.Results.Result`1.Value">
+            <summary>
+            Gets the value returned by the operation if successful.
+            </summary>
+        </member>
+        <member name="P:Shared.Results.Result`1.Errors">
+            <summary>
+            Gets the collection of error messages if the operation failed.
+            </summary>
+        </member>
+        <member name="M:Shared.Results.Result`1.Success(`0)">
+            <summary>
+            Creates a successful result with the specified value.
+            </summary>
+            <param name="value">The value to return in case of success.</param>
+            <returns>A <see cref="T:Shared.Results.Result`1"/> indicating success.</returns>
+        </member>
+        <member name="M:Shared.Results.Result`1.Failure(System.String[])">
+            <summary>
+            Creates a failed result with the specified error messages.
+            </summary>
+            <param name="errors">The error messages to include in the result.</param>
+            <returns>A <see cref="T:Shared.Results.Result`1"/> indicating failure.</returns>
+        </member>
+        <member name="M:Shared.Results.Result`1.Match``1(System.Func{`0,``0},System.Func{System.Collections.Generic.IReadOnlyCollection{System.String},``0})">
+            <summary>
+            Matches the result with corresponding handlers for success or failure.
+            </summary>
+            <typeparam name="TResult">The type of the result of the matching operation.</typeparam>
+            <param name="onSuccess">The function to handle the success case.</param>
+            <param name="onFailure">The function to handle the failure case.</param>
+            <returns>The result of the matching operation.</returns>
+        </member>
+        <member name="T:Shared.Results.Result">
+            <summary>
+            Represents the result of an operation that does not return a value.
+            </summary>
+        </member>
+        <member name="P:Shared.Results.Result.Succeeded">
+            <summary>
+            Gets a value indicating whether the operation was successful.
+            </summary>
+        </member>
+        <member name="P:Shared.Results.Result.Errors">
+            <summary>
+            Gets the collection of error messages if the operation failed.
+            </summary>
+        </member>
+        <member name="M:Shared.Results.Result.Success">
+            <summary>
+            Creates a successful result.
+            </summary>
+            <returns>A <see cref="T:Shared.Results.Result"/> indicating success.</returns>
+        </member>
+        <member name="M:Shared.Results.Result.Failure(System.String[])">
+            <summary>
+            Creates a failed result with the specified error messages.
+            </summary>
+            <param name="errors">The error messages to include in the result.</param>
+            <returns>A <see cref="T:Shared.Results.Result"/> indicating failure.</returns>
         </member>
         <member name="T:Shared.SeedWork.Interfaces.IDatabaseConfig">
             <summary>
@@ -1681,6 +1834,17 @@
             It may return null if no email address is configured.
             </summary>
             <returns>The SMTP email address or null if not configured.</returns>
+        </member>
+        <member name="T:Shared.Validators.Auth.RegisterValidator">
+            <summary>
+            Validator for registering a new user.
+            </summary>
+        </member>
+        <member name="M:Shared.Validators.Auth.RegisterValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Shared.Validators.Auth.RegisterValidator"/> class.
+            Defines validation rules for the <see cref="T:Shared.Dtos.Authentication.Register.RegisterUserRequestDto"/> object.
+            </summary>
         </member>
     </members>
 </doc>
