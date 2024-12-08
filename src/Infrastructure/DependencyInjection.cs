@@ -2,9 +2,9 @@ using Infrastructure.Configurations.Credentials;
 using Infrastructure.Configurations.DataBase;
 using Infrastructure.Configurations.Identity;
 using Infrastructure.Configurations.Observability;
-using Infrastructure.Configurations.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistance.Configurations.Repositories;
 using Shared.Configurations.Environment;
 
 namespace Infrastructure;
@@ -37,7 +37,7 @@ public static class DependencyInjection
         services.ConfigureAuthentication(config);
         services.ConfigureAuthorization(config);
         services.ConfigureIdentity();
-        services.ConfigureRepositories();
+        // services.ConfigureRepositories();
 
         return services;
     }

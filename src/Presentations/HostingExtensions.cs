@@ -4,6 +4,7 @@ using Application;
 using Infrastructure;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Resources;
+using Persistance;
 using Presentations.Configurations;
 using Presentations.Extensions;
 using Serilog;
@@ -44,6 +45,7 @@ public static class HostingExtensions
         var cert = new X509Certificate2(kestrelConfig["Path"]!, kestrelConfig["Password"]);
         
         builder.Services.ConfigureInfrastructureDependencyInjection(builder.Configuration);
+        builder.Services.ConfigureDataBaseDependencyInjection(builder.Configuration);
         builder.Services.ConfigureApplicationDependencyInjection(builder.Configuration, AppCors);
         // builder.Services.ConfigurePresentationsServices(builder.Configuration);
         // builder.Services.ConfigureHttpException();

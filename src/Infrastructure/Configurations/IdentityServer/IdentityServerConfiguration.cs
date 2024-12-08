@@ -1,9 +1,9 @@
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Configuration;
 using Duende.IdentityServer.Models;
-using Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Persistance.Repositories;
 using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
