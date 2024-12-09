@@ -24,11 +24,11 @@ public class UserAccountAggregate : IdentityUser<int>
     [Required]
     public required int UserProfileId { get; set; }
     
-    /// <summary>
-    /// Gets or sets the status of the user's email verification.
-    /// </summary>
-    [MaxLength(7)]
-    public string EmailStatus { get; set; } = EEmailStatus.Pending.ToString();
+    // /// <summary>
+    // /// Gets or sets the status of the user's email verification.
+    // /// </summary>
+    // [MaxLength(7)]
+    // public string EmailStatus { get; set; } = EEmailStatus.Pending.ToString();
 
     /// <summary>
     /// Gets or sets the token used for password recovery.
@@ -42,21 +42,21 @@ public class UserAccountAggregate : IdentityUser<int>
     [MaxLength(50)]
     public string? ConfirmationToken { get; set; } = null;
 
-    /// <summary>
-    /// Gets or sets a value indicating whether two-factor authentication is enabled for the user.
-    /// </summary>
-    public bool IsTwoFactorEnabled { get; set; } = false;
+    // /// <summary>
+    // /// Gets or sets a value indicating whether two-factor authentication is enabled for the user.
+    // /// </summary>
+    // public bool IsTwoFactorEnabled { get; set; } = false;
 
     /// <summary>
     /// Gets or sets a value indicating whether the user has verified two-factor authentication.
     /// </summary>
     public bool IsTwoFactorVerified { get; set; } = false;
 
-    /// <summary>
-    /// Gets or sets the secret used for two-factor authentication.
-    /// </summary>
-    [MaxLength(50)]
-    public string? TwoFactorSecret { get; set; } = null;
+    // /// <summary>
+    // /// Gets or sets the secret used for two-factor authentication.
+    // /// </summary>
+    // [MaxLength(50)]
+    // public string? TwoFactorSecret { get; set; } = null;
 
     /// <summary>
     /// Gets or sets the position of the user within the organization.

@@ -45,10 +45,10 @@ public class UserAccountModel
     /// </summary>
     public string Email { get; set; } = null!;
     
-    /// <summary>
-    /// Gets or sets the status of the email (e.g., verified, unverified).
-    /// </summary>
-    public string EmailStatus { get; set; } = null!;
+    // /// <summary>
+    // /// Gets or sets the status of the email (e.g., verified, unverified).
+    // /// </summary>
+    // public string EmailStatus { get; set; } = null!;
     
     /// <summary>
     /// Gets or sets the token used for password recovery.

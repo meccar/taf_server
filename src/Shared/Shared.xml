@@ -296,12 +296,7 @@
             Represents a request to verify a user by their email and authenticator code.
             </summary>
         </member>
-        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserByAuthenticatorRequestDto.Email">
-            <summary>
-            Gets or sets the email address of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserByAuthenticatorRequestDto.Token">
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserByAuthenticatorRequestDto.AuthenticatorToken">
             <summary>
             Gets or sets the authenticator Token provided by the user.
             </summary>
@@ -311,7 +306,7 @@
             Represents a request to verify a user's email using a verification token.
             </summary>
         </member>
-        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserEmailRequestDto.Token">
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserEmailRequestDto.UrlToken">
             <summary>
             Gets or sets the token used to verify the user's email.
             This token is typically sent to the user via email to confirm ownership.
@@ -1307,11 +1302,6 @@
         <member name="P:Shared.Model.UserAccountModel.Email">
             <summary>
             Gets or sets the email address of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.EmailStatus">
-            <summary>
-            Gets or sets the status of the email (e.g., verified, unverified).
             </summary>
         </member>
         <member name="P:Shared.Model.UserAccountModel.PasswordRecoveryToken">

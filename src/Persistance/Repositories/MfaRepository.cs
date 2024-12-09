@@ -13,16 +13,19 @@ namespace Persistance.Repositories;
 public class MfaRepository : IMfaRepository 
 {
     private readonly UserManager<UserAccountAggregate> _userManager;
+    private readonly SignInManager<UserAccountAggregate> _signInManager;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="MfaRepository"/> class.
     /// </summary>
     /// <param name="userManager">The UserManager instance used for managing user accounts.</param>
     public MfaRepository(
-        UserManager<UserAccountAggregate> userManager
+        UserManager<UserAccountAggregate> userManager,
+        SignInManager<UserAccountAggregate> signInManager
     )
     {
         _userManager = userManager;
+        _signInManager = signInManager;
     }
 
     /// <summary>
@@ -32,16 +35,21 @@ public class MfaRepository : IMfaRepository
     /// <returns>A <see cref="MfaViewModel"/> containing the shared key and QR code URI.</returns>
     public async Task<MfaViewModel> MfaSetup(UserAccountAggregate user)
     {
+        await _userManager.SetTwoFactorEnabledAsync(user, false);
+    
         string? unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
+    
         if (string.IsNullOrEmpty(unformattedKey))
         {
             await _userManager.ResetAuthenticatorKeyAsync(user);
             unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
         }
-        
+    
+        await _userManager.SetTwoFactorEnabledAsync(user, true);
+
         return new MfaViewModel
         {
-            SharedKey = FormatKey(unformattedKey!),
+            SharedKey = unformattedKey!,
             AuthenticatorUri = GenerateQrCodeUri(user.Email!, unformattedKey!)
         };
     }
@@ -58,16 +66,24 @@ public class MfaRepository : IMfaRepository
         
         if (user == null)
             return Result.Failure("Account does not exist");
-        
-        bool isValidToken = await _userManager.VerifyTwoFactorTokenAsync(user, "Authenticator", token);
 
-        if (isValidToken)
-        {
-
-            return Result.Success();
-        }
+        if (!await _userManager.GetTwoFactorEnabledAsync(user))
+            return Result.Failure("Two-factor authentication is not enabled for this account");
         
-        return Result.Failure("Invalid authenticator key.");
+        string? authenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user);
+        
+        if (string.IsNullOrEmpty(authenticatorKey))
+            return Result.Failure("Authenticator key is not set up");
+
+        bool isValidToken = await _userManager.VerifyTwoFactorTokenAsync(
+            user,
+            TokenOptions.DefaultProvider,
+            token
+        );
+
+        return isValidToken
+            ? Result.Success()
+            : Result.Failure("Invalid authenticator key");
     }
     
     /// <summary>
@@ -86,8 +102,8 @@ public class MfaRepository : IMfaRepository
             WebUtility.UrlEncode(email),
             unformattedKey);
     }
-    private string FormatKey(string unformattedKey)
-    {
-        return unformattedKey;
-    }
+    // private string FormatKey(string unformattedKey)
+    // {
+    //     return unformattedKey;
+    // }
 }

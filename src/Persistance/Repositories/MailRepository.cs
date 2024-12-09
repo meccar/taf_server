@@ -43,6 +43,15 @@ public class MailRepository : IMailRepository
     public async Task<Result> SendEmailConfirmation(UserAccountAggregate userAccount, MfaViewModel mfaViewModel)
     {
         string baseToken = await _userManager.GenerateEmailConfirmationTokenAsync(userAccount);
+        
+        // userAccount.ConfirmationToken = baseToken;
+        // var result = await _userManager.UpdateAsync(userAccount);
+
+        // if (!result.Succeeded)
+        // {
+        //     return Result.Failure();
+        // }
+        
         string token = $"{userAccount.Email}:{baseToken}";
         
         token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
@@ -111,6 +120,7 @@ public class MailRepository : IMailRepository
         string email = parts[0];
         string baseToken = parts[1];
         
+            
         var tokenProvider = _userManager.Options.Tokens.EmailConfirmationTokenProvider;
         var purpose = UserManager<UserAccountAggregate>.ConfirmEmailTokenPurpose;
 
@@ -126,6 +136,8 @@ public class MailRepository : IMailRepository
             baseToken
         );
 
+        Console.WriteLine($"Direct Token Verification Result: {validation}");
+
         var confirmResult = await _userManager.ConfirmEmailAsync(user, baseToken); 
         
         if (!confirmResult.Succeeded)
@@ -134,17 +146,25 @@ public class MailRepository : IMailRepository
             {
                 Console.WriteLine($"Token Verification Error: {error.Description}");
             }
-            // string test = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            // var testResult = await _userManager.ConfirmEmailAsync(user, test); 
-            // bool testValidation = await _userManager.VerifyUserTokenAsync(
-            //     user, 
-            //     tokenProvider, 
-            //     purpose,
-            //     test
-            // );
-        }
+            string newToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            Console.WriteLine($"Newly Generated Token: {newToken}");
+            
+            var result1 = await _userManager.ConfirmEmailAsync(user, newToken);
+            Console.WriteLine($"New Token Confirm Result: {result1.Succeeded}");
 
-        return validation && confirmResult.Succeeded ? user.Email : null;
+            var result2 = await _userManager.VerifyUserTokenAsync(
+                user, 
+                tokenProvider, 
+                purpose,
+                newToken
+            );
+            Console.WriteLine($"New Token Direct Verification: {result2}");
+            
+            return result2 && result1.Succeeded ? user.Email : null;
+
+
+        }
+        return confirmResult.Succeeded ? user.Email : null;
     }
     
     /// <summary>

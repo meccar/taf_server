@@ -48,9 +48,10 @@ public static class IdentityConfiguration
                 // options.SignIn.RequireConfirmedEmail = true;
 
                 // Tokens
-                options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
-                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
-                options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                // options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
+                // options.Tokens.ChangeEmailTokenProvider = TokenOptions.DefaultEmailProvider;
+                // options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                // options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
             })
             .AddRoles<IdentityRole<int>>()
             .AddRoleManager<RoleManager<IdentityRole<int>>>()

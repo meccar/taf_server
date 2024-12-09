@@ -1,20 +1,17 @@
-using System.Text;
 using AutoMapper;
 using Domain.Interfaces;
 using Domain.SeedWork.Query;
-using Microsoft.AspNetCore.WebUtilities;
 using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Exceptions;
-using Shared.Model;
 
-namespace Application.Queries.Auth.VerifyUser;
+namespace Application.Queries.Auth.VerifyUserEmail;
 
 /// <summary>
 /// Handles the verification of a user's email using a confirmation token.
 /// This handler processes the <see cref="VerifyUserQuery"/>, validates the token for email confirmation,
 /// and generates an authentication response containing a JWT token and refresh token if the token is valid.
 /// </summary>
-public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, VerifyUserEmailRequestDto>
+public class VerifyUserEmailQueryHandler : IQueryHandler<VerifyUserEmailQuery, VerifyUserResponseDto>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IMailRepository _mailRepository;
@@ -28,7 +25,7 @@ public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, VerifyUserE
     /// <param name="mailRepository">The mail repository responsible for verifying email confirmation tokens.</param>
     /// <param name="jwtTokenRepository">The JWT repository responsible for generating authentication tokens.</param>
     /// <param name="mapper">The AutoMapper instance to map the token model to the response DTO.</param>
-    public VerifyUserQueryHandler(
+    public VerifyUserEmailQueryHandler(
         IUnitOfWork unitOfWork,
         IMailRepository mailRepository,
         IJwtRepository jwtTokenRepository,
@@ -39,7 +36,6 @@ public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, VerifyUserE
         _mailRepository = mailRepository;
         _jwtTokenRepository = jwtTokenRepository;
         _mapper = mapper;
-
     }
     
     /// <summary>
@@ -55,16 +51,16 @@ public class VerifyUserQueryHandler : IQueryHandler<VerifyUserQuery, VerifyUserE
     /// If the token is valid, it generates a new authentication response, including a JWT token and refresh token, 
     /// using the <see cref="IJwtRepository"/>.
     /// </remarks>
-    public async Task<VerifyUserEmailRequestDto> Handle(VerifyUserQuery request, CancellationToken cancellationToken)
+    public async Task<VerifyUserResponseDto> Handle(VerifyUserEmailQuery request, CancellationToken cancellationToken)
     {
         // Verify the email confirmation token
-        string? result = await _mailRepository.VerifyEmailConfirmationToken(request.Token.Token);
+        string? result = await _mailRepository.VerifyEmailConfirmationToken(request.Token);
 
         if (result != null)
         {
             // Generate authentication response with refresh token if verification succeeds
             var tokenModel = await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(result);
-            return _mapper.Map<VerifyUserEmailRequestDto>(tokenModel);
+            return _mapper.Map<VerifyUserResponseDto>(tokenModel);
         }
 
         // Throw exception if verification fails

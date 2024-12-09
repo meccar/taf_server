@@ -49,23 +49,23 @@ public class UserAccountRepository
     public async Task<Result<UserAccountModel>> CreateUserAccountAsync(UserAccountModel request)
     {
         UserAccountAggregate userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);
+        
         userAccountAggregate.UserName ??= userAccountAggregate.Email;
-
+        // userAccountAggregate.TwoFactorEnabled = true;
+        
         IdentityResult result = await _userManager.CreateAsync(userAccountAggregate, request.Password);
         request.Password = null!;
         
+
+        
         if (!result.Succeeded)
-        {
             return Result<UserAccountModel>.Failure(
                 result.Errors.Select(e => e.Description).ToArray());
-        }
         
         IdentityResult roleResult = await AssignRoleAsync(userAccountAggregate);
         if (!roleResult.Succeeded)
-        {
             return Result<UserAccountModel>.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
-        }
         
         MfaViewModel mfaViewModel = await _mfaRepository.MfaSetup(userAccountAggregate);
         Result isMailSent =  await _mailRepository.SendEmailConfirmation(userAccountAggregate, mfaViewModel);
@@ -128,7 +128,7 @@ public class UserAccountRepository
                       !validationResults[1] && // !isLockedOut
                       validationResults[2] && // isPasswordValid
                       validationResults[3] && // isPhoneNumberConfirmed
-                      user.IsTwoFactorEnabled && 
+                      // user.IsTwoFactorEnabled && 
                       user.IsTwoFactorVerified;
 
         if (isValid)

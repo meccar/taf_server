@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Application.Commands.Auth.Register;
 using Application.Queries.Auth.Login;
 using Application.Queries.Auth.VerifyUser;
+using Application.Queries.Auth.VerifyUserEmail;
 using Asp.Versioning;
 using Infrastructure.Decorators.Guards;
 using MediatR;
@@ -138,8 +139,8 @@ public class AuthenticationController
     public async Task<IActionResult> VerifyUserEmail([FromQuery] VerifyUserEmailRequestDto tokenRequestDto)
     {
         _logger.LogInformation("START: Verify User");
-
-        var response = await _mediator.Send(new VerifyUserQuery(tokenRequestDto));
+    
+        var response = await _mediator.Send(new VerifyUserEmailQuery(tokenRequestDto));
         
         _logger.LogInformation("END: Verify User");
         
@@ -159,11 +160,14 @@ public class AuthenticationController
     [SwaggerResponse(200, "Successfully verify user", typeof(object))]
     [SwaggerResponse(400, "Unauthorized")]
     // [UserGuard]
-    public async Task<IActionResult> VerifyUserByAuthenticator([FromQuery] VerifyUserEmailRequestDto tokenRequestDto)
+    public async Task<IActionResult> VerifyUser(
+        [FromQuery] VerifyUserEmailRequestDto userEmailRequestDto,
+        [FromBody] VerifyUserByAuthenticatorRequestDto userByAuthenticatorRequestDto
+    )
     {
         _logger.LogInformation("START: Verify User");
 
-        var response = await _mediator.Send(new VerifyUserQuery(tokenRequestDto));
+        var response = await _mediator.Send(new VerifyUserByAuthenticatorQuery(userEmailRequestDto, userByAuthenticatorRequestDto));
         
         _logger.LogInformation("END: Verify User");
         

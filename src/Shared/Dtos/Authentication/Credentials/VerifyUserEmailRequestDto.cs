@@ -9,5 +9,5 @@ public class VerifyUserEmailRequestDto
     /// Gets or sets the token used to verify the user's email.
     /// This token is typically sent to the user via email to confirm ownership.
     /// </summary>
-    public string Token { get; set; } = null!;
+    public string UrlToken { get; set; } = null!;
 }

@@ -1,14 +1,13 @@
 using Domain.SeedWork.Query;
 using Shared.Dtos.Authentication.Credentials;
-using Shared.Model;
 
-namespace Application.Queries.Auth.VerifyUser;
+namespace Application.Queries.Auth.VerifyUserEmail;
 
 /// <summary>
 /// Query used to verify a user's email based on a provided token.
 /// This query is typically used for actions like email verification or password reset validation.
 /// </summary>
-public class VerifyUserQuery : IQuery<VerifyUserEmailRequestDto>
+public class VerifyUserEmailQuery : IQuery<VerifyUserResponseDto>
 {
     /// <summary>
     /// Gets or sets the token used for user verification.
@@ -17,13 +16,13 @@ public class VerifyUserQuery : IQuery<VerifyUserEmailRequestDto>
     /// <value>
     /// The verification token (usually received by the user in an email) that is used to validate the user's action.
     /// </value>
-    public VerifyUserEmailRequestDto Token { get; set; }
+    public string Token { get; set; }
     /// <summary>
-    /// Initializes a new instance of the <see cref="VerifyUserQuery"/> class.
+    /// Initializes a new instance of the <see cref="VerifyUserEmailQuery"/> class.
     /// </summary>
     /// <param name="token">The token used for verifying the user's email, typically received from an external source like email.</param>
-    public VerifyUserQuery(
+    public VerifyUserEmailQuery(
         VerifyUserEmailRequestDto token
         ) =>
-        Token = token;
+        Token = token.UrlToken;
 }
