@@ -68,13 +68,21 @@ public class MfaRepository : IMfaRepository
             return Result.Failure("Account does not exist");
 
         if (!await _userManager.GetTwoFactorEnabledAsync(user))
-            return Result.Failure("Two-factor authentication is not enabled for this account");
+            return Result.Failure("Invalid 2-factor provider");
         
-        string? authenticatorKey = await _userManager.GetAuthenticatorKeyAsync(user);
+        var providers = await _userManager.GetValidTwoFactorProvidersAsync(user); 
+        if (!providers.Contains(_userManager.Options.Tokens.EmailConfirmationTokenProvider))
+            return Result.Failure("Invalid 2-factor provider");
         
-        if (string.IsNullOrEmpty(authenticatorKey))
+        
+        if (string.IsNullOrEmpty(await _userManager.GetAuthenticatorKeyAsync(user)))
             return Result.Failure("Authenticator key is not set up");
 
+        // var testToken = await _userManager.GenerateTwoFactorTokenAsync(
+        //     user,
+        //     _userManager.Options.Tokens.EmailConfirmationTokenProvider
+        // );
+        
         bool isValidToken = await _userManager.VerifyTwoFactorTokenAsync(
             user,
             TokenOptions.DefaultProvider,
