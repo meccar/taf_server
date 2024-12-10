@@ -29,9 +29,9 @@ public class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountAggr
             .Property(x => x.ConfirmationToken)
             .IsRequired(false);
         
-        // builder
-        //     .Property(x => x.TwoFactorSecret)
-        //     .IsRequired(false);
+        builder
+            .Property(x => x.TwoFactorSecret)
+            .IsRequired(false);
         
         // builder
         //     .Property(x => x.EmailStatus)

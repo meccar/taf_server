@@ -51,16 +51,20 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResponseDto>
     public async Task<LoginResponseDto> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
         // Validate user login data
-        if (!await _unitOfWork.UserAccountRepository.ValidateUserLoginData(request.Email, request.Password))
-            throw new UnauthorizedException("Invalid credentials");
-        
-        // Clear password after validation
-        request.Password = null!;
+        var result = await _unitOfWork.UserAccountRepository.ValidateUserLoginData(request.Email, request.Password);
+        if (result.Succeeded)
+        {
+            // Clear password after validation
+            request.Password = null!;
 
-        // Generate authentication token and refresh token
-        var tokenModel = await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(request.Email);
+            // Generate authentication token and refresh token
+            var tokenModel = await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(request.Email);
+            
+            // Map the token model to a response DTO
+            return _mapper.Map<LoginResponseDto>(tokenModel); 
+        }
         
-        // Map the token model to a response DTO
-        return _mapper.Map<LoginResponseDto>(tokenModel); 
+        throw new UnauthorizedException("Invalid credentials");
+        
     }
 }

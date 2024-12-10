@@ -52,11 +52,11 @@ public class UserAccountAggregate : IdentityUser<int>
     /// </summary>
     public bool IsTwoFactorVerified { get; set; } = false;
 
-    // /// <summary>
-    // /// Gets or sets the secret used for two-factor authentication.
-    // /// </summary>
-    // [MaxLength(50)]
-    // public string? TwoFactorSecret { get; set; } = null;
+    /// <summary>
+    /// Gets or sets the secret used for two-factor authentication.
+    /// </summary>
+    [MaxLength(50)]
+    public string? TwoFactorSecret { get; set; } = null;
 
     /// <summary>
     /// Gets or sets the position of the user within the organization.

@@ -17,10 +17,12 @@
   </ItemGroup>
   
   <ItemGroup>
+    <PackageReference Include="AspNetCore.Totp" Version="2.3.0" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Duende.IdentityServer" Version="7.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
+    <PackageReference Include="Otp.NET" Version="1.4.0" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
   </ItemGroup>
 

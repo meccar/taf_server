@@ -1,3 +1,5 @@
+using AspNetCore.Totp;
+using AspNetCore.Totp.Interface;
 using Domain.Abstractions;
 using Domain.Interfaces;
 using Duende.IdentityServer.Services;

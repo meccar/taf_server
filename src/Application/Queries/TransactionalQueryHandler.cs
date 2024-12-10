@@ -1,5 +1,6 @@
 using Domain.Interfaces;
 using Domain.SeedWork.Command;
+using Domain.SeedWork.Query;
 
 namespace Application.Queries;
 
@@ -11,8 +12,8 @@ namespace Application.Queries;
 /// <typeparam name="TQuery">The type of the query being handled.</typeparam>
 /// <typeparam name="TQueryResponse">The type of the response returned by the query handler.</typeparam>
 public abstract class TransactionalQueryHandler<TQuery, TQueryResponse> 
-    : ICommandHandler<TQuery, TQueryResponse>
-    where TQuery : ICommand<TQueryResponse>
+    : IQueryHandler<TQuery, TQueryResponse>
+    where TQuery : IQuery<TQueryResponse>
 {
     /// <summary>
     /// The unit of work instance used to interact with the data repositories and manage transactions.

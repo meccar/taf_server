@@ -16,14 +16,14 @@ public interface IMfaRepository
     /// </summary>
     /// <param name="user">The <see cref="UserAccountAggregate"/> representing the user for whom MFA is being set up.</param>
     /// <returns>A <see cref="Task{MfaViewModel}"/> representing the asynchronous operation. The result is an <see cref="MfaViewModel"/> containing the MFA setup details.</returns>
-    Task<MfaViewModel> MfaSetup(UserAccountAggregate user);
+    Task<Result<MfaViewModel>> MfaSetup(UserAccountAggregate user);
 
     /// <summary>
     /// Validates the multi-factor authentication (MFA) token submitted by a user.
     /// This method checks if the provided token is valid and matches the user's MFA token for authentication.
     /// </summary>
-    /// <param name="email">The email address of the user attempting to validate the MFA token.</param>
+    /// <param name="user">The user attempting to validate the MFA token.</param>
     /// <param name="token">The MFA token provided by the user for validation.</param>
     /// <returns>A <see cref="Task{Result}"/> representing the asynchronous operation. The result contains the outcome of the token validation, indicating whether it is valid or not.</returns>
-    Task<Result> ValidateMfa(string email, string token);
+    Task<Result> ValidateMfa(UserAccountAggregate user, string token);
 }

@@ -150,7 +150,8 @@ public class AuthenticationController
     /// <summary>
     /// Verifies the user using an authenticator (such as two-factor authentication).
     /// </summary>
-    /// <param name="tokenRequestDto">The request containing the verification data.</param>
+    /// <param name="userEmailRequestDto">The request containing the email verification data.</param>
+    /// <param name="userByAuthenticatorRequestDto">The request containing the authenticator verification data.</param>
     /// <returns>A response indicating whether the verification succeeded.</returns>
     [HttpPost("verify/mail")]
     [SwaggerOperation(

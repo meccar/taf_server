@@ -59,9 +59,7 @@ public class JwtRepository : IJwtRepository
             .TokenExistsAsync(user!, token);
         
         if (!existingTokens)
-        {
             await CreateNewTokens(user!, token);
-        }
         else
         {
             var result = await _unitOfWork.UserTokenRepository.RemoveLoginAndAuthenticationTokenAsync(user!, token);
@@ -102,7 +100,7 @@ public class JwtRepository : IJwtRepository
                 user.UserProfileId,
                 ETokenName.REFRESH,
                 token.LoginProvider,
-                token.Token.RefreshToken,
+                token.Token!.RefreshToken,
                 token.Claims
             )
         );

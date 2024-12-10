@@ -38,38 +38,40 @@ public static class IdentityConfiguration
                 // options.User.AllowedUserNameCharacters = "";
                 // options.Stores.ProtectPersonalData = true;
                 options.User.RequireUniqueEmail = true;
-
+    
                 // ClaimsIdentity
                 options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
                 options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
                 options.ClaimsIdentity.SecurityStampClaimType = ClaimTypes.System;
 
-                // options.SignIn.RequireConfirmedPhoneNumber = true;
+                // options.SignIn.RequireConfirmedPhoneNumber = false;
                 // options.SignIn.RequireConfirmedEmail = true;
 
                 // Tokens
-                // options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
-                // options.Tokens.ChangeEmailTokenProvider = TokenOptions.DefaultEmailProvider;
-                // options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
-                // options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
+                options.Tokens.ChangeEmailTokenProvider = TokenOptions.DefaultEmailProvider;
+                options.Tokens.ChangePhoneNumberTokenProvider = TokenOptions.DefaultPhoneProvider;
+                options.Tokens.PasswordResetTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                options.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                options.Tokens.AuthenticatorIssuer = "TAF Việt";
             })
             .AddRoles<IdentityRole<int>>()
             .AddRoleManager<RoleManager<IdentityRole<int>>>()
             .AddSignInManager<SignInManager<UserAccountAggregate>>()
             .AddUserManager<UserManager<UserAccountAggregate>>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddDefaultTokenProviders();
+            .AddDefaultTokenProviders()
             // .AddErrorDescriber<CustomIdentityErrorDescriber>();/
-        
+
             // services.AddSingleton<ILookupProtectorKeyRing, KeyRing>();
             // services.AddSingleton<ILookupProtector, LookupProtector>();
             // services.AddSingleton<IPersonalDataProtector, PersonalDataProtector>();
-        
-        //.AddTokenProvider<>()
+
+            .AddTokenProvider<AuthenticatorTokenProvider<UserAccountAggregate>>(TokenOptions.DefaultAuthenticatorProvider);
         
         services.Configure<DataProtectionTokenProviderOptions>(options =>
         {
-            options.TokenLifespan = TimeSpan.FromDays(1);
+            options.TokenLifespan = TimeSpan.FromDays(15);
         });
         
         return services;

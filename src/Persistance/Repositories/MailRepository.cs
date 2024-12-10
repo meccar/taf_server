@@ -42,17 +42,15 @@ public class MailRepository : IMailRepository
     /// <returns>A <see cref="Result"/> indicating the success or failure of the operation.</returns>
     public async Task<Result> SendEmailConfirmation(UserAccountAggregate userAccount, MfaViewModel mfaViewModel)
     {
-        string baseToken = await _userManager.GenerateEmailConfirmationTokenAsync(userAccount);
-        
-        // userAccount.ConfirmationToken = baseToken;
-        // var result = await _userManager.UpdateAsync(userAccount);
+        string userToken = await _userManager.GenerateUserTokenAsync(
+            userAccount,
+            _userManager.Options.Tokens.EmailConfirmationTokenProvider,
+            UserManager<UserAccountAggregate>.ConfirmEmailTokenPurpose
+        );
 
-        // if (!result.Succeeded)
-        // {
-        //     return Result.Failure();
-        // }
+        string emailToken = await _userManager.GenerateEmailConfirmationTokenAsync(userAccount);
         
-        string token = $"{userAccount.Email}:{baseToken}";
+        string token = $"{userAccount.Email}:{mfaViewModel.SharedKey}:{userToken}:{emailToken}";
         
         token = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
         
@@ -111,60 +109,47 @@ public class MailRepository : IMailRepository
     /// </summary>
     /// <param name="token">The confirmation token received by the user.</param>
     /// <returns>The email of the user if the token is valid, or null if the token is invalid.</returns>
-    public async Task<string?> VerifyEmailConfirmationToken(string token)
+    public async Task<Result<UserAccountAggregate>> VerifyEmailConfirmationToken(string token)
     {
         string decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
 
         string[] parts = decodedToken.Split(':');
 
-        string email = parts[0];
-        string baseToken = parts[1];
-        
+        if (parts.Length < 3)
+            return Result<UserAccountAggregate>.Failure("Could not verify your account");
             
+        string email = parts[0];
+        string userKey = parts[2];
+        string emailKey = parts[3];
+        
         var tokenProvider = _userManager.Options.Tokens.EmailConfirmationTokenProvider;
         var purpose = UserManager<UserAccountAggregate>.ConfirmEmailTokenPurpose;
 
         var user = await _userManager.FindByEmailAsync(email);
 
         if (user == null)
-            return null;
+            return Result<UserAccountAggregate>.Failure("Could not verify your account");
+
+        if (await _userManager.IsEmailConfirmedAsync(user))
+            return Result<UserAccountAggregate>.Success(user);
         
         bool validation = await _userManager.VerifyUserTokenAsync(
             user, 
             tokenProvider, 
             purpose, 
-            baseToken
+            userKey
         );
 
-        Console.WriteLine($"Direct Token Verification Result: {validation}");
-
-        var confirmResult = await _userManager.ConfirmEmailAsync(user, baseToken); 
+        if (!validation)
+            return Result<UserAccountAggregate>.Failure("Could not verify your account");
         
-        if (!confirmResult.Succeeded)
-        {
-            foreach (var error in confirmResult.Errors)
-            {
-                Console.WriteLine($"Token Verification Error: {error.Description}");
-            }
-            string newToken = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            Console.WriteLine($"Newly Generated Token: {newToken}");
-            
-            var result1 = await _userManager.ConfirmEmailAsync(user, newToken);
-            Console.WriteLine($"New Token Confirm Result: {result1.Succeeded}");
+        var confirmResult = await _userManager.ConfirmEmailAsync(user, emailKey); 
+        
+        if (!confirmResult.Succeeded) 
+            return Result<UserAccountAggregate>.Failure("Could not verify your account");
 
-            var result2 = await _userManager.VerifyUserTokenAsync(
-                user, 
-                tokenProvider, 
-                purpose,
-                newToken
-            );
-            Console.WriteLine($"New Token Direct Verification: {result2}");
-            
-            return result2 && result1.Succeeded ? user.Email : null;
+        return Result<UserAccountAggregate>.Success(user);
 
-
-        }
-        return confirmResult.Succeeded ? user.Email : null;
     }
     
     /// <summary>

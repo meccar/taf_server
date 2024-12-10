@@ -56,19 +56,21 @@ public class UserAccountRepository
         IdentityResult result = await _userManager.CreateAsync(userAccountAggregate, request.Password);
         request.Password = null!;
         
-
-        
         if (!result.Succeeded)
             return Result<UserAccountModel>.Failure(
                 result.Errors.Select(e => e.Description).ToArray());
         
-        IdentityResult roleResult = await AssignRoleAsync(userAccountAggregate);
+        IdentityResult roleResult = await _userManager.AddToRoleAsync(userAccountAggregate, FoRole.User);
         if (!roleResult.Succeeded)
             return Result<UserAccountModel>.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         
-        MfaViewModel mfaViewModel = await _mfaRepository.MfaSetup(userAccountAggregate);
-        Result isMailSent =  await _mailRepository.SendEmailConfirmation(userAccountAggregate, mfaViewModel);
+        Result<MfaViewModel> mfaViewModel = await _mfaRepository.MfaSetup(userAccountAggregate);
+        if (!mfaViewModel.Succeeded)
+            return Result<UserAccountModel>.Failure(
+                roleResult.Errors.Select(e => e.Description).ToArray());
+        
+        Result isMailSent =  await _mailRepository.SendEmailConfirmation(userAccountAggregate, mfaViewModel.Value!);
         
         if (isMailSent.Succeeded)
         {
@@ -108,37 +110,35 @@ public class UserAccountRepository
     /// <param name="email">The user's email.</param>
     /// <param name="password">The user's password.</param>
     /// <returns>True if the login data is valid; otherwise, false.</returns>
-    public async Task<bool> ValidateUserLoginData(string email, string password)
+    public async Task<Result> ValidateUserLoginData(string email, string password)
     {
         UserAccountAggregate? user = await _userManager.FindByEmailAsync(email);
         
         if (user == null)
         {
-            return false;
+            return Result.Failure("Invalid email or Password");
+        }
+
+        bool isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+        bool isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
+        
+        // bool[] validationResults = await Task.WhenAll(
+        //     _userManager.IsEmailConfirmedAsync(user),
+        //     _userManager.CheckPasswordAsync(user, password)
+        // );
+        //
+        // bool isValid = validationResults[0] && // isEmailConfirmed
+        //               validationResults[2] && // isPasswordValid
+        //               // user.IsTwoFactorEnabled && 
+        //               user.IsTwoFactorVerified;
+
+        if (isEmailConfirmed && isCorrectPassword && user.IsTwoFactorVerified)
+        {
+            await _userManager.ResetAccessFailedCountAsync(user);
+            return Result.Success();
+
         }
         
-        bool[] validationResults = await Task.WhenAll(
-            _userManager.IsEmailConfirmedAsync(user),
-            _userManager.IsLockedOutAsync(user),
-            _userManager.CheckPasswordAsync(user, password),
-            _userManager.IsPhoneNumberConfirmedAsync(user)
-        );
-        
-        bool isValid = validationResults[0] && // isEmailConfirmed
-                      !validationResults[1] && // !isLockedOut
-                      validationResults[2] && // isPasswordValid
-                      validationResults[3] && // isPhoneNumberConfirmed
-                      // user.IsTwoFactorEnabled && 
-                      user.IsTwoFactorVerified;
-
-        if (isValid)
-            await _userManager.ResetAccessFailedCountAsync(user);
-        
-        return isValid;
-    }
-    
-    private async Task<IdentityResult> AssignRoleAsync(UserAccountAggregate user)
-    {
-        return await _userManager.AddToRoleAsync(user, FoRole.User);
+        return Result.Failure("Invalid email or Password");
     }
 }

@@ -33,5 +33,5 @@ public interface IUserAccountRepository
     /// <param name="email">The email address to validate.</param>
     /// <param name="password">The password to validate.</param>
     /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the credentials are valid.</returns>
-    Task<bool> ValidateUserLoginData(string email, string password);
+    Task<Result> ValidateUserLoginData(string email, string password);
 }

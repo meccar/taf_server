@@ -318,34 +318,9 @@
             and their expiration times, which are returned to the client after a successful authentication process.
             </summary>
         </member>
-        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.TokenType">
+        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.Message">
             <summary>
-            Gets or sets the type of the token (e.g., "Bearer").
-            This field is required and indicates the authentication scheme that should be used with the access token.
-            </summary>
-        </member>
-        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.AccessToken">
-            <summary>
-            Gets or sets the access token that is used to authenticate the user on subsequent API requests.
-            This field is required and represents a bearer token that grants access to protected resources.
-            </summary>
-        </member>
-        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.AccessTokenExpires">
-            <summary>
-            Gets or sets the expiration time of the access token.
-            This field is required and represents the time at which the access token will expire, typically in ISO 8601 format.
-            </summary>
-        </member>
-        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.RefreshToken">
-            <summary>
-            Gets or sets the refresh token used to obtain a new access token once the current access token expires.
-            This field is required and is typically used to maintain a session without requiring the user to log in again.
-            </summary>
-        </member>
-        <member name="P:Shared.Dtos.Authentication.Credentials.VerifyUserResponseDto.RefreshTokenExpires">
-            <summary>
-            Gets or sets the expiration time of the refresh token.
-            This field is required and represents the time at which the refresh token will expire, typically in ISO 8601 format.
+            
             </summary>
         </member>
         <member name="T:Shared.Dtos.Authentication.Login.LoginResponseDto">

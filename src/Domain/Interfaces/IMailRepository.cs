@@ -25,5 +25,5 @@ public interface IMailRepository
     /// </summary>
     /// <param name="token">The confirmation token to be verified.</param>
     /// <returns>A <see cref="string"/> that returns the result of the verification. If valid, returns the user identifier or null if invalid.</returns>
-    Task<string?> VerifyEmailConfirmationToken(string token);
+    Task<Result<UserAccountAggregate>> VerifyEmailConfirmationToken(string token);
 }
