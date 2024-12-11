@@ -3,7 +3,6 @@ using Domain.Interfaces;
 using Domain.SeedWork.Query;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Exceptions;
-using Shared.Model;
 
 namespace Application.Queries.Auth.Login;
 
@@ -12,27 +11,29 @@ namespace Application.Queries.Auth.Login;
 /// This handler processes the <see cref="LoginQuery"/>, validates the login credentials, and generates an authentication response 
 /// containing a JWT token and refresh token for the user.
 /// </summary>
-public class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResponseDto>
+public class LoginQueryHandler : TransactionalQueryHandler<LoginQuery, LoginResponseDto>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtRepository _jwtTokenRepository;
     private readonly IMapper _mapper;
+    private readonly ISignInRepository _signInRepository;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="LoginQueryHandler"/> class.
     /// </summary>
-    /// <param name="unitOfWork">The unit of work interface to interact with the data repositories.</param>
+    /// <param name="unitOfWork">The unit of work for handling transactions.</param>
     /// <param name="jwtTokenRepository">The JWT repository responsible for generating authentication tokens.</param>
-    /// <param name="mapper">The AutoMapper instance to map the token model to the response DTO.</param>
+    /// <param name="mapper">The AutoMapper instance to map models to response DTOs.</param>
+    /// <param name="signInRepository">The repository responsible for handling user sign-in operations.</param>
     public LoginQueryHandler(
         IUnitOfWork unitOfWork,
         IJwtRepository jwtTokenRepository,
-        IMapper mapper
-        )
+        IMapper mapper,
+        ISignInRepository signInRepository
+        ) : base(unitOfWork)
     {
-        _unitOfWork = unitOfWork;
         _jwtTokenRepository = jwtTokenRepository;
         _mapper = mapper;
+        _signInRepository = signInRepository;
     }
 
     /// <summary>
@@ -48,23 +49,30 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResponseDto>
     /// If the credentials are valid, it generates an authentication response that includes a JWT token and refresh token,
     /// using the <see cref="IJwtRepository"/>.
     /// </remarks>
-    public async Task<LoginResponseDto> Handle(LoginQuery request, CancellationToken cancellationToken)
+    protected override async Task<LoginResponseDto> ExecuteCoreAsync(LoginQuery request, CancellationToken cancellationToken)
     {
-        // Validate user login data
-        var result = await _unitOfWork.UserAccountRepository.ValidateUserLoginData(request.Email, request.Password);
+        var result = await _signInRepository
+            .SignInAsync(
+                request.Email,
+                request.Password,
+                false
+            );
+        
+        request.Password = null!;
+        
         if (result.Succeeded)
         {
-            // Clear password after validation
-            request.Password = null!;
-
             // Generate authentication token and refresh token
-            var tokenModel = await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(request.Email);
+            var tokenGenerationResult = await _jwtTokenRepository
+                .GenerateAuthResponseWithRefreshTokenCookie(
+                    result.Value.Item1,
+                    result.Value.Item2
+                );
             
-            // Map the token model to a response DTO
-            return _mapper.Map<LoginResponseDto>(tokenModel); 
+            if (tokenGenerationResult.Succeeded)
+                return _mapper.Map<LoginResponseDto>(tokenGenerationResult.Value); 
         }
         
-        throw new UnauthorizedException("Invalid credentials");
-        
+        throw new UnauthorizedException(result.Errors.FirstOrDefault() ?? "Invalid credentials");
     }
 }

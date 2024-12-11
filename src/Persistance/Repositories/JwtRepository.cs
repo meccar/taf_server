@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Shared.Configurations.Environment;
 using Shared.Enums;
 using Shared.Model;
+using Shared.Results;
 
 namespace Persistance.Repositories;
 
@@ -47,98 +48,78 @@ public class JwtRepository : IJwtRepository
     /// </summary>
     /// <param name="email">The email address of the user.</param>
     /// <returns>A <see cref="TokenModel"/> containing authentication tokens.</returns>
-    public async Task<TokenModel> GenerateAuthResponseWithRefreshTokenCookie(string email)
+    public async Task<Result<TokenModel>> GenerateAuthResponseWithRefreshTokenCookie(
+        UserAccountAggregate user,
+        UserTokenModel token
+    )
     {
-        var user = await _userManager.FindByEmailAsync(email);
-        
-        var token = _tokenRepository.GenerateTokenPair(user!);
-        
-        token.LoginProvider = EProvider.PASSWORD;
-        
-        var existingTokens = await _unitOfWork.UserTokenRepository
-            .TokenExistsAsync(user!, token);
-        
-        if (!existingTokens)
-            await CreateNewTokens(user!, token);
-        else
-        {
-            var result = await _unitOfWork.UserTokenRepository.RemoveLoginAndAuthenticationTokenAsync(user!, token);
-            
-            if(!result)
-                throw new InvalidOperationException("Failed to create user tokens");
+        var refreshToken = await _unitOfWork
+            .UserTokenRepository
+            .CreateUserTokenAsync(
+            user,
+            new UserTokenModel(
+                user.UserProfileId,
+                token.Name,
+                token.LoginProvider,
+                token.Token!.RefreshToken,
+                token.Claims
+            )
+        );
 
-            await UpdateExistingTokens(user!, token);
-        }
-
-        CreateRefreshTokenCookie(token);
+        if (refreshToken == null)
+            return Result<TokenModel>.Failure("Failed while logging in, please try again.");
         
+        return Result<TokenModel>
+            .Success(new TokenModel(
+            token.Token!.TokenType,
+            token.Token.AccessToken,
+            token.Token.AccessTokenExpires,
+            token.Token.RefreshToken,
+            token.Token.RefreshTokenExpires
+        ));
+    }
+    
+    public async Task<TokenModel> GenerateAuthResponseWithRefreshTokenCookie(
+        UserAccountAggregate user
+    )
+    {
+        var token = _tokenRepository
+            .GenerateTokenPair(user);
+        
+        // token.LoginProvider = EProvider.PASSWORD;
+        // token.Name = ETokenName.REFRESH;
+        
+        var result = await _unitOfWork
+            .UserTokenRepository
+            .RemoveLoginAndAuthenticationTokenAsync(user!, token);
+        
+        if(!result)
+            throw new InvalidOperationException("Failed to create user tokens");
+        
+        var refreshToken = await _unitOfWork
+            .UserTokenRepository
+            .CreateUserTokenAsync(
+                user,
+                new UserTokenModel(
+                    user.UserProfileId,
+                    token.Name,
+                    token.LoginProvider,
+                    token.Token!.RefreshToken,
+                    token.Claims
+                )
+            );
+                
+        if (refreshToken == null)
+            throw new InvalidOperationException("Failed to create user tokens");
+        
+        // CreateRefreshTokenCookie(token);
         return new TokenModel(
             token.Token!.TokenType,
             token.Token.AccessToken,
             token.Token.AccessTokenExpires,
             token.Token.RefreshToken,
             token.Token.RefreshTokenExpires
-            );
-    }
-    
-    private async Task CreateNewTokens(UserAccountAggregate user, UserTokenModel token)
-    {
-        var accessToken = await _unitOfWork.UserTokenRepository.CreateUserTokenAsync(
-            user,
-            new UserTokenModel(
-                user.UserProfileId,
-                ETokenName.ACCESS,
-                token.LoginProvider,
-                token.Token!.AccessToken,
-                token.Claims
-            )
         );
-
-        var refreshToken = await _unitOfWork.UserTokenRepository.CreateUserTokenAsync(
-            user,
-            new UserTokenModel(
-                user.UserProfileId,
-                ETokenName.REFRESH,
-                token.LoginProvider,
-                token.Token!.RefreshToken,
-                token.Claims
-            )
-        );
-                
-        if (accessToken == null || refreshToken == null)
-        {
-            throw new InvalidOperationException("Failed to create user tokens");
-        }
-    }
-
-    private async Task UpdateExistingTokens(UserAccountAggregate user, UserTokenModel token)
-    {
-        var accessToken = await _unitOfWork.UserTokenRepository.UpdateUserTokenAsync(
-            user,
-            new UserTokenModel(
-                user.UserProfileId,
-                ETokenName.ACCESS,
-                token.LoginProvider,
-                token.Token!.AccessToken,
-                token.Claims
-            )
-        );
-
-        var refreshToken = await _unitOfWork.UserTokenRepository.UpdateUserTokenAsync(
-            user,
-            new UserTokenModel(
-                user.UserProfileId,
-                ETokenName.REFRESH,
-                token.LoginProvider,
-                token.Token.RefreshToken,
-                token.Claims
-            )
-        );
-        
-        if (accessToken == null || refreshToken == null)
-        {
-            throw new InvalidOperationException("Failed to update user tokens");
-        }
     }
     
     private void CreateRefreshTokenCookie(UserTokenModel token)

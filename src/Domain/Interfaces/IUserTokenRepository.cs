@@ -21,26 +21,10 @@ namespace Domain.Interfaces;
         Task<UserTokenModel?> CreateUserTokenAsync(UserAccountAggregate user, UserTokenModel request);
 
         /// <summary>
-        /// Asynchronously updates an existing user token for a given user.
-        /// </summary>
-        /// <param name="user">The user account for which the token is being updated.</param>
-        /// <param name="request">The token model containing the new token details to update.</param>
-        /// <returns>A task representing the asynchronous operation. The task result contains the updated <see cref="UserTokenModel"/>.</returns>
-        Task<UserTokenModel?> UpdateUserTokenAsync(UserAccountAggregate user, UserTokenModel request);
-
-        /// <summary>
         /// Asynchronously removes a user's login and authentication token.
         /// </summary>
         /// <param name="userLoginDataModel">The user account for which the token is being removed.</param>
         /// <param name="token">The token model that represents the login and authentication token to be removed.</param>
         /// <returns>A task representing the asynchronous operation. The task result is <c>true</c> if the token was successfully removed; otherwise, <c>false</c>.</returns>
         Task<bool> RemoveLoginAndAuthenticationTokenAsync(UserAccountAggregate userLoginDataModel, UserTokenModel token);
-
-        /// <summary>
-        /// Checks if a token exists for the given user account.
-        /// </summary>
-        /// <param name="user">The user account for which the token existence is being checked.</param>
-        /// <param name="token">The token model to check for existence.</param>
-        /// <returns>A task representing the asynchronous operation. The task result is <c>true</c> if the token exists for the user, otherwise <c>false</c>.</returns>
-        Task<bool> TokenExistsAsync(UserAccountAggregate user, UserTokenModel token);
     }

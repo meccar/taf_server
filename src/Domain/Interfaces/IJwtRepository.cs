@@ -1,4 +1,6 @@
+using Domain.Aggregates;
 using Shared.Model;
+using Shared.Results;
 
 namespace Domain.Interfaces;
 
@@ -10,9 +12,18 @@ public interface IJwtRepository
 {
     /// <summary>
     /// Generates an authentication response containing a JWT and a refresh token cookie for the specified user.
-    /// This method is used to authenticate a user and provide them with an access token as well as a refresh token.
+    /// This method authenticates a user and provides them with an access token and a refresh token.
     /// </summary>
-    /// <param name="userId">The user identifier (usually the email or username) to generate the authentication tokens for.</param>
-    /// <returns>A <see cref="TokenModel"/> containing the generated JWT and refresh token information.</returns>
-    Task<TokenModel> GenerateAuthResponseWithRefreshTokenCookie(string userId);
+    /// <param name="user">The <see cref="UserAccountAggregate"/> representing the user for whom the tokens are generated.</param>
+    /// <returns>A <see cref="TokenModel"/> containing the generated JWT and refresh token details.</returns>
+    Task<TokenModel> GenerateAuthResponseWithRefreshTokenCookie(UserAccountAggregate user);
+    
+    /// <summary>
+    /// Generates an authentication response containing a JWT and a refresh token cookie for the specified user,
+    /// based on the provided user token model.
+    /// </summary>
+    /// <param name="user">The <see cref="UserAccountAggregate"/> representing the user for whom the tokens are generated.</param>
+    /// <param name="token">The <see cref="UserTokenModel"/> containing token-related data for generating the response.</param>
+    /// <returns>A <see cref="Result{T}"/> containing a <see cref="TokenModel"/> with the generated JWT and refresh token details.</returns>
+    Task<Result<TokenModel>> GenerateAuthResponseWithRefreshTokenCookie(UserAccountAggregate user, UserTokenModel token);
 }

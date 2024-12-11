@@ -104,6 +104,17 @@ public class UserAccountRepository
         return email || phone;
     }
     
+    public async Task<bool> IsUserLoginDataExisted(string userLoginData)
+    {
+        bool result = await _userManager.Users
+            .AsQueryable()
+            .AnyAsync(
+                u =>
+                    u.Email == userLoginData || u.PhoneNumber == userLoginData);
+        
+        return result;
+    }
+    
     /// <summary>
     /// Validates the user's login data (email and password).
     /// </summary>
@@ -122,16 +133,6 @@ public class UserAccountRepository
         bool isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
         bool isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
         
-        // bool[] validationResults = await Task.WhenAll(
-        //     _userManager.IsEmailConfirmedAsync(user),
-        //     _userManager.CheckPasswordAsync(user, password)
-        // );
-        //
-        // bool isValid = validationResults[0] && // isEmailConfirmed
-        //               validationResults[2] && // isPasswordValid
-        //               // user.IsTwoFactorEnabled && 
-        //               user.IsTwoFactorVerified;
-
         if (isEmailConfirmed && isCorrectPassword && user.IsTwoFactorVerified)
         {
             await _userManager.ResetAccessFailedCountAsync(user);

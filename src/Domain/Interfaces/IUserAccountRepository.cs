@@ -28,6 +28,13 @@ public interface IUserAccountRepository
     Task<bool> IsUserLoginDataExisted(UserAccountModel userAccountModel);
 
     /// <summary>
+    /// Checks if the specified user login data exists in the repository.
+    /// </summary>
+    /// <param name="userLoginData">The user login data (e.g., email or username) to check for existence.</param>
+    /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the login data exists.</returns>
+    Task<bool> IsUserLoginDataExisted(string userLoginData);
+
+    /// <summary>
     /// Validates the provided email and password against the stored user account credentials.
     /// </summary>
     /// <param name="email">The email address to validate.</param>

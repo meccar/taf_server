@@ -28,6 +28,7 @@ public static class RepositoriesConfiguration
             .AddScoped<IUserAccountRepository, UserAccountRepository>()
             .AddScoped<IUserProfileRepository, UserProfileRepository>()
             .AddScoped<IUserTokenRepository, UserTokenRepository>()
+            .AddScoped<ISignInRepository, SignInRepository>()
             .AddScoped<IJwtRepository, JwtRepository>()
             .AddScoped<IProfileService, ProfileService>()
             .AddScoped<IMfaRepository, MfaRepository>()

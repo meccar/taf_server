@@ -2,7 +2,6 @@ using System.Security.Claims;
 using Application.Commands.Auth.Register;
 using Application.Queries.Auth.Login;
 using Application.Queries.Auth.VerifyUser;
-using Application.Queries.Auth.VerifyUserEmail;
 using Asp.Versioning;
 using Infrastructure.Decorators.Guards;
 using MediatR;
@@ -121,30 +120,6 @@ public class AuthenticationController
             SessionId = sessionId,
             AllClaims = claims
         });
-    }
-
-    /// <summary>
-    /// Verifies if the user's email exists in the system.
-    /// </summary>
-    /// <param name="tokenRequestDto">The request containing the email verification token.</param>
-    /// <returns>A response indicating whether the user exists or not.</returns>
-    [HttpGet("verify/mail")]
-    [SwaggerOperation(
-        Summary = "Verify User",
-        Description = "Returns a JSON object indicating if email exists"
-    )]
-    [SwaggerResponse(200, "Successfully verify user", typeof(object))]
-    [SwaggerResponse(400, "Unauthorized")]
-    // [UserGuard]
-    public async Task<IActionResult> VerifyUserEmail([FromQuery] VerifyUserEmailRequestDto tokenRequestDto)
-    {
-        _logger.LogInformation("START: Verify User");
-    
-        var response = await _mediator.Send(new VerifyUserEmailQuery(tokenRequestDto));
-        
-        _logger.LogInformation("END: Verify User");
-        
-        return Ok(response);
     }
     
     /// <summary>

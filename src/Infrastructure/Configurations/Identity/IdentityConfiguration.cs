@@ -44,8 +44,8 @@ public static class IdentityConfiguration
                 options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
                 options.ClaimsIdentity.SecurityStampClaimType = ClaimTypes.System;
 
-                // options.SignIn.RequireConfirmedPhoneNumber = false;
-                // options.SignIn.RequireConfirmedEmail = true;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.SignIn.RequireConfirmedEmail = true;
 
                 // Tokens
                 options.Tokens.EmailConfirmationTokenProvider = TokenOptions.DefaultEmailProvider;
