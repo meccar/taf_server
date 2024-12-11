@@ -12,6 +12,10 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.Ciba;
 
+/// <summary>
+/// Represents the page model for handling user consent during backchannel login requests.
+/// This page is accessible only to authenticated users.
+/// </summary>
 [Authorize]
 [SecurityHeaders]
 public class Consent : PageModel
@@ -20,6 +24,12 @@ public class Consent : PageModel
     private readonly IEventService _events;
     private readonly ILogger<Consent> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Consent"/> class.
+    /// </summary>
+    /// <param name="interaction">The service used to interact with backchannel authentication requests.</param>
+    /// <param name="events">The event service for raising events.</param>
+    /// <param name="logger">The logger service used to log messages.</param>
     public Consent(
         IBackchannelAuthenticationInteractionService interaction,
         IEventService events,
@@ -30,11 +40,22 @@ public class Consent : PageModel
         _logger = logger;
     }
 
+    /// <summary>
+    /// Gets or sets the view model that contains the consent information to be displayed on the page.
+    /// </summary>
     public ViewModel View { get; set; } = default!;
 
+    /// <summary>
+    /// Gets or sets the input model that contains user consent choices.
+    /// </summary>
     [BindProperty]
     public InputModel Input { get; set; } = default!;
 
+    /// <summary>
+    /// Handles the GET request for the consent page. This method retrieves the login request by its ID and displays the consent UI.
+    /// </summary>
+    /// <param name="id">The ID of the login request.</param>
+    /// <returns>A task that represents the asynchronous operation. The result contains the IActionResult for the page.</returns>
     public async Task<IActionResult> OnGet(string? id)
     {
         if (!await SetViewModelAsync(id))
@@ -50,9 +71,13 @@ public class Consent : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// Handles the POST request for submitting consent. The user either grants or denies consent to the requested scopes.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous operation. The result contains the IActionResult for the page.</returns>
     public async Task<IActionResult> OnPost()
     {
-        // validate return url is still valid
+        // Validate the return URL and ensure the request is valid
         var request = await _interaction.GetLoginRequestByInternalIdAsync(Input.Id ?? throw new ArgumentNullException(nameof(Input.Id)));
         if (request == null || request.Subject.GetSubjectId() != User.GetSubjectId())
         {
@@ -62,23 +87,23 @@ public class Consent : PageModel
 
         CompleteBackchannelLoginRequest? result = null;
 
-        // user clicked 'no' - send back the standard 'access_denied' response
+        // User clicked 'no' - deny consent
         if (Input.Button == "no")
         {
             result = new CompleteBackchannelLoginRequest(Input.Id);
 
-            // emit event
+            // Emit consent denied event
             await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues));
             Telemetry.Metrics.ConsentDenied(request.Client.ClientId, request.ValidatedResources.ParsedScopes.Select(s => s.ParsedName));
         }
-        // user clicked 'yes' - validate the data
+        // User clicked 'yes' - grant consent and validate data
         else if (Input.Button == "yes")
         {
-            // if the user consented to some scope, build the response model
+            // If user consented to some scope, build the response model
             if (Input.ScopesConsented.Any())
             {
                 var scopes = Input.ScopesConsented;
-                if (ConsentOptions.EnableOfflineAccess == false)
+                if (!ConsentOptions.EnableOfflineAccess)
                 {
                     scopes = scopes.Where(x => x != Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess);
                 }
@@ -89,7 +114,7 @@ public class Consent : PageModel
                     Description = Input.Description
                 };
 
-                // emit event
+                // Emit consent granted event
                 await _events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues, result.ScopesValuesConsented, false));
                 Telemetry.Metrics.ConsentGranted(request.Client.ClientId, result.ScopesValuesConsented, false);
                 var denied = request.ValidatedResources.ParsedScopes.Select(s => s.ParsedName).Except(result.ScopesValuesConsented);
@@ -107,13 +132,13 @@ public class Consent : PageModel
 
         if (result != null)
         {
-            // communicate outcome of consent back to identityserver
+            // Complete the login request and communicate outcome to IdentityServer
             await _interaction.CompleteLoginRequestAsync(result);
 
             return RedirectToPage("/Ciba/All");
         }
 
-        // we need to redisplay the consent UI
+        // Redisplay the consent UI if validation fails
         if (!await SetViewModelAsync(Input.Id))
         {
             return RedirectToPage("/Home/Error/Index");
@@ -121,6 +146,11 @@ public class Consent : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// Sets the consent view model by retrieving the login request for the specified ID.
+    /// </summary>
+    /// <param name="id">The ID of the login request.</param>
+    /// <returns>A task that represents the asynchronous operation. The result indicates whether the view model was successfully set.</returns>
     private async Task<bool> SetViewModelAsync(string? id)
     {
         ArgumentNullException.ThrowIfNull(id);
@@ -138,6 +168,11 @@ public class Consent : PageModel
         }
     }
 
+    /// <summary>
+    /// Creates the consent view model based on the provided login request.
+    /// </summary>
+    /// <param name="request">The login request that contains information for the consent page.</param>
+    /// <returns>The created <see cref="ViewModel"/> for the consent page.</returns>
     private ViewModel CreateConsentViewModel(BackchannelUserLoginRequest request)
     {
         var vm = new ViewModel
@@ -180,6 +215,12 @@ public class Consent : PageModel
         return vm;
     }
 
+    /// <summary>
+    /// Creates a scope view model from an identity resource.
+    /// </summary>
+    /// <param name="identity">The identity resource.</param>
+    /// <param name="check">Indicates whether the scope should be checked.</param>
+    /// <returns>The created <see cref="ScopeViewModel"/>.</returns>
     private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
     {
         return new ScopeViewModel
@@ -194,6 +235,13 @@ public class Consent : PageModel
         };
     }
 
+    /// <summary>
+    /// Creates a scope view model from a parsed scope and API scope.
+    /// </summary>
+    /// <param name="parsedScopeValue">The parsed scope value.</param>
+    /// <param name="apiScope">The associated API scope.</param>
+    /// <param name="check">Indicates whether the scope should be checked.</param>
+    /// <returns>The created <see cref="ScopeViewModel"/>.</returns>
     private static ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
     {
         var displayName = apiScope.DisplayName ?? apiScope.Name;
@@ -214,6 +262,11 @@ public class Consent : PageModel
         };
     }
 
+    /// <summary>
+    /// Creates a scope view model for offline access.
+    /// </summary>
+    /// <param name="check">Indicates whether the scope should be checked.</param>
+    /// <returns>The created <see cref="ScopeViewModel"/> for offline access.</returns>
     private static ScopeViewModel GetOfflineAccessScope(bool check)
     {
         return new ScopeViewModel

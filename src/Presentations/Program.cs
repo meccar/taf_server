@@ -1,10 +1,19 @@
-using Presentations;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 
+namespace Presentations;
+
+/// <summary>
+/// The entry point for the application, configuring the application services and running the host.
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// The main entry point for the application.
+    /// </summary>
+    /// <param name="args">Command line arguments passed to the application.</param>
+    /// <returns>A task representing the asynchronous operation. Returns 0 if successful, 1 if an error occurred.</returns>
     public static async Task<int> Main(string[] args)
     {
         Log.Logger = new LoggerConfiguration()
@@ -21,9 +30,9 @@ public class Program
         {
             Log.Information("Starting host...");
             
-            WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
             
-            WebApplication? app = builder
+            WebApplication app = builder
                 .ConfigureBuilder()
                 .ConfigurePipeline();
 
@@ -50,5 +59,3 @@ public class Program
         }
     }
 }
-
-

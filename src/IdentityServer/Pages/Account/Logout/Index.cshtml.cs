@@ -2,7 +2,6 @@
 // See LICENSE in the project root for license information.
 
 using Domain.Aggregates;
-using Domain.Entities;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Services;
@@ -15,6 +14,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.Account.Logout;
 
+/// <summary>
+/// Handles the logout process for users, including showing the logout prompt and performing the actual logout.
+/// </summary>
 [SecurityHeaders]
 [AllowAnonymous]
 public class Index : PageModel
@@ -23,9 +25,18 @@ public class Index : PageModel
     private readonly IIdentityServerInteractionService _interaction;
     private readonly IEventService _events;
 
+    /// <summary>
+    /// The logout identifier, used to track the logout request context.
+    /// </summary>
     [BindProperty] 
     public string? LogoutId { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Index"/> class with the required dependencies.
+    /// </summary>
+    /// <param name="signInManager">The <see cref="SignInManager{T}"/> responsible for handling user sign-ins and sign-outs.</param>
+    /// <param name="interaction">The <see cref="IIdentityServerInteractionService"/> responsible for interacting with IdentityServer's interaction contexts.</param>
+    /// <param name="events">The <see cref="IEventService"/> for raising events related to user authentication and logout.</param>
     public Index(SignInManager<UserAccountAggregate> signInManager, IIdentityServerInteractionService interaction, IEventService events)
     {
         _signInManager = signInManager;
@@ -33,6 +44,11 @@ public class Index : PageModel
         _events = events;
     }
 
+    /// <summary>
+    /// Handles the HTTP GET request for the logout page. It determines whether to show the logout prompt or log out automatically.
+    /// </summary>
+    /// <param name="logoutId">The identifier for the logout request.</param>
+    /// <returns>A <see cref="Task{IActionResult}"/> representing the asynchronous operation.</returns>
     public async Task<IActionResult> OnGet(string? logoutId)
     {
         LogoutId = logoutId;
@@ -41,13 +57,13 @@ public class Index : PageModel
 
         if (User.Identity?.IsAuthenticated != true)
         {
-            // if the user is not authenticated, then just show logged out page
+            // if the user is not authenticated, then just show the logged out page
             showLogoutPrompt = false;
         }
         else
         {
             var context = await _interaction.GetLogoutContextAsync(LogoutId);
-            if (context?.ShowSignoutPrompt == false)
+            if (context.ShowSignoutPrompt == false)
             {
                 // it's safe to automatically sign-out
                 showLogoutPrompt = false;
@@ -64,39 +80,42 @@ public class Index : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// Handles the HTTP POST request for logging the user out. This method performs the logout actions and raises necessary events.
+    /// </summary>
+    /// <returns>A <see cref="Task{IActionResult}"/> representing the asynchronous operation.</returns>
     public async Task<IActionResult> OnPost()
     {
         if (User.Identity?.IsAuthenticated == true)
         {
-            // if there's no current logout context, we need to create one
+            // if there's no current logout context, create one
             // this captures necessary info from the current logged in user
             // this can still return null if there is no context needed
             LogoutId ??= await _interaction.CreateLogoutContextAsync();
                 
-            // delete local authentication cookie
+            // delete the local authentication cookie
             await _signInManager.SignOutAsync();
             
+            // delete the refresh token cookie
             HttpContext.Response.Cookies.Delete("__Secure_refresh_token");
 
-            // see if we need to trigger federated logout
+            // check if we need to trigger federated logout
             var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
 
             // raise the logout event
             await _events.RaiseAsync(new UserLogoutSuccessEvent(User.GetSubjectId(), User.GetDisplayName()));
             Telemetry.Metrics.UserLogout(idp);
 
-            // if it's a local login we can ignore this workflow
+            // if it's a local login, we can ignore this workflow
             if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
             {
-                // we need to see if the provider supports external logout
+                // check if the identity provider supports external logout
                 if (await HttpContext.GetSchemeSupportsSignOutAsync(idp))
                 {
-                    // build a return URL so the upstream provider will redirect back
-                    // to us after the user has logged out. this allows us to then
-                    // complete our single sign-out processing.
+                    // build the return URL so the external provider will redirect back here after logout
                     var url = Url.Page("/Account/Logout/Loggedout", new { logoutId = LogoutId });
 
-                    // this triggers a redirect to the external provider for sign-out
+                    // redirect to the external provider for sign-out
                     return SignOut(new AuthenticationProperties { RedirectUri = url }, idp);
                 }
             }
@@ -105,3 +124,4 @@ public class Index : PageModel
         return RedirectToPage("/Account/Logout/LoggedOut", new { logoutId = LogoutId });
     }
 }
+

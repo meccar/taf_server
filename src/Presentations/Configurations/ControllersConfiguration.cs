@@ -4,8 +4,16 @@ using Presentations.Controllers.Exceptions;
 
 namespace Presentations.Configurations;
 
+/// <summary>
+/// Provides extension methods for configuring controllers and their behavior.
+/// </summary>
 public static class ControllersConfiguration
 {
+    /// <summary>
+    /// Configures controllers with custom JSON serialization settings and exception filters.
+    /// </summary>
+    /// <param name="services">The service collection to add the configurations to.</param>
+    /// <returns>The updated <see cref="IServiceCollection"/> instance with the configured controllers.</returns>
     public static IServiceCollection ConfigureControllers(this IServiceCollection services)
     {
         services

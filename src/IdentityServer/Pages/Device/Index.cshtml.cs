@@ -7,7 +7,6 @@ using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Validation;
-using IdentityServer.Pages.Consent;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -15,15 +14,23 @@ using Microsoft.Extensions.Options;
 
 namespace IdentityServer.Pages.Device;
 
+/// <summary>
+/// The page model for handling device flow consent.
+/// </summary>
 [SecurityHeaders]
 [Authorize]
 public class Index : PageModel
 {
     private readonly IDeviceFlowInteractionService _interaction;
     private readonly IEventService _events;
-    private readonly IOptions<IdentityServerOptions> _options;
-    private readonly ILogger<Index> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Index"/> class.
+    /// </summary>
+    /// <param name="interaction">The device flow interaction service.</param>
+    /// <param name="eventService">The event service to raise consent events.</param>
+    /// <param name="options">The identity server options.</param>
+    /// <param name="logger">The logger for logging information and errors.</param>
     public Index(
         IDeviceFlowInteractionService interaction,
         IEventService eventService,
@@ -32,15 +39,24 @@ public class Index : PageModel
     {
         _interaction = interaction;
         _events = eventService;
-        _options = options;
-        _logger = logger;
     }
 
+    /// <summary>
+    /// Gets or sets the view model for rendering consent page UI.
+    /// </summary>
     public ViewModel View { get; set; } = default!;
 
+    /// <summary>
+    /// Gets or sets the input model, including the user's consent selection.
+    /// </summary>
     [BindProperty]
     public InputModel Input { get; set; } = default!;
 
+    /// <summary>
+    /// Handles GET requests to display the consent page.
+    /// </summary>
+    /// <param name="userCode">The user code to identify the device flow request.</param>
+    /// <returns>The action result to render the consent page.</returns>
     public async Task<IActionResult> OnGet(string? userCode)
     {
         if (String.IsNullOrWhiteSpace(userCode))
@@ -61,6 +77,10 @@ public class Index : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// Handles POST requests to submit the consent form and grant or deny access.
+    /// </summary>
+    /// <returns>The action result to redirect the user based on their choice.</returns>
     public async Task<IActionResult> OnPost()
     {
         var request = await _interaction.GetAuthorizationContextAsync(Input.UserCode ?? throw new ArgumentNullException(nameof(Input.UserCode)));
@@ -87,7 +107,7 @@ public class Index : PageModel
             if (Input.ScopesConsented.Any())
             {
                 var scopes = Input.ScopesConsented;
-                if (ConsentOptions.EnableOfflineAccess == false)
+                if (DeviceOptions.EnableOfflineAccess == false)
                 {
                     scopes = scopes.Where(x => x != Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess);
                 }
@@ -107,12 +127,12 @@ public class Index : PageModel
             }
             else
             {
-                ModelState.AddModelError("", ConsentOptions.MustChooseOneErrorMessage);
+                ModelState.AddModelError("", DeviceOptions.MustChooseOneErrorMessage);
             }
         }
         else
         {
-            ModelState.AddModelError("", ConsentOptions.InvalidSelectionErrorMessage);
+            ModelState.AddModelError("", DeviceOptions.InvalidSelectionErrorMessage);
         }
 
         if (grantedConsent != null)
@@ -132,7 +152,11 @@ public class Index : PageModel
         return Page();
     }
 
-
+    /// <summary>
+    /// Sets up the consent page's view model using the provided user code.
+    /// </summary>
+    /// <param name="userCode">The user code to identify the device flow request.</param>
+    /// <returns>A task representing the asynchronous operation, with a result indicating whether the view model was set.</returns>
     private async Task<bool> SetViewModelAsync(string userCode)
     {
         var request = await _interaction.GetAuthorizationContextAsync(userCode);
@@ -148,6 +172,11 @@ public class Index : PageModel
         }
     }
 
+    /// <summary>
+    /// Creates a view model for consent based on the device flow authorization request.
+    /// </summary>
+    /// <param name="request">The device flow authorization request.</param>
+    /// <returns>The view model for rendering the consent page.</returns>
     private ViewModel CreateConsentViewModel(DeviceFlowAuthorizationRequest request)
     {
         var vm = new ViewModel
@@ -158,8 +187,10 @@ public class Index : PageModel
             AllowRememberConsent = request.Client.AllowRememberConsent
         };
 
-        vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources.Select(x => CreateScopeViewModel(x, Input == null || Input.ScopesConsented.Contains(x.Name))).ToArray();
+        // Populate identity scope view models
+        vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources.Select(x => CreateScopeViewModel(x, Input.ScopesConsented.Contains(x.Name))).ToArray();
 
+        // Populate API scope view models
         var apiScopes = new List<ScopeViewModel>();
         foreach (var parsedScope in request.ValidatedResources.ParsedScopes)
         {
@@ -170,15 +201,24 @@ public class Index : PageModel
                 apiScopes.Add(scopeVm);
             }
         }
+
+        // Add offline access scope if enabled
         if (DeviceOptions.EnableOfflineAccess && request.ValidatedResources.Resources.OfflineAccess)
         {
             apiScopes.Add(GetOfflineAccessScope(Input == null || Input.ScopesConsented.Contains(Duende.IdentityServer.IdentityServerConstants.StandardScopes.OfflineAccess)));
         }
+
         vm.ApiScopes = apiScopes;
 
         return vm;
     }
 
+    /// <summary>
+    /// Creates a scope view model for identity resources.
+    /// </summary>
+    /// <param name="identity">The identity resource.</param>
+    /// <param name="check">Indicates whether the scope should be checked (selected).</param>
+    /// <returns>The scope view model.</returns>
     private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
     {
         return new ScopeViewModel
@@ -192,12 +232,18 @@ public class Index : PageModel
         };
     }
 
+    /// <summary>
+    /// Creates a scope view model for API scopes.
+    /// </summary>
+    /// <param name="parsedScopeValue">The parsed scope value.</param>
+    /// <param name="apiScope">The API scope.</param>
+    /// <param name="check">Indicates whether the scope should be checked (selected).</param>
+    /// <returns>The scope view model.</returns>
     private static ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
     {
         return new ScopeViewModel
         {
             Value = parsedScopeValue.RawValue,
-            // todo: use the parsed scope value in the display?
             DisplayName = apiScope.DisplayName ?? apiScope.Name,
             Description = apiScope.Description,
             Emphasize = apiScope.Emphasize,
@@ -206,6 +252,11 @@ public class Index : PageModel
         };
     }
 
+    /// <summary>
+    /// Gets the offline access scope view model.
+    /// </summary>
+    /// <param name="check">Indicates whether the offline access scope should be checked (selected).</param>
+    /// <returns>The offline access scope view model.</returns>
     private static ScopeViewModel GetOfflineAccessScope(bool check)
     {
         return new ScopeViewModel

@@ -1,15 +1,20 @@
 namespace IdentityServer.Pipeline;
 
+/// <summary>
+/// Provides extension methods for configuring the host in the application.
+/// </summary>
 public static class HostExtensions
 {
-    public static void AddAppConfigurations(this ConfigureHostBuilder host)
+    /// <summary>
+    /// Adds application-specific configurations to the host's configuration system.
+    /// </summary>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance to configure.</param>
+    public static void AddAppConfigurations(this WebApplicationBuilder builder)
     {
-        host.ConfigureAppConfiguration((context, config) =>
-        {
-            var env = context.HostingEnvironment;
-            config.AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
-                .AddEnvironmentVariables();
-        });
+        var env = builder.Environment;
+        builder.Configuration
+            .AddJsonFile("appsettings.json", false, true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
+            .AddEnvironmentVariables();
     }
 }

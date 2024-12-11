@@ -6,8 +6,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages;
 
+/// <summary>
+/// An action filter that adds common security-related HTTP headers to responses.
+/// This helps mitigate risks like clickjacking, content sniffing, and improves overall security posture.
+/// </summary>
 public sealed class SecurityHeadersAttribute : ActionFilterAttribute
 {
+    /// <summary>
+    /// Executes when the result is being executed. Adds HTTP security headers to the response.
+    /// </summary>
+    /// <param name="context">The context for the current action result execution.</param>
     public override void OnResultExecuting(ResultExecutingContext context)
     {
         ArgumentNullException.ThrowIfNull(context, nameof(context));
@@ -46,10 +54,10 @@ public sealed class SecurityHeadersAttribute : ActionFilterAttribute
             }
 
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
-            var referrer_policy = "no-referrer";
+            var referrerPolicy = "no-referrer";
             if (!context.HttpContext.Response.Headers.ContainsKey("Referrer-Policy"))
             {
-                context.HttpContext.Response.Headers.Append("Referrer-Policy", referrer_policy);
+                context.HttpContext.Response.Headers.Append("Referrer-Policy", referrerPolicy);
             }
         }
     }

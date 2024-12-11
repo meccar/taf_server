@@ -3,33 +3,76 @@ using Domain.Interfaces;
 using Domain.SeedWork.Query;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Exceptions;
-using Shared.Model;
 
 namespace Application.Queries.Auth.Login;
 
-public class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResponseDto>
+/// <summary>
+/// Handles the login query by validating user credentials and generating an authentication response.
+/// This handler processes the <see cref="LoginQuery"/>, validates the login credentials, and generates an authentication response 
+/// containing a JWT token and refresh token for the user.
+/// </summary>
+public class LoginQueryHandler : TransactionalQueryHandler<LoginQuery, LoginResponseDto>
 {
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IJwtRepository _jwtTokenRepository;
     private readonly IMapper _mapper;
+    private readonly ISignInRepository _signInRepository;
+    
+    /// <summary>
+    /// Initializes a new instance of the <see cref="LoginQueryHandler"/> class.
+    /// </summary>
+    /// <param name="unitOfWork">The unit of work for handling transactions.</param>
+    /// <param name="jwtTokenRepository">The JWT repository responsible for generating authentication tokens.</param>
+    /// <param name="mapper">The AutoMapper instance to map models to response DTOs.</param>
+    /// <param name="signInRepository">The repository responsible for handling user sign-in operations.</param>
     public LoginQueryHandler(
         IUnitOfWork unitOfWork,
         IJwtRepository jwtTokenRepository,
-        IMapper mapper
-        )
+        IMapper mapper,
+        ISignInRepository signInRepository
+        ) : base(unitOfWork)
     {
-        _unitOfWork = unitOfWork;
         _jwtTokenRepository = jwtTokenRepository;
         _mapper = mapper;
+        _signInRepository = signInRepository;
     }
 
-    public async Task<LoginResponseDto> Handle(LoginQuery request, CancellationToken cancellationToken)
+    /// <summary>
+    /// Handles the <see cref="LoginQuery"/>, validates the user's login credentials, and returns a <see cref="LoginResponseDto"/> 
+    /// containing the authentication token and refresh token if successful.
+    /// </summary>
+    /// <param name="request">The login query containing the user's email and password for authentication.</param>
+    /// <param name="cancellationToken">The cancellation token to monitor for task cancellation.</param>
+    /// <returns>A <see cref="LoginResponseDto"/> containing the JWT token and refresh token if the credentials are valid.</returns>
+    /// <exception cref="UnauthorizedException">Thrown when the user’s credentials are invalid.</exception>
+    /// <remarks>
+    /// This method first validates the user’s credentials using the <see cref="IUnitOfWork"/>'s UserAccountRepository.
+    /// If the credentials are valid, it generates an authentication response that includes a JWT token and refresh token,
+    /// using the <see cref="IJwtRepository"/>.
+    /// </remarks>
+    protected override async Task<LoginResponseDto> ExecuteCoreAsync(LoginQuery request, CancellationToken cancellationToken)
     {
-        if (!await _unitOfWork.UserAccountRepository.ValidateUserLoginData(request.Email, request.Password))
-            throw new UnauthorizedException("Invalid credentials");
-        request.Password = null;
-
-        var tokenModel = await _jwtTokenRepository.GenerateAuthResponseWithRefreshTokenCookie(request.Email);
-        return _mapper.Map<LoginResponseDto>(tokenModel); 
+        var result = await _signInRepository
+            .SignInAsync(
+                request.Email,
+                request.Password,
+                false
+            );
+        
+        request.Password = null!;
+        
+        if (result.Succeeded)
+        {
+            // Generate authentication token and refresh token
+            var tokenGenerationResult = await _jwtTokenRepository
+                .GenerateAuthResponseWithRefreshTokenCookie(
+                    result.Value.Item1,
+                    result.Value.Item2
+                );
+            
+            if (tokenGenerationResult.Succeeded)
+                return _mapper.Map<LoginResponseDto>(tokenGenerationResult.Value); 
+        }
+        
+        throw new UnauthorizedException(result.Errors.FirstOrDefault() ?? "Invalid credentials");
     }
 }

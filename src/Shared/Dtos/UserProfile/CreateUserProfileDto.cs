@@ -3,6 +3,9 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Shared.Dtos.UserProfile;
 
+/// <summary>
+/// DTO for creating a new user profile, containing the necessary information for registration.
+/// </summary>
 public class CreateUserProfileDto
 {
     /// <summary>

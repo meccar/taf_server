@@ -9,17 +9,32 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.ExternalLogin;
 
+/// <summary>
+/// Handles the external authentication challenge by redirecting the user to the specified external authentication provider.
+/// This page validates the return URL and initiates the challenge process for the specified external scheme.
+/// </summary>
 [AllowAnonymous]
 [SecurityHeaders]
 public class Challenge : PageModel
 {
     private readonly IIdentityServerInteractionService _interactionService;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Challenge"/> class.
+    /// </summary>
+    /// <param name="interactionService">The identity server interaction service used to validate return URLs.</param>
     public Challenge(IIdentityServerInteractionService interactionService)
     {
         _interactionService = interactionService;
     }
         
+    /// <summary>
+    /// Handles the GET request to challenge the user to authenticate via an external provider.
+    /// It validates the provided return URL and initiates the authentication process with the specified scheme.
+    /// </summary>
+    /// <param name="scheme">The authentication scheme to challenge (e.g., Google, Facebook, etc.).</param>
+    /// <param name="returnUrl">The URL to redirect the user to after successful authentication.</param>
+    /// <returns>An <see cref="IActionResult"/> representing the redirect to the external authentication provider.</returns>
     public IActionResult OnGet(string scheme, string? returnUrl)
     {
         if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";

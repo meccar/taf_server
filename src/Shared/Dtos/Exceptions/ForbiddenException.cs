@@ -2,6 +2,10 @@ using Shared.HttpResponses;
 
 namespace Shared.Dtos.Exceptions;
 
+/// <summary>
+/// Represents an exception that is thrown when a forbidden action is attempted.
+/// The HTTP status code associated with this exception is 403 (Forbidden).
+/// </summary>
 public class ForbiddenException : HttpResponseException
 {
     /// <summary>

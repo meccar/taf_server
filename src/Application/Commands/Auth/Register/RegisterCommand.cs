@@ -2,42 +2,38 @@
 using Shared.Dtos.Authentication.Register;
 using Shared.Dtos.UserAccount;
 using Shared.Dtos.UserProfile;
-using Shared.Model;
 
 namespace Application.Commands.Auth.Register;
 
 /// <summary>
-/// Represents a command to sign up a new user.
+/// Command used for registering a new user in the system.
+/// Contains the necessary data for creating both a user profile and a user account.
 /// </summary>
-/// <remarks>
-/// This command is used to create a new user account with the provided details.
-/// </remarks>
 public class RegisterCommand : ICommand<RegisterUserResponseDto>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommand"/> class.
     /// </summary>
-    /// <param name="dto">
-    /// The data transfer object containing the information necessary for user registration.
-    /// </param>
-    // public RegisterCommand(UserAccountModel userAccountModel, UserLoginDataModel userLoginDataModel) => 
-    //     (UserAccountModel, UserLoginDataModel) = (userAccountModel, userLoginDataModel);
-
-    public RegisterCommand(CreateUserProfileDto userProfileModel, CreateUserAccountDto userAccountModel) => 
-        (UserProfileModel, UserAccountModel) = (userProfileModel, userAccountModel);
+    /// <param name="userProfileDto">The user profile data transfer object containing details of the user's profile.</param>
+    /// <param name="userAccountDto">The user account data transfer object containing the user's account information.</param>
+    public RegisterCommand(
+        CreateUserProfileDto userProfileDto,
+        CreateUserAccountDto userAccountDto
+        ) => 
+        (UserProfileModel, UserAccountModel) = (userProfileDto, userAccountDto);
     /// <summary>
-    /// Gets or sets the user login information for the new account.
+    /// Gets or sets the user profile model, which holds the user's profile information.
     /// </summary>
     /// <value>
-    /// An instance of <see cref="CreateUserLoginDataDto"/> representing the user's login details.
+    /// The user profile data transfer object containing details about the user.
     /// </value>
     public CreateUserProfileDto UserProfileModel { get; set; }
-
     /// <summary>
-    /// Gets or sets the user account information for the new account.
+    /// Gets or sets the user account model, which holds the user's account information.
     /// </summary>
     /// <value>
-    /// An instance of <see cref="CreateUserAccountDto"/> representing the user's account details.
+    /// The user account data transfer object containing information about the user's account (e.g., username, password).
     /// </value>
     public CreateUserAccountDto UserAccountModel { get; set; }
+
 }

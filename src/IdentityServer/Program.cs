@@ -2,10 +2,20 @@ using System.Diagnostics;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
-using IdentityServer;
 
+namespace IdentityServer;
+
+/// <summary>
+/// The main entry point for the IdentityServer application.
+/// Configures and runs the web application.
+/// </summary>
 public class Program
 {
+    /// <summary>
+    /// The entry point for the application. Configures and runs the web application.
+    /// </summary>
+    /// <param name="args">The command-line arguments passed to the application.</param>
+    /// <returns>Returns an integer exit code indicating success (0) or failure (1).</returns>
     public static async Task<int> Main(string[] args)
     {
         Activity.DefaultIdFormat = ActivityIdFormat.W3C;

@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.Consent;
 
+/// <summary>
+/// Handles the consent page logic for users to approve or deny access to requested resources.
+/// </summary>
 [Authorize]
 [SecurityHeaders]
 public class Index : PageModel
@@ -21,6 +24,12 @@ public class Index : PageModel
     private readonly IEventService _events;
     private readonly ILogger<Index> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Index"/> class.
+    /// </summary>
+    /// <param name="interaction">The identity server interaction service.</param>
+    /// <param name="events">The event service for consent-related events.</param>
+    /// <param name="logger">The logger for the <see cref="Index"/> class.</param>
     public Index(
         IIdentityServerInteractionService interaction,
         IEventService events,
@@ -31,11 +40,22 @@ public class Index : PageModel
         _logger = logger;
     }
 
+    /// <summary>
+    /// Gets or sets the view model that will be used to render the consent page.
+    /// </summary>
     public ViewModel View { get; set; } = default!;
 
+    /// <summary>
+    /// Gets or sets the input model that contains the data submitted by the user.
+    /// </summary>
     [BindProperty]
     public InputModel Input { get; set; } = default!;
 
+    /// <summary>
+    /// Handles the HTTP GET request to display the consent page.
+    /// </summary>
+    /// <param name="returnUrl">The URL to redirect to after consent is granted.</param>
+    /// <returns>An action result representing the consent page.</returns>
     public async Task<IActionResult> OnGet(string? returnUrl)
     {
         if (!await SetViewModelAsync(returnUrl))
@@ -51,27 +71,31 @@ public class Index : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// Handles the HTTP POST request when the user submits their consent decision.
+    /// </summary>
+    /// <returns>An action result representing the outcome of the consent decision.</returns>
     public async Task<IActionResult> OnPost()
     {
-        // validate return url is still valid
+        // Validate the return URL is still valid
         var request = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
         if (request == null) return RedirectToPage("/Home/Error/Index");
 
         ConsentResponse? grantedConsent = null;
 
-        // user clicked 'no' - send back the standard 'access_denied' response
+        // User clicked 'no' - send back the standard 'access_denied' response
         if (Input.Button == "no")
         {
             grantedConsent = new ConsentResponse { Error = AuthorizationError.AccessDenied };
 
-            // emit event
+            // Emit event
             await _events.RaiseAsync(new ConsentDeniedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues));
             Telemetry.Metrics.ConsentDenied(request.Client.ClientId, request.ValidatedResources.ParsedScopes.Select(s => s.ParsedName));
         }
-        // user clicked 'yes' - validate the data
+        // User clicked 'yes' - validate the data
         else if (Input.Button == "yes")
         {
-            // if the user consented to some scope, build the response model
+            // If the user consented to some scope, build the response model
             if (Input.ScopesConsented.Any())
             {
                 var scopes = Input.ScopesConsented;
@@ -87,7 +111,7 @@ public class Index : PageModel
                     Description = Input.Description
                 };
 
-                // emit event
+                // Emit event
                 await _events.RaiseAsync(new ConsentGrantedEvent(User.GetSubjectId(), request.Client.ClientId, request.ValidatedResources.RawScopeValues, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent));
                 Telemetry.Metrics.ConsentGranted(request.Client.ClientId, grantedConsent.ScopesValuesConsented, grantedConsent.RememberConsent);
                 var denied = request.ValidatedResources.ParsedScopes.Select(s => s.ParsedName).Except(grantedConsent.ScopesValuesConsented);
@@ -107,11 +131,11 @@ public class Index : PageModel
         {
             ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
 
-            // communicate outcome of consent back to identityserver
+            // Communicate outcome of consent back to IdentityServer
             await _interaction.GrantConsentAsync(request, grantedConsent);
 
-            // redirect back to authorization endpoint
-            if (request.IsNativeClient() == true)
+            // Redirect back to authorization endpoint
+            if (request.IsNativeClient())
             {
                 // The client is native, so this change in how to
                 // return the response is for better UX for the end user.
@@ -121,7 +145,7 @@ public class Index : PageModel
             return Redirect(Input.ReturnUrl);
         }
 
-        // we need to redisplay the consent UI
+        // Redisplay the consent UI if necessary
         if (!await SetViewModelAsync(Input.ReturnUrl))
         {
             return RedirectToPage("/Home/Error/Index");
@@ -129,6 +153,11 @@ public class Index : PageModel
         return Page();
     }
 
+    /// <summary>
+    /// Sets the view model for the consent page based on the authorization request context.
+    /// </summary>
+    /// <param name="returnUrl">The URL to return to after consent is processed.</param>
+    /// <returns>True if the view model was successfully set; otherwise, false.</returns>
     private async Task<bool> SetViewModelAsync(string? returnUrl)
     {
         ArgumentNullException.ThrowIfNull(returnUrl);
@@ -146,6 +175,11 @@ public class Index : PageModel
         }
     }
 
+    /// <summary>
+    /// Creates a view model to represent the consent UI based on the authorization request.
+    /// </summary>
+    /// <param name="request">The authorization request.</param>
+    /// <returns>A view model representing the consent UI.</returns>
     private ViewModel CreateConsentViewModel(AuthorizationRequest request)
     {
         var vm = new ViewModel
@@ -157,7 +191,7 @@ public class Index : PageModel
         };
 
         vm.IdentityScopes = request.ValidatedResources.Resources.IdentityResources
-            .Select(x => CreateScopeViewModel(x, Input == null || Input.ScopesConsented.Contains(x.Name)))
+            .Select(x => CreateScopeViewModel(x, Input.ScopesConsented.Contains(x.Name)))
             .ToArray();
 
         var resourceIndicators = request.Parameters.GetValues(OidcConstants.AuthorizeRequest.Resource) ?? Enumerable.Empty<string>();
@@ -188,6 +222,12 @@ public class Index : PageModel
         return vm;
     }
 
+    /// <summary>
+    /// Creates a scope view model for identity resources.
+    /// </summary>
+    /// <param name="identity">The identity resource to create a view model for.</param>
+    /// <param name="check">Indicates whether the scope should be pre-selected.</param>
+    /// <returns>A view model representing the identity scope.</returns>
     private static ScopeViewModel CreateScopeViewModel(IdentityResource identity, bool check)
     {
         return new ScopeViewModel
@@ -202,9 +242,16 @@ public class Index : PageModel
         };
     }
 
+    /// <summary>
+    /// Creates a scope view model for API scopes.
+    /// </summary>
+    /// <param name="parsedScopeValue">The parsed scope value from the authorization request.</param>
+    /// <param name="apiScope">The API scope to create a view model for.</param>
+    /// <param name="check">Indicates whether the scope should be pre-selected.</param>
+    /// <returns>A view model representing the API scope.</returns>
     private static ScopeViewModel CreateScopeViewModel(ParsedScopeValue parsedScopeValue, ApiScope apiScope, bool check)
     {
-		var displayName = apiScope.DisplayName ?? apiScope.Name;
+        var displayName = apiScope.DisplayName ?? apiScope.Name;
         if (!String.IsNullOrWhiteSpace(parsedScopeValue.ParsedParameter))
         {
             displayName += ":" + parsedScopeValue.ParsedParameter;
@@ -222,6 +269,11 @@ public class Index : PageModel
         };
     }
 
+    /// <summary>
+    /// Creates a scope view model for offline access.
+    /// </summary>
+    /// <param name="check">Indicates whether offline access should be pre-selected.</param>
+    /// <returns>A view model representing the offline access scope.</returns>
     private static ScopeViewModel CreateOfflineAccessScope(bool check)
     {
         return new ScopeViewModel

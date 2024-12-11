@@ -1,8 +1,12 @@
 namespace Shared.Dtos.Authentication.Credentials;
 
+/// <summary>
+/// Represents a request to verify a user by their email and authenticator code.
+/// </summary>
 public class VerifyUserByAuthenticatorRequestDto
 {
-    public string Email { get; set; }
-    public string Token { get; set; }
-
+    /// <summary>
+    /// Gets or sets the authenticator Token provided by the user.
+    /// </summary>
+    public string AuthenticatorToken { get; set; } = null!;
 }

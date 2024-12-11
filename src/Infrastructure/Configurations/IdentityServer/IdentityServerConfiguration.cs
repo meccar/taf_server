@@ -1,13 +1,25 @@
 using System.Security.Cryptography.X509Certificates;
 using Duende.IdentityServer.Configuration;
-using Infrastructure.Repositories;
+using Duende.IdentityServer.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Persistance.Repositories;
 using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;
+
+/// <summary>
+/// Provides extension methods to configure Duende IdentityServer.
+/// </summary>
 public static class IdentityServerConfiguration
 {
+    /// <summary>
+    /// Configures IdentityServer with specified options, including signing credentials, caching, and key management.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/> to add services to.</param>
+    /// <param name="configuration">The environment configuration containing settings for IdentityServer.</param>
+    /// <returns>The modified <see cref="IServiceCollection"/> for chaining.</returns>
+    /// <exception cref="Exception">Thrown if the signing certificate is not found.</exception>
     public static IServiceCollection ConfigureIdentityServer(this IServiceCollection services, EnvironmentConfiguration configuration)
     {
         var cert = new X509Certificate2("certificate.pfx", "tung");
@@ -54,10 +66,10 @@ public static class IdentityServerConfiguration
                 // options.LicenseKey = "eyJhbG...";
             })
             .AddSigningCredential(cert)
-            .AddInMemoryClients(IdentityServerConfig.Clients)
-            .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources)
-            .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes)
-            .AddInMemoryApiResources(IdentityServerConfig.ApiResources)
+            .AddInMemoryClients(IdentityServerConfig.Clients ?? Array.Empty<Client>())
+            .AddInMemoryIdentityResources(IdentityServerConfig.IdentityResources ?? Array.Empty<IdentityResource>())
+            .AddInMemoryApiScopes(IdentityServerConfig.ApiScopes ?? Array.Empty<ApiScope>())
+            .AddInMemoryApiResources(IdentityServerConfig.ApiResources ?? Array.Empty<ApiResource>())
             .AddTestUsers(IdentityServerConfig.TestUsers)
             .AddProfileService<ProfileService>()
             .AddServerSideSessions()

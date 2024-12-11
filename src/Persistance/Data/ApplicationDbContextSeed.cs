@@ -16,40 +16,40 @@ public class ApplicationDbContextSeed
         new Dictionary<string, IReadOnlyCollection<string>>
         {
             { 
-                FORole.Admin, 
+                FoRole.Admin, 
                 new[] 
                 {
-                    FOClaimeActionsValue.View,
-                    FOClaimeActionsValue.Read,
-                    FOClaimeActionsValue.Update,
-                    FOClaimeActionsValue.Delete
+                    FoClaimeActionsValue.View,
+                    FoClaimeActionsValue.Read,
+                    FoClaimeActionsValue.Update,
+                    FoClaimeActionsValue.Delete
                 }
             },
             { 
-                FORole.CompanyManager, 
+                FoRole.CompanyManager, 
                 new[] 
                 {
-                    FOClaimeActionsValue.View,
-                    FOClaimeActionsValue.Read,
-                    FOClaimeActionsValue.Update
+                    FoClaimeActionsValue.View,
+                    FoClaimeActionsValue.Read,
+                    FoClaimeActionsValue.Update
                 }
             },
             { 
-                FORole.CompanyUser, 
+                FoRole.CompanyUser, 
                 new[] 
                 {
-                    FOClaimeActionsValue.View,
-                    FOClaimeActionsValue.Read,
-                    FOClaimeActionsValue.Update
+                    FoClaimeActionsValue.View,
+                    FoClaimeActionsValue.Read,
+                    FoClaimeActionsValue.Update
                 }
             },
             { 
-                FORole.User, 
+                FoRole.User, 
                 new[] 
                 {
-                    FOClaimeActionsValue.View,
-                    FOClaimeActionsValue.Read,
-                    FOClaimeActionsValue.Update
+                    FoClaimeActionsValue.View,
+                    FoClaimeActionsValue.Read,
+                    FoClaimeActionsValue.Update
                 }
             },
         };

@@ -32,5 +32,5 @@ public class HttpResponseException : Exception
     /// <summary>
     /// Gets a new message that provides additional context.
     /// </summary>
-    public string Message { get; }
+    public override string Message { get; }
 }

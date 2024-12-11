@@ -1,15 +1,21 @@
 namespace Presentations.Extensions;
 
+/// <summary>
+/// Provides extension methods for configuring the host builder.
+/// </summary>
 public static class HostExtensions
 {
-    public static void AddAppConfigurations(this ConfigureHostBuilder host)
+    /// <summary>
+    /// Adds application-specific configurations to the <see cref="WebApplicationBuilder"/>.
+    /// </summary>
+    /// <param name="builder">The <see cref="WebApplicationBuilder"/> instance to configure.</param>
+    public static void AddAppConfigurations(this WebApplicationBuilder builder)
     {
-        host.ConfigureAppConfiguration((context, config) =>
-        {
-            var env = context.HostingEnvironment;
-            config.AddJsonFile("appsettings.json", false, true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, true)
-                .AddEnvironmentVariables();
-        });
+        var env = builder.Environment;
+
+        builder.Configuration
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables();
     }
 }
