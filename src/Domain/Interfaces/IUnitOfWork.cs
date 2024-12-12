@@ -1,3 +1,6 @@
+using Domain.Interfaces.Credentials;
+using Domain.Interfaces.News;
+using Domain.Interfaces.User;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Domain.Interfaces;
@@ -62,4 +65,9 @@ public interface IUnitOfWork : IDisposable
     /// Gets or sets the repository for managing user token data.
     /// </summary>
     IUserTokenRepository UserTokenRepository { get; set; }
+    
+    /// <summary>
+    /// Gets or sets the repository for managing news data.
+    /// </summary>
+    INewsRepository NewsRepository { get; set; }
 }

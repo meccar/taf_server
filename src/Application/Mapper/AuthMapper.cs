@@ -46,6 +46,6 @@ public static class AuthMapper
         // Map TokenModel to UserProfileResponseDto
         config.CreateMap<TokenModel, UserProfileResponseDto>();
         // Map TokenModel to VerifyUserEmailRequestDto for verifying user email
-        config.CreateMap<TokenModel, VerifyUserEmailRequestDto>();
+        config.CreateMap<TokenModel, VerifyUserResponseDto>();
     }
 }

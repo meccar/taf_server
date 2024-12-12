@@ -572,6 +572,102 @@
             An object that provides additional information about the unauthorized request. This value is passed to the base exception class.
             </param>
         </member>
+        <member name="T:Shared.Dtos.News.CreateNewsRequestDto">
+            <summary>
+            DTO for creating a news item.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.News.CreateNewsRequestDto.ImageUrl">
+            <summary>
+            News's Image Url
+            </summary>
+            <example>https://example.com/news-image.jpg</example>
+        </member>
+        <member name="P:Shared.Dtos.News.CreateNewsRequestDto.Title">
+            <summary>
+            News's Title
+            </summary>
+            <example>Breaking News: Market Hits All-Time High</example>
+        </member>
+        <member name="P:Shared.Dtos.News.CreateNewsRequestDto.SubTitle">
+            <summary>
+            News's SubTitle
+            </summary>
+            <example>Key insights into the record-breaking stock market surge</example>
+        </member>
+        <member name="P:Shared.Dtos.News.CreateNewsRequestDto.Summary">
+            <summary>
+            News's Summary
+            </summary>
+            <example>The stock market has reached an unprecedented level, driven by tech growth.</example>
+        </member>
+        <member name="P:Shared.Dtos.News.CreateNewsRequestDto.Content">
+            <summary>
+            News's Content
+            </summary>
+            <example>The stock market hit a new milestone today, with major indices...</example>
+        </member>
+        <member name="P:Shared.Dtos.News.CreateNewsRequestDto.IsPublished">
+            <summary>
+            Is News Published
+            </summary>
+            <example>true</example>
+        </member>
+        <member name="T:Shared.Dtos.News.GetAllNewsResponseDto">
+            <summary>
+            DTO for returning news items in a paginated response
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.News.GetAllNewsResponseDto.Uuid">
+            <summary>
+            Unique identifier for the news item
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.News.GetAllNewsResponseDto.Title">
+            <summary>
+            Title of the news article
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.News.GetAllNewsResponseDto.Summary">
+            <summary>
+            Short summary or excerpt of the news article
+            </summary>
+        </member>
+        <member name="T:Shared.Dtos.Pagination.PaginationParams">
+            <summary>
+            Pagination parameters for filtering and sorting news
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Pagination.PaginationParams.PageNumber">
+            <summary>
+            Page number for pagination (default: 1)
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Pagination.PaginationParams.PageSize">
+            <summary>
+            Number of items per page (default: 10, max: 50)
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Pagination.PaginationParams.SearchTerm">
+            <summary>
+            Search term to filter news items
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Pagination.PaginationParams.SortBy">
+            <summary>
+            Property to sort by (e.g., "Title", "PublishedDate")
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Pagination.PaginationParams.IsAscending">
+            <summary>
+            Sort direction (true for ascending, false for descending)
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.Pagination.PaginationParams.Category">
+            <summary>
+            Category filter for news items
+            </summary>
+        </member>
         <member name="T:Shared.Dtos.UserAccount.CreateUserAccountDto">
             <summary>
             DTO for creating a new user account, containing the necessary information for registration.
@@ -943,6 +1039,37 @@
         <member name="F:Shared.FileObjects.FoRole.User">
             <summary>
             The User role, a general user with basic access to the system.
+            </summary>
+        </member>
+        <member name="T:Shared.Helpers.PaginationHelper`1">
+            <summary>
+            A generic pagination helper that can be used across different types and data sources
+            </summary>
+            <typeparam name="T">The type of items to paginate</typeparam>
+        </member>
+        <member name="M:Shared.Helpers.PaginationHelper`1.#ctor(System.Nullable{System.Int32},System.Nullable{System.Int32},System.String,System.String,System.Boolean,System.String)">
+            <summary>
+            Create a new pagination helper with optional parameters
+            </summary>
+        </member>
+        <member name="M:Shared.Helpers.PaginationHelper`1.PaginateAsync(System.Linq.IQueryable{`0})">
+            <summary>
+            Asynchronous version of Paginate for async data sources
+            </summary>
+        </member>
+        <member name="M:Shared.Helpers.PaginationHelper`1.ApplyCategoryFilter(System.Collections.Generic.IEnumerable{`0},System.String)">
+            <summary>
+            Apply category filtering based on a matching property
+            </summary>
+        </member>
+        <member name="M:Shared.Helpers.PaginationHelper`1.ApplySearch(System.Collections.Generic.IEnumerable{`0},System.String)">
+            <summary>
+            Apply search across string properties
+            </summary>
+        </member>
+        <member name="M:Shared.Helpers.PaginationHelper`1.ApplySorting(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Apply sorting based on a specified property
             </summary>
         </member>
         <member name="T:Shared.HttpResponses.ApiBadRequestResponse">
@@ -1359,10 +1486,12 @@
             Gets or sets the external identifier of the user profile.
             </summary>
         </member>
-        <member name="P:Shared.Model.UserProfileModel.LastName">
+        <member name="P:Shared.Model.UserProfileModel.FirstName">
             <summary>
             Gets or sets the first name of the user.
             </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.LastName">
             <summary>
             Gets or sets the last name of the user.
             </summary>
@@ -1400,6 +1529,11 @@
         <member name="P:Shared.Model.UserProfileModel.DeletedAt">
             <summary>
             Gets or sets the deletion date and time of the user profile.
+            </summary>
+        </member>
+        <member name="P:Shared.Model.UserProfileModel.IsDeleted">
+            <summary>
+            Whether user's profile is deleted.
             </summary>
         </member>
         <member name="P:Shared.Model.UserProfileModel.UserAccount">

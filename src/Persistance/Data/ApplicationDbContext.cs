@@ -45,6 +45,7 @@ public class ApplicationDbContext
     public DbSet<UserAccountAggregate> UserAccount { get; set; }
 
     #endregion
+    public DbSet<NewsAggregate> News { get; set; }
 
     /// <summary>
     /// Configures the model and applies configurations from the current assembly.

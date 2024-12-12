@@ -3,6 +3,7 @@ using Domain.Abstractions;
 using Domain.Entities;
 using Domain.SeedWork.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Persistance.Data;
 
 namespace Persistance.Repositories;
@@ -126,11 +127,11 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="entity">The entity to create.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public async Task<bool> CreateAsync(T entity)
+    public async Task<EntityEntry<T>?> CreateAsync(T entity)
     {
-        await _context.Set<T>().AddAsync(entity);
+        var addResult = await _context.Set<T>().AddAsync(entity);
         var result = await _context.SaveChangesAsync();
-        return result > 0;
+        return result > 0 ? addResult : null;
     }
     /// <summary>
     /// Creates a list of entities asynchronously.

@@ -1,8 +1,6 @@
 ﻿using Domain.Aggregates;
-using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Shared.Enums;
 
 namespace Persistance.Configurations.Entity;
 public class UserAccountConfiguration : IEntityTypeConfiguration<UserAccountAggregate>

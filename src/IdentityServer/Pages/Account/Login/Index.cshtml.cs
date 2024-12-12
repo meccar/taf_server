@@ -4,6 +4,7 @@
 using Application.Queries.Auth.Login;
 using Domain.Aggregates;
 using Domain.Interfaces;
+using Domain.Interfaces.Tokens;
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;

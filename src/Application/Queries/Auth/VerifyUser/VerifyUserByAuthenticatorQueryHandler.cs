@@ -1,6 +1,8 @@
 using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces;
+using Domain.Interfaces.Credentials;
+using Domain.Interfaces.Tokens;
 using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Exceptions;
 using Shared.Results;
@@ -58,35 +60,36 @@ public class VerifyUserByAuthenticatorQueryHandler : TransactionalQueryHandler<V
         Result<UserAccountAggregate> verifyEmailConfirmationTokenResult = await _mailRepository
             .VerifyEmailConfirmationToken(request.UrlToken);
 
-        if (verifyEmailConfirmationTokenResult.Succeeded)
-        {
-            Result validateMfaResult = await _mfaRepository
+        if (!verifyEmailConfirmationTokenResult.Succeeded)
+            throw new BadRequestException(
+                verifyEmailConfirmationTokenResult.Errors.FirstOrDefault() 
+                ?? "Something went wrong"
+            );   
+
+        Result validateMfaResult = await _mfaRepository
                 .ValidateMfa(
                     verifyEmailConfirmationTokenResult.Value!,
                     request.AuthenticatorToken
                 );
 
-            if (validateMfaResult.Succeeded)
-            {
-                var signInResult = await _signInRepository
-                    .SignInAsync(
-                        verifyEmailConfirmationTokenResult.Value!.Email!,
-                        null!,
-                        false
-                    );
-                
-                var tokenModel = await _jwtTokenRepository
-                    .GenerateAuthResponseWithRefreshTokenCookie(
-                        signInResult.Value.Item1, signInResult.Value.Item2 
-                    );
-                
-                return _mapper.Map<VerifyUserResponseDto>(tokenModel);
-            }
-        }
+        if (!validateMfaResult.Succeeded)
+            throw new BadRequestException(
+                validateMfaResult.Errors.FirstOrDefault() 
+                ?? "MFA validation failed"
+            );
         
-        throw new BadRequestException(
-            verifyEmailConfirmationTokenResult.Errors.FirstOrDefault() 
-            ?? "Something went wrong"
-        );
+        var signInResult = await _signInRepository
+            .SignInAsync(
+                verifyEmailConfirmationTokenResult.Value!.Email!,
+                null!,
+                false
+            );
+        
+        var tokenModel = await _jwtTokenRepository
+            .GenerateAuthResponseWithRefreshTokenCookie(
+                signInResult.Value.Item1, signInResult.Value.Item2 
+            );
+        
+        return _mapper.Map<VerifyUserResponseDto>(tokenModel.Value);
     }
 }

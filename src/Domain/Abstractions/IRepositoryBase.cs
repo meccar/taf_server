@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Domain.Entities;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Domain.Abstractions;
 /// <summary>
@@ -104,7 +105,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="entity">The entity to create.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task<bool> CreateAsync(T entity);
+    Task<EntityEntry<T>?> CreateAsync(T entity);
 
     /// <summary>
     /// Asynchronously creates a list of new entities.

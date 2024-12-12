@@ -23,12 +23,6 @@ public class UserAccountAggregate : IdentityUser<int>
     /// </summary>
     [Required]
     public required int UserProfileId { get; set; }
-    
-    // /// <summary>
-    // /// Gets or sets the status of the user's email verification.
-    // /// </summary>
-    // [MaxLength(7)]
-    // public string EmailStatus { get; set; } = EEmailStatus.Pending.ToString();
 
     /// <summary>
     /// Gets or sets the token used for password recovery.
@@ -41,11 +35,6 @@ public class UserAccountAggregate : IdentityUser<int>
     /// </summary>
     [MaxLength(50)]
     public string? ConfirmationToken { get; set; } = null;
-
-    // /// <summary>
-    // /// Gets or sets a value indicating whether two-factor authentication is enabled for the user.
-    // /// </summary>
-    // public bool IsTwoFactorEnabled { get; set; } = false;
 
     /// <summary>
     /// Gets or sets a value indicating whether the user has verified two-factor authentication.
