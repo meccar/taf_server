@@ -57,6 +57,8 @@ public static class ApiConfiguration
                     options.SubstituteApiVersionInUrl = true;
                 });
                 
+        // services.AddHttpContextAccessor();
+        
         return services;
     }
 }

@@ -36,6 +36,9 @@ public static class MapperConfiguration
             
             // Registers mappings for Auth-related models
             AuthMapper.CreateMap(config);
+            
+            // Registers mappings for News
+            NewsMapper.CreateMap(config);
         });
         
         return services;

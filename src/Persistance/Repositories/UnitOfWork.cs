@@ -1,4 +1,7 @@
 using Domain.Interfaces;
+using Domain.Interfaces.Credentials;
+using Domain.Interfaces.News;
+using Domain.Interfaces.User;
 using Microsoft.EntityFrameworkCore.Storage;
 using Persistance.Data;
 
@@ -31,7 +34,9 @@ public class UnitOfWork : IUnitOfWork
         
         IUserAccountRepository userAccountRepository,
         IUserProfileRepository userProfileRepository,
-        IUserTokenRepository userTokenRepository
+        IUserTokenRepository userTokenRepository,
+        
+        INewsRepository newsRepository 
         )
     {
         _context = context;
@@ -39,6 +44,8 @@ public class UnitOfWork : IUnitOfWork
         UserAccountRepository = userAccountRepository;
         UserProfileRepository = userProfileRepository;
         UserTokenRepository = userTokenRepository;
+
+        NewsRepository = newsRepository;
     }
     /// <summary>
     /// Gets the repository for user account commands.
@@ -54,6 +61,11 @@ public class UnitOfWork : IUnitOfWork
     /// Gets the repository for user token commands.
     /// </summary>
     public IUserTokenRepository UserTokenRepository { get; set; }
+    
+    /// <summary>
+    /// Gets the repository for news commands.
+    /// </summary>
+    public INewsRepository NewsRepository { get; set; }
 
     /// <summary>
     /// Releases the resources used by the <see cref="UnitOfWork"/> class.

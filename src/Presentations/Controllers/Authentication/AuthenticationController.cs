@@ -128,7 +128,7 @@ public class AuthenticationController
     /// <param name="userEmailRequestDto">The request containing the email verification data.</param>
     /// <param name="userByAuthenticatorRequestDto">The request containing the authenticator verification data.</param>
     /// <returns>A response indicating whether the verification succeeded.</returns>
-    [HttpPost("verify/mail")]
+    [HttpPost("verify/mail/{UrlToken}")]
     [SwaggerOperation(
         Summary = "Verify User",
         Description = "Returns a JSON object indicating if email exists"

@@ -2,9 +2,17 @@ using AspNetCore.Totp;
 using AspNetCore.Totp.Interface;
 using Domain.Abstractions;
 using Domain.Interfaces;
+using Domain.Interfaces.Credentials;
+using Domain.Interfaces.News;
+using Domain.Interfaces.Tokens;
+using Domain.Interfaces.User;
 using Duende.IdentityServer.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Persistance.Repositories;
+using Persistance.Repositories.Credentials;
+using Persistance.Repositories.News;
+using Persistance.Repositories.Tokens;
+using Persistance.Repositories.User;
 using Shared.Configurations.Environment;
 
 namespace Persistance.Configurations.Repositories;
@@ -28,6 +36,7 @@ public static class RepositoriesConfiguration
             .AddScoped<IUserAccountRepository, UserAccountRepository>()
             .AddScoped<IUserProfileRepository, UserProfileRepository>()
             .AddScoped<IUserTokenRepository, UserTokenRepository>()
+            .AddScoped<INewsRepository, NewsRepository>()
             .AddScoped<ISignInRepository, SignInRepository>()
             .AddScoped<IJwtRepository, JwtRepository>()
             .AddScoped<IProfileService, ProfileService>()

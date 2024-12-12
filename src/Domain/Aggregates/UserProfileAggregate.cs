@@ -55,8 +55,10 @@ public class UserProfileAggregate : EntityBase
     /// Gets or sets the user's gender.
     /// This value is required and represents the gender of the user.
     /// </summary>
-    [Required] 
-    public EGender Gender { get; set; }
+    [Required]
+    [MaxLength(6)]
+    public required string Gender { get; set; }
+    // public EGender Gender { get; set; }
 
     /// <summary>
     /// Gets or sets the user's date of birth.
@@ -84,33 +86,6 @@ public class UserProfileAggregate : EntityBase
     public string Status { get; set; } = EUserAccountStatus.Inactive.ToString();
     
     // public int CompanyId { get; set; }
-    
-    /// <summary>
-    /// Gets or sets the date and time when the user profile was created.
-    /// This value is required and represents when the profile was created in the system.
-    /// </summary>
-    [Required]
-    public new DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    
-    /// <summary>
-    /// Gets or sets the date and time when the user profile was last updated.
-    /// This value can be null if the profile has not been updated.
-    /// </summary>
-    public new DateTime UpdatedAt { get; set; }
-   
-    /// <summary>
-    /// Gets or sets the date and time when the user profile was deleted.
-    /// This is used for soft deletion purposes and is set when the profile is marked as deleted.
-    /// </summary>
-    public new DateTime? DeletedAt { get; set; }
-    
-    /// <summary>
-    /// Gets or sets a value indicating whether the user profile is marked as deleted.
-    /// This value is used for soft deletion, allowing the profile to remain in the system but be excluded from active use.
-    /// </summary>
-    public new bool IsDeleted { get; set; } = false;
-    
-    // public UserLoginDataExternalEntity? UserLoginDataExternal { get; set; }
 
     /// <summary>
     /// Gets or sets the associated user account for this profile.

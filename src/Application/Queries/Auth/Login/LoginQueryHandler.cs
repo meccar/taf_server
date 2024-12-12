@@ -1,5 +1,7 @@
 using AutoMapper;
 using Domain.Interfaces;
+using Domain.Interfaces.Credentials;
+using Domain.Interfaces.Tokens;
 using Domain.SeedWork.Query;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Exceptions;

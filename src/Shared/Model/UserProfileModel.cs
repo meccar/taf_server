@@ -18,7 +18,8 @@ public class UserProfileModel
     /// <summary>
     /// Gets or sets the first name of the user.
     /// </summary>
-
+    public string FirstName { get; set; } = "";
+    
     /// <summary>
     /// Gets or sets the last name of the user.
     /// </summary>
@@ -59,7 +60,12 @@ public class UserProfileModel
     /// <summary>
     /// Gets or sets the deletion date and time of the user profile.
     /// </summary>
-    public DateTime DeletedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
+    
+    /// <summary>
+    /// Whether user's profile is deleted.
+    /// </summary>
+    public bool IsDeleted { get; set; }
     
     // public UserLoginDataExternalEntity UserLoginDataExternal { get; set; }
     

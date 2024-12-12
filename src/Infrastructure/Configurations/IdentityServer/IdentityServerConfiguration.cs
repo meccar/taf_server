@@ -4,6 +4,7 @@ using Duende.IdentityServer.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Persistance.Repositories;
+using Persistance.Repositories.User;
 using Shared.Configurations.Environment;
 
 namespace Infrastructure.Configurations.IdentityServer;

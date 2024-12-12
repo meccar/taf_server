@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain.Interfaces;
-using Domain.SeedWork.Command;
 using Shared.Dtos.Authentication.Register;
 using Shared.Dtos.Exceptions;
 using Shared.Model;
@@ -48,6 +47,10 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
         if (await UnitOfWork.UserAccountRepository.IsUserLoginDataExisted(userAccountModel))
             throw new BadRequestException("Either Email or Phone number already exists");
 
+        userProfileModel.IsDeleted = false;
+        userProfileModel.DeletedAt = null;
+        userProfileModel.CreatedAt = DateTime.Now;
+        
         // Create user account
         var userProfile = await UnitOfWork
             .UserProfileRepository
