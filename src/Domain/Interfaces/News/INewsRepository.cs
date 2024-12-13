@@ -7,7 +7,7 @@ namespace Domain.Interfaces.News;
 public interface INewsRepository
 {
     Task<Result<List<NewsAggregate>>> GetAllNewsAsync();
-    Task<Result<NewsModel>> CreateNewsAsync(NewsModel newsModel);
+    Task<Result<NewsAggregate>> CreateNewsAsync(NewsAggregate newsAggregate);
     Task<Result<NewsAggregate>> GetDetailNewsAsync(string id);
-    Task<Result<NewsModel>> UpdateAsync(NewsModel newsModel);
+    Task<Result<NewsAggregate>> UpdateAsync(NewsAggregate newsAggregate);
 }

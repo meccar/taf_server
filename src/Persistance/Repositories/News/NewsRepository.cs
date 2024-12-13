@@ -41,23 +41,21 @@ public class NewsRepository
             : Result<NewsAggregate>.Failure("Failed to get news");
     }
     
-    public async Task<Result<NewsModel>> CreateNewsAsync(NewsModel newsModel)
+    public async Task<Result<NewsAggregate>> CreateNewsAsync(NewsAggregate newsAggregate)
     {
-        var newsAggregate = _mapper.Map<NewsAggregate>(newsModel);
-        
         var created = await CreateAsync(newsAggregate);
 
         return created != null
-            ? Result<NewsModel>.Success(_mapper.Map<NewsModel>(created.Entity))
-            : Result<NewsModel>.Failure("Failed to create news");
+            ? Result<NewsAggregate>.Success(created.Entity)
+            : Result<NewsAggregate>.Failure("Failed to create news");
     }
 
-    public async Task<Result<NewsModel>> UpdateAsync(NewsModel newsModel)
+    public async Task<Result<NewsAggregate>> UpdateAsync(NewsAggregate newsAggregate)
     {
-        var newsAggregate = _mapper.Map<NewsAggregate>(newsModel);
-
         var result = await UpdateAsync(newsAggregate);
         
-        return Result<NewsModel>.Success(_mapper.Map<NewsModel>(result));
+        return result.Succeeded
+            ? Result<NewsAggregate>.Success(result.Value!)
+            : Result<NewsAggregate>.Failure(result.Errors.FirstOrDefault() ?? "Failed to update news");
     }
 }

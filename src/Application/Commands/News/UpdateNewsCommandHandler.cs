@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.Aggregates;
 using Domain.Interfaces;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
@@ -35,9 +36,9 @@ public class UpdateNewsCommandHandler : TransactionalCommandHandler<UpdateNewsCo
         if (!(user.Id == GetNewsResult.Value!.CreatedByUserAccountId))
             throw new UnauthorizedException("You do not have permission to update the news");
 
-        var newsModel = _mapper.Map<NewsModel>(request.UpdateNewsRequestDto);
+        var newsAggregate = _mapper.Map<NewsAggregate>(request);
         
-        var result = await UnitOfWork.NewsRepository.UpdateAsync(newsModel);
+        var result = await UnitOfWork.NewsRepository.UpdateAsync(newsAggregate);
         
         return result.Succeeded 
             ?_mapper.Map<UpdateNewsResponseDto>(result.Value)

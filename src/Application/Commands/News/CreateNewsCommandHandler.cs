@@ -1,4 +1,5 @@
 using AutoMapper;
+using Domain.Aggregates;
 using Domain.Interfaces;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
@@ -22,14 +23,14 @@ public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCo
     {
         var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
 
-        var newsModel = _mapper.Map<NewsModel>(request.NewsRequestModel);
+        var newsAggregate = _mapper.Map<NewsAggregate>(request);
         
-        newsModel.CreatedByUserAccountId = user!.Id;
-        newsModel.UpdatedByUserAccountId = user.Id;
-        newsModel.CreatedAt = DateTime.Now;
-        newsModel.DeletedAt = null;
+        newsAggregate.CreatedByUserAccountId = user!.Id;
+        newsAggregate.UpdatedByUserAccountId = user.Id;
+        newsAggregate.CreatedAt = DateTime.Now;
+        newsAggregate.DeletedAt = null;
         
-        var result = await UnitOfWork.NewsRepository.CreateNewsAsync(newsModel);
+        var result = await UnitOfWork.NewsRepository.CreateNewsAsync(newsAggregate);
 
         if (result.Succeeded)
             return _mapper.Map<CreateNewsResponseDto>(result.Value); 
