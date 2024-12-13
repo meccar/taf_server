@@ -36,7 +36,6 @@ public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCo
         
         throw new BadRequestException(
             result.Errors.FirstOrDefault() 
-            ?? "There was an error creating the news"
-        );
+            ?? "There was an error creating the news");
     }
 }

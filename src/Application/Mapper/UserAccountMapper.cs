@@ -1,3 +1,4 @@
+using Application.Commands.UserAccount;
 using AutoMapper;
 using Domain.Aggregates;
 using Shared.Model;
@@ -29,5 +30,8 @@ public static class UserAccountMapper
         // Map UserProfileModel to UserProfileAggregate, ignoring the EId property
         config.CreateMap<UserProfileModel, UserProfileAggregate>()
             .ForMember(dest => dest.EId, opt => opt.Ignore());
+
+        config.CreateMap<UpdateUserAccountCommand, UserProfileAggregate>();
+
     }
 }

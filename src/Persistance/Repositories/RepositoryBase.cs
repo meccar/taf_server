@@ -147,11 +147,14 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="entity">The entity to update.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task UpdateAsync(T entity)
+    public async Task<T> UpdateAsync(T entity)
     {
         if (_context.Entry(entity).State != EntityState.Unchanged)
             _context.Entry(entity).CurrentValues.SetValues(entity);
-        return Task.CompletedTask;
+        else
+            _context.Set<T>().Update(entity);
+        
+        return entity;
     }
     /// <summary>
     /// Deletes an existing entity asynchronously.

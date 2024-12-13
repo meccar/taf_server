@@ -35,15 +35,13 @@ public class UserProfileRepository
     /// </summary>
     /// <param name="request">The user profile model containing the details of the profile to be created.</param>
     /// <returns>A result containing the created user profile model or a failure message.</returns>
-    public async Task<Result<UserProfileModel>> CreateUserProfileAsync(UserProfileModel request)
+    public async Task<Result<UserProfileAggregate>> CreateUserProfileAsync(UserProfileAggregate userProfileAggregate)
     {
-        var userProfileEntity = _mapper.Map<UserProfileAggregate>(request);
-        
-        var created = await CreateAsync(userProfileEntity);
+        var created = await CreateAsync(userProfileAggregate);
         
         return created != null
-            ? Result<UserProfileModel>.Success(_mapper.Map<UserProfileModel>(created.Entity))
-            : Result<UserProfileModel>.Failure("Failed to create user account. Please try again.");
+            ? Result<UserProfileAggregate>.Success(created.Entity)
+            : Result<UserProfileAggregate>.Failure("Failed to create user account. Please try again.");
     }
     
     /// <summary>

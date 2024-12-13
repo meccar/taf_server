@@ -16,5 +16,9 @@ public static class NewsMapper
         config.CreateMap<NewsModel, GetDetailNewsResponseDto>();
         config.CreateMap<NewsModel, NewsAggregate>();
         config.CreateMap<NewsAggregate, NewsModel>();
+        
+        config.CreateMap<NewsAggregate, GetDetailNewsResponseDto>();
+
+        
     }
 }

@@ -7,8 +7,7 @@ public class CreateNewsCommand : ICommand<CreateNewsResponseDto>
 {
     public CreateNewsCommand(
         CreateNewsRequestDto newsRequestDto
-    ) =>
-    NewsRequestModel = newsRequestDto;
+    ) => NewsRequestModel = newsRequestDto;
     
     public CreateNewsRequestDto NewsRequestModel { get; set; }
 }

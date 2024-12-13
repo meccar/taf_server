@@ -1,4 +1,6 @@
+using Application.Commands.Auth.Register;
 using AutoMapper;
+using Domain.Aggregates;
 using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Authentication.Register;
@@ -47,5 +49,10 @@ public static class AuthMapper
         config.CreateMap<TokenModel, UserProfileResponseDto>();
         // Map TokenModel to VerifyUserEmailRequestDto for verifying user email
         config.CreateMap<TokenModel, VerifyUserResponseDto>();
+        
+        config.CreateMap<RegisterCommand, UserProfileAggregate>();
+        config.CreateMap<UserProfileAggregate, RegisterUserResponseDto>();
+        config.CreateMap<RegisterCommand, UserAccountAggregate>();
+        config.CreateMap<UserAccountAggregate, UserAccountResponseDto>();
     }
 }

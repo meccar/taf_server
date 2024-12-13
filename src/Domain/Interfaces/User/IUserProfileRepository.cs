@@ -1,3 +1,4 @@
+using Domain.Aggregates;
 using Shared.Model;
 using Shared.Results;
 
@@ -17,7 +18,7 @@ public interface IUserProfileRepository
     /// </summary>
     /// <param name="createUserAccountDto">The user profile model containing the data to create a new user profile.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains a <see cref="Result{UserProfileModel}"/> object with the created user profile.</returns>
-    Task<Result<UserProfileModel>> CreateUserProfileAsync(UserProfileModel createUserAccountDto);
+    Task<Result<UserProfileAggregate>> CreateUserProfileAsync(UserProfileAggregate userProfileAggregate);
 
     /// <summary>
     /// Retrieves the status of a user account by its user ID.

@@ -8,6 +8,6 @@ public class GetDetailNewsQuery : IQuery<GetDetailNewsResponseDto>
     public string Eid { get; set; }
 
     public GetDetailNewsQuery(
-        GetDetailNewsRequestDto getDetailNewsRequestDto
-    ) => Eid = getDetailNewsRequestDto.Eid;
+        string eid
+    ) => Eid = eid;
 }

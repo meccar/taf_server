@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Domain.Aggregates;
 using Domain.Interfaces;
 using Shared.Dtos.Authentication.Register;
 using Shared.Dtos.Exceptions;
@@ -40,37 +41,37 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
     /// </exception>
     protected override async Task<RegisterUserResponseDto> ExecuteCoreAsync(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var userProfileModel = _mapper.Map<UserProfileModel>(request.UserProfileModel);
-        var userAccountModel = _mapper.Map<UserAccountModel>(request.UserAccountModel);
+        var userProfileAggregate = _mapper.Map<UserProfileAggregate>(request);
+        var userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);
         
         // Validate existing user login data
-        if (await UnitOfWork.UserAccountRepository.IsUserLoginDataExisted(userAccountModel))
+        if (await UnitOfWork.UserAccountRepository.IsUserLoginDataExisted(userAccountAggregate))
             throw new BadRequestException("Either Email or Phone number already exists");
 
-        userProfileModel.IsDeleted = false;
-        userProfileModel.DeletedAt = null;
-        userProfileModel.CreatedAt = DateTime.Now;
+        userProfileAggregate.IsDeleted = false;
+        userProfileAggregate.DeletedAt = null;
+        userProfileAggregate.CreatedAt = DateTime.Now;
         
         // Create user account
         var userProfile = await UnitOfWork
             .UserProfileRepository
-            .CreateUserProfileAsync(userProfileModel);
+            .CreateUserProfileAsync(userProfileAggregate);
 
         if (!userProfile.Succeeded)
             throw new BadRequestException("Failed to create user account");
 
         // Associate login data with the new account
-        userAccountModel.UserProfileId = userProfile.Value!.Id;
+        userAccountAggregate.UserProfileId = userProfile.Value!.Id;
 
         var userAccount = await UnitOfWork
             .UserAccountRepository
-            .CreateUserAccountAsync(userAccountModel);
+            .CreateUserAccountAsync(userAccountAggregate, request.Password);
 
         if (!userAccount.Succeeded)
             throw new BadRequestException("Failed to create user login data");
 
         // Attach login data to the user account
-        userProfile.Value.UserAccount = userAccount.Value;
+        userProfile.Value.UserAccount = userAccount.Value!;
 
         var response = _mapper.Map<RegisterUserResponseDto>(userProfile.Value);
 
