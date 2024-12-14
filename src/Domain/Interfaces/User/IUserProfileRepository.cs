@@ -20,6 +20,8 @@ public interface IUserProfileRepository
     /// <returns>A task representing the asynchronous operation. The task result contains a <see cref="Result{UserProfileModel}"/> object with the created user profile.</returns>
     Task<Result<UserProfileAggregate>> CreateUserProfileAsync(UserProfileAggregate userProfileAggregate);
 
+    Task<Result<UserProfileAggregate>> UpdateUserProfileAsync(UserProfileAggregate userProfileAggregate);
+    
     /// <summary>
     /// Retrieves the status of a user account by its user ID.
     /// </summary>

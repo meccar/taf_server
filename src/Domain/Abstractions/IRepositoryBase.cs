@@ -20,7 +20,7 @@ public interface IRepositoryBase<T> where T : EntityBase
     /// </summary>
     /// <param name="entity">The entity to update.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task<T> UpdateAsync(T entity);
+    Task<T?> UpdateAsync(T entity);
 
     #endregion
 

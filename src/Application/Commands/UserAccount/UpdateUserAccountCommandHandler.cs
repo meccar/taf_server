@@ -24,7 +24,7 @@ public class UpdateUserAccountCommandHandler : TransactionalCommandHandler<Updat
         var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
 
         if (user == null)
-            throw new BadRequestException("User not found");
+            throw new UnauthorizedException("You do not have permission to update this user");
         
         if (!(user.EId == request.Eid))
             throw new UnauthorizedException("You do not have permission to update this user");

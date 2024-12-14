@@ -23,14 +23,6 @@ public static class UserAccountMapper
     /// </remarks>
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        // Map UserProfileAggregate to UserProfileModel, and map the UserAccount property
-        config.CreateMap<UserProfileAggregate, UserProfileModel>()
-            .ForMember(dest => dest.UserAccount, opt => opt.MapFrom(src => src.UserAccount));
-
-        // Map UserProfileModel to UserProfileAggregate, ignoring the EId property
-        config.CreateMap<UserProfileModel, UserProfileAggregate>()
-            .ForMember(dest => dest.EId, opt => opt.Ignore());
-
         config.CreateMap<UpdateUserAccountCommand, UserProfileAggregate>();
 
     }

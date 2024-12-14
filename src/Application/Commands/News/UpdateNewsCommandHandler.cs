@@ -3,7 +3,6 @@ using Domain.Aggregates;
 using Domain.Interfaces;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
-using Shared.Model;
 
 namespace Application.Commands.News;
 

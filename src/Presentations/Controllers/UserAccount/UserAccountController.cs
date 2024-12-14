@@ -11,7 +11,7 @@ namespace Presentations.Controllers.UserAccount;
 
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}")]
+[Route("api/v{version:apiVersion}/[controller]")]
 public class UserAccountController
     : ControllerBase
 {
@@ -27,13 +27,13 @@ public class UserAccountController
         _mediator = mediator;
     }
 
-    [HttpPatch("register/{eid}")]
+    [HttpPatch("{eid}")]
     [SwaggerOperation(
         Summary = "Register a new user",
         Description =
             "Registers a new user with the provided details. Returns a sign-in response upon successful registration."
     )]
-    [SwaggerResponse(201, "User successfully registered", typeof(RegisterUserResponseDto))]
+    [SwaggerResponse(201, "User successfully registered", typeof(UpdateUserAccountResponseDto))]
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
     [UserGuard]
@@ -42,11 +42,11 @@ public class UserAccountController
         [FromBody] UpdateUserAccountRequestDto updateUserAccountRequestDto
     )
     {
-        _logger.LogInformation($"START: Updating user with id: {eid}");
+        _logger.LogInformation($"START: Updating user account with id: {eid}");
 
         var response = await _mediator.Send(new UpdateUserAccountCommand(updateUserAccountRequestDto, eid));
         
-        _logger.LogInformation($"END: User with id {eid} updated");
+        _logger.LogInformation($"END: User account with id {eid} updated");
 
         return Ok(response);
     }

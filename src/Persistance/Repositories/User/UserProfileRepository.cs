@@ -43,6 +43,15 @@ public class UserProfileRepository
             ? Result<UserProfileAggregate>.Success(created.Entity)
             : Result<UserProfileAggregate>.Failure("Failed to create user account. Please try again.");
     }
+
+    public async Task<Result<UserProfileAggregate>> UpdateUserProfileAsync(UserProfileAggregate userProfileAggregate)
+    {
+        var updated = await UpdateAsync(userProfileAggregate);
+        
+        return updated != null
+            ? Result<UserProfileAggregate>.Success(updated)
+            : Result<UserProfileAggregate>.Failure("Failed to update user profile. Please try again.");
+    }
     
     /// <summary>
     /// Retrieves the status of a user account asynchronously by user ID.
