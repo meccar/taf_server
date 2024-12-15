@@ -63,4 +63,13 @@ public class UserProfileRepository
         var userAccount = await GetByIdAsync(userId);
         return userAccount.Status;
     }
+    
+    public async Task<Result<UserProfileAggregate>> SoftDeleteUserAccount(UserProfileAggregate userProfileAggregate)
+    {
+        var updated = await UpdateAsync(userProfileAggregate);
+        
+        return updated != null
+            ? Result<UserProfileAggregate>.Success(updated)
+            : Result<UserProfileAggregate>.Failure("Failed to update user profile. Please try again.");
+    }
 }

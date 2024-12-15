@@ -28,4 +28,6 @@ public interface IUserProfileRepository
     /// <param name="userId">The user ID of the account to retrieve the status for.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the status of the user account as a string.</returns>
     Task<string> GetUserAccountStatusAsync(string userId);
+
+    Task<Result<UserProfileAggregate>> SoftDeleteUserAccount(UserProfileAggregate userProfileAggregate);
 }
