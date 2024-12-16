@@ -9,8 +9,6 @@ namespace Domain.Entities;
 /// </summary>
 public abstract class EntityBase : IEntityBase
 {
-    private DateTime? _updatedAt;
-    
     /// <summary>
     /// Gets or sets a value indicating whether the entity has been deleted.
     /// When set to <c>true</c>, the entity is considered deleted and should no longer be used.
@@ -29,15 +27,7 @@ public abstract class EntityBase : IEntityBase
     /// This timestamp is updated whenever any changes are made to the entity.
     /// A <c>null</c> value indicates that the entity has not been updated since its creation.
     /// </summary>
-    public DateTime? UpdatedAt
-    {
-        get => _updatedAt;
-        set
-        {
-            _updatedAt = value;
-            _updatedAt = DateTime.Now;
-        }
-    }
+    public DateTime? UpdatedAt { get; set; }
 
     /// <summary>
     /// Gets or sets the date and time when the entity was deleted.

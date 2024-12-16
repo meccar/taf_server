@@ -1,8 +1,8 @@
 using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces.User;
+using Microsoft.EntityFrameworkCore;
 using Persistance.Data;
-using Shared.Model;
 using Shared.Results;
 
 namespace Persistance.Repositories.User;
@@ -14,6 +14,7 @@ public class UserProfileRepository
     : RepositoryBase<UserProfileAggregate>, IUserProfileRepository
 {
     private readonly IMapper _mapper;
+    private readonly ApplicationDbContext _context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserProfileRepository"/> class.
@@ -27,7 +28,7 @@ public class UserProfileRepository
         : base(context)
     {
         _mapper = mapper;
-
+        _context = context;
     }
     
     /// <summary>
@@ -58,10 +59,13 @@ public class UserProfileRepository
     /// </summary>
     /// <param name="userId">The user ID for which the account status is to be retrieved.</param>
     /// <returns>The status of the user account.</returns>
-    public async Task<string> GetUserAccountStatusAsync(string userId)
+    public async Task<Result<UserProfileAggregate>> GetUserProfileAsync(int eid)
     {
-        var userAccount = await GetByIdAsync(userId);
-        return userAccount.Status;
+        var userAccount = await GetByIdAsync(eid);
+        
+        return userAccount != null
+            ? Result<UserProfileAggregate>.Success(userAccount)
+            : Result<UserProfileAggregate>.Failure("Failed to get user profile. Please try again.");
     }
     
     public async Task<Result<UserProfileAggregate>> SoftDeleteUserAccount(UserProfileAggregate userProfileAggregate)

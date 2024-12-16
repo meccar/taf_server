@@ -150,4 +150,19 @@ public class UserAccountRepository
         var principal = _httpContextAccessor.HttpContext?.User;
         return principal != null ? await _userManager.GetUserAsync(principal) : null;
     }
+    
+    public async Task<Result<UserAccountAggregate>> GetCurrentUser(string eid)
+    {
+        var principal = _httpContextAccessor.HttpContext?.User;
+        
+        if (principal == null)
+            return Result<UserAccountAggregate>.Failure("You do not have permission");
+        
+        var user = await _userManager.GetUserAsync(principal);
+        
+        return user!.EId == eid 
+            ? Result<UserAccountAggregate>.Success(user)
+            : Result<UserAccountAggregate>.Failure("You do not have permission");
+    }
+    
 }

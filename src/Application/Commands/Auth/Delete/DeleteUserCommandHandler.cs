@@ -1,12 +1,11 @@
 using AutoMapper;
-using Domain.Aggregates;
 using Domain.Interfaces;
-using Shared.Dtos.Authentication;
+using Shared.Dtos;
 using Shared.Dtos.Exceptions;
 
 namespace Application.Commands.Auth.Delete;
 
-public class DeleteUserCommandHandler : TransactionalCommandHandler<DeleteUserCommand, DeleteUserResponseDto>
+public class DeleteUserCommandHandler : TransactionalCommandHandler<DeleteUserCommand, SuccessResponseDto>
 {
     private readonly IMapper _mapper;
     public DeleteUserCommandHandler(
@@ -17,23 +16,26 @@ public class DeleteUserCommandHandler : TransactionalCommandHandler<DeleteUserCo
         _mapper = mapper;
     }
 
-    protected override async Task<DeleteUserResponseDto> ExecuteCoreAsync(DeleteUserCommand request, CancellationToken cancellationToken)
+    protected override async Task<SuccessResponseDto> ExecuteCoreAsync(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
+        var getCurrentUserResult = await UnitOfWork.UserAccountRepository.GetCurrentUser(request.UserAccountEid);
         
-        if (user == null)
-            throw new UnauthorizedException("You do not have permission to delete this user");
+        if (!getCurrentUserResult.Succeeded)
+            throw new UnauthorizedException(getCurrentUserResult.Errors.FirstOrDefault()!);
 
+
+        var getUserProfileResult = await UnitOfWork.UserProfileRepository.GetUserProfileAsync(getCurrentUserResult.Value!.UserProfileId);
         
-        if (!(user.EId != request.Eid))
-            throw new UnauthorizedException("You do not have permission to delete this user");
-
-        // user.
-        var userProfileAggregate = _mapper.Map<UserProfileAggregate>(request);
+        if (!getUserProfileResult.Succeeded)
+            throw new UnauthorizedException(getUserProfileResult.Errors.FirstOrDefault()!);
         
-        //TODO: fix this
-        var userAccountAggregate = UnitOfWork.UserProfileRepository.SoftDeleteUserAccount(userProfileAggregate);
+        getUserProfileResult.Value!.DeletedAt = DateTime.Now;
+        getUserProfileResult.Value!.IsDeleted = true;
+        
+        var softDeleteUserAccountResult = await UnitOfWork.UserProfileRepository.SoftDeleteUserAccount(getUserProfileResult.Value!);
 
-        throw new NotImplementedException();
+        return softDeleteUserAccountResult.Succeeded
+            ? new SuccessResponseDto(true)
+            : throw new BadRequestException(softDeleteUserAccountResult.Errors.FirstOrDefault()!);
     }
 }

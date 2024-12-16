@@ -21,13 +21,13 @@ public interface IUserProfileRepository
     Task<Result<UserProfileAggregate>> CreateUserProfileAsync(UserProfileAggregate userProfileAggregate);
 
     Task<Result<UserProfileAggregate>> UpdateUserProfileAsync(UserProfileAggregate userProfileAggregate);
-    
+
     /// <summary>
     /// Retrieves the status of a user account by its user ID.
     /// </summary>
     /// <param name="userId">The user ID of the account to retrieve the status for.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains the status of the user account as a string.</returns>
-    Task<string> GetUserAccountStatusAsync(string userId);
+    Task<Result<UserProfileAggregate>> GetUserProfileAsync(int eid);
 
     Task<Result<UserProfileAggregate>> SoftDeleteUserAccount(UserProfileAggregate userProfileAggregate);
 }

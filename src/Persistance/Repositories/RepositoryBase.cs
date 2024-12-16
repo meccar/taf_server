@@ -107,7 +107,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// <param name="id">The identifier of the entity.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// the entity with the specified identifier.</returns>
-    public async Task<T> GetByIdAsync(string id)
+    public async Task<T> GetByIdAsync(int id)
     {
         return (await _context.Set<T>().FindAsync(id))!;
     }
@@ -118,7 +118,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// <param name="includeProperties">The related entities to include.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// the entity with the specified identifier and included properties.</returns>
-    public async Task<T> GetByIdAsync(string id, params Expression<Func<T, object>>[] includeProperties)
+    public async Task<T> GetByIdAsync(int id, params Expression<Func<T, object>>[] includeProperties)
     {
         return (await _context.Set<T>().FindAsync(id, includeProperties))!;
     }
