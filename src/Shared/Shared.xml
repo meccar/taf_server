@@ -633,6 +633,47 @@
             Short summary or excerpt of the news article
             </summary>
         </member>
+        <member name="T:Shared.Dtos.News.UpdateNewsRequestDto">
+            <summary>
+            DTO for Updating a news item.
+            </summary>
+        </member>
+        <member name="P:Shared.Dtos.News.UpdateNewsRequestDto.ImageUrl">
+            <summary>
+            News's Image Url
+            </summary>
+            <example>https://example.com/news-image.jpg</example>
+        </member>
+        <member name="P:Shared.Dtos.News.UpdateNewsRequestDto.Title">
+            <summary>
+            News's Title
+            </summary>
+            <example>Breaking News: Market Hits All-Time High</example>
+        </member>
+        <member name="P:Shared.Dtos.News.UpdateNewsRequestDto.SubTitle">
+            <summary>
+            News's SubTitle
+            </summary>
+            <example>Key insights into the record-breaking stock market surge</example>
+        </member>
+        <member name="P:Shared.Dtos.News.UpdateNewsRequestDto.Summary">
+            <summary>
+            News's Summary
+            </summary>
+            <example>The stock market has reached an unprecedented level, driven by tech growth.</example>
+        </member>
+        <member name="P:Shared.Dtos.News.UpdateNewsRequestDto.Content">
+            <summary>
+            News's Content
+            </summary>
+            <example>The stock market hit a new milestone today, with major indices...</example>
+        </member>
+        <member name="P:Shared.Dtos.News.UpdateNewsRequestDto.IsPublished">
+            <summary>
+            Is News Published
+            </summary>
+            <example>true</example>
+        </member>
         <member name="T:Shared.Dtos.Pagination.PaginationParams">
             <summary>
             Pagination parameters for filtering and sorting news
@@ -1385,161 +1426,6 @@
             <param name="accessTokenExpires">The expiration time of the access token in seconds.</param>
             <param name="refreshToken">The refresh token.</param>
             <param name="refreshTokenExpires">The expiration time of the refresh token in seconds.</param>
-        </member>
-        <member name="T:Shared.Model.UserAccountModel">
-            <summary>
-            Represents a user account with associated details.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.Id">
-            <summary>
-            Gets or sets the unique identifier for the user account.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.EId">
-            <summary>
-            Gets or sets the external identifier for the user account.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.UserProfileId">
-            <summary>
-            Gets or sets the unique identifier of the associated user profile.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.PhoneNumber">
-            <summary>
-            Gets or sets the phone number of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.Password">
-            <summary>
-            Gets or sets the plaintext password of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.PasswordHash">
-            <summary>
-            Gets or sets the hashed password of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.SecurityStamp">
-            <summary>
-            Gets or sets the security stamp used for security purposes.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.Email">
-            <summary>
-            Gets or sets the email address of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.PasswordRecoveryToken">
-            <summary>
-            Gets or sets the token used for password recovery.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.ConfirmationToken">
-            <summary>
-            Gets or sets the token used for email confirmation.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.IsTwoFactorEnabled">
-            <summary>
-            Gets or sets a value indicating whether two-factor authentication is enabled.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.IsTwoFactorVerified">
-            <summary>
-            Gets or sets a value indicating whether two-factor authentication has been verified.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.UserAccount">
-            <summary>
-            Gets or sets the associated user profile.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.CreatedAt">
-            <summary>
-            Gets or sets the date and time when the user account was created.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.UpdatedAt">
-            <summary>
-            Gets or sets the date and time when the user account was last updated.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserAccountModel.DeletedAt">
-            <summary>
-            Gets or sets the date and time when the user account was deleted.
-            </summary>
-        </member>
-        <member name="T:Shared.Model.UserProfileModel">
-            <summary>
-            Represents the profile of a user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.Id">
-            <summary>
-            Gets or sets the unique identifier of the user profile.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.EId">
-            <summary>
-            Gets or sets the external identifier of the user profile.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.FirstName">
-            <summary>
-            Gets or sets the first name of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.LastName">
-            <summary>
-            Gets or sets the last name of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.Gender">
-            <summary>
-            Gets or sets the gender of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.DateOfBirth">
-            <summary>
-            Gets or sets the date of birth of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.Avatar">
-            <summary>
-            Gets or sets the avatar of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.Status">
-            <summary>
-            Gets or sets the status of the user.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.CreatedAt">
-            <summary>
-            Gets or sets the creation date and time of the user profile.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.UpdatedAt">
-            <summary>
-            Gets or sets the last update date and time of the user profile.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.DeletedAt">
-            <summary>
-            Gets or sets the deletion date and time of the user profile.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.IsDeleted">
-            <summary>
-            Whether user's profile is deleted.
-            </summary>
-        </member>
-        <member name="P:Shared.Model.UserProfileModel.UserAccount">
-            <summary>
-            Gets or sets the associated user account, if any.
-            </summary>
         </member>
         <member name="T:Shared.Model.UserTokenModel">
             <summary>

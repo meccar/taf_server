@@ -21,34 +21,41 @@ public class NewsRepository
         _mapper = mapper;
     }
 
-    public async Task<Result<List<NewsModel>>> GetAllNewsAsync()
+    public async Task<Result<List<NewsAggregate>>> GetAllNewsAsync()
     {
         var result =  FindAll(true)
                                             .ToList();
         
-        return result != null
-            ? Result<List<NewsModel>>.Success(_mapper.Map<List<NewsModel>>(result))
-            : Result<List<NewsModel>>.Failure("Failed to get news");
+        return result.Count > 0
+            ? Result<List<NewsAggregate>>.Success(result)
+            : Result<List<NewsAggregate>>.Failure("Failed to get news");
     }
     
-    public async Task<Result<NewsModel>> GetDetailNewsAsync(string id)
+    public async Task<Result<NewsAggregate>> GetDetailNewsAsync(string id)
     {
         var result = await FindByCondition(x => x.Uuid == id, true)
-            .FirstOrDefaultAsync();
+                                            .FirstOrDefaultAsync();
         
         return result != null
-            ? Result<NewsModel>.Success(_mapper.Map<NewsModel>(result))
-            : Result<NewsModel>.Failure("Failed to get news");
+            ? Result<NewsAggregate>.Success(result)
+            : Result<NewsAggregate>.Failure("Failed to get news");
     }
     
-    public async Task<Result<NewsModel>> CreateNewsAsync(NewsModel newsModel)
+    public async Task<Result<NewsAggregate>> CreateNewsAsync(NewsAggregate newsAggregate)
     {
-        var newsAggregate = _mapper.Map<NewsAggregate>(newsModel);
-        
         var created = await CreateAsync(newsAggregate);
 
         return created != null
-            ? Result<NewsModel>.Success(_mapper.Map<NewsModel>(created.Entity))
-            : Result<NewsModel>.Failure("Failed to create news");
+            ? Result<NewsAggregate>.Success(created.Entity)
+            : Result<NewsAggregate>.Failure("Failed to create news");
+    }
+
+    public async Task<Result<NewsAggregate>> UpdateAsync(NewsAggregate newsAggregate)
+    {
+        var result = await UpdateAsync(newsAggregate);
+        
+        return result.Succeeded
+            ? Result<NewsAggregate>.Success(result.Value!)
+            : Result<NewsAggregate>.Failure(result.Errors.FirstOrDefault() ?? "Failed to update news");
     }
 }

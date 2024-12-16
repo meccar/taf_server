@@ -1,5 +1,6 @@
 using Application.Commands;
 using AutoMapper;
+using Domain.Aggregates;
 using Domain.Interfaces;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
@@ -27,7 +28,7 @@ public class GetAllNewsCommandHandler : TransactionalQueryHandler<GetAllNewsQuer
 
         if (result.Succeeded)
         {
-            var paginationResponse = new PaginationHelper<NewsModel>(
+            var paginationResponse = new PaginationHelper<NewsAggregate>(
                 pageNumber: request.PaginationParams.PageNumber,
                 pageSize: request.PaginationParams.PageSize,
                 searchTerm: request.PaginationParams.SearchTerm,

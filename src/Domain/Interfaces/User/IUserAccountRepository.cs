@@ -19,14 +19,14 @@ public interface IUserAccountRepository
     /// </summary>
     /// <param name="userAccountModel">The user account model containing the data to create a new user.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains a <see cref="Result{UserAccountModel}"/> object with the created user account.</returns>
-    Task<Result<UserAccountModel>> CreateUserAccountAsync(UserAccountModel userAccountModel);
+    Task<Result<UserAccountAggregate>> CreateUserAccountAsync(UserAccountAggregate userAccountAggregate, string password);
 
     /// <summary>
     /// Checks if the provided user login data (email and password) already exists in the repository.
     /// </summary>
     /// <param name="userAccountModel">The user account model containing the login data to check.</param>
     /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the login data exists.</returns>
-    Task<bool> IsUserLoginDataExisted(UserAccountModel userAccountModel);
+    Task<bool> IsUserLoginDataExisted(UserAccountAggregate userAccountAggregate);
 
     /// <summary>
     /// Checks if the specified user login data exists in the repository.
@@ -43,5 +43,7 @@ public interface IUserAccountRepository
     /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the credentials are valid.</returns>
     Task<Result> ValidateUserLoginData(string email, string password);
 
+    Task<Result<UserAccountAggregate>> GetCurrentUser(string eid);
     Task<UserAccountAggregate?> GetCurrentUser();
+    Task<Result<UserAccountAggregate>> UpdateUserAccountAsync(UserAccountAggregate userAccountAggregate);
 }

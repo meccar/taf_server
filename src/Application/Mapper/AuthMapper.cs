@@ -1,4 +1,6 @@
+using Application.Commands.Auth.Register;
 using AutoMapper;
+using Domain.Aggregates;
 using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Authentication.Register;
@@ -29,23 +31,16 @@ public static class AuthMapper
     /// </remarks>
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        // Map CreateUserProfileDto to UserProfileModel
-        config.CreateMap<CreateUserProfileDto, UserProfileModel>();
-        // Map CreateUserAccountDto to UserAccountModel
-        config.CreateMap<CreateUserAccountDto, UserAccountModel>();
-        
-        // Map UserProfileModel to RegisterUserResponseDto
-        config.CreateMap<UserProfileModel, RegisterUserResponseDto>();
-        // Map UserAccountModel to UserAccountResponseDto
-        config.CreateMap<UserAccountModel, UserAccountResponseDto>();
-        
-        // Map LoginUserRequestDto to UserAccountModel for login request
-        config.CreateMap<LoginUserRequestDto, UserAccountModel>();
         // Map TokenModel to LoginResponseDto for returning a token-based response
         config.CreateMap<TokenModel, LoginResponseDto>();
         // Map TokenModel to UserProfileResponseDto
         config.CreateMap<TokenModel, UserProfileResponseDto>();
         // Map TokenModel to VerifyUserEmailRequestDto for verifying user email
         config.CreateMap<TokenModel, VerifyUserResponseDto>();
+        
+        config.CreateMap<RegisterCommand, UserProfileAggregate>();
+        config.CreateMap<UserProfileAggregate, RegisterUserResponseDto>();
+        config.CreateMap<RegisterCommand, UserAccountAggregate>();
+        config.CreateMap<UserAccountAggregate, UserAccountResponseDto>();
     }
 }

@@ -17,7 +17,6 @@ namespace Persistance.Repositories.User;
 public class UserAccountRepository
     : IUserAccountRepository
 {
-    private readonly IMapper _mapper;
     private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly IMfaRepository _mfaRepository;
     private readonly IMailRepository _mailRepository;
@@ -26,19 +25,16 @@ public class UserAccountRepository
     /// <summary>
     /// Initializes a new instance of the <see cref="UserAccountRepository"/> class.
     /// </summary>
-    /// <param name="mapper">The AutoMapper instance for mapping models.</param>
     /// <param name="userManager">The UserManager for managing user accounts.</param>
     /// <param name="mfaRepository">The repository responsible for MFA setup.</param>
     /// <param name="mailRepository">The repository responsible for sending confirmation emails.</param>
     public UserAccountRepository(
-        IMapper mapper,
         UserManager<UserAccountAggregate> userManager,
         IMfaRepository mfaRepository,
         IMailRepository mailRepository,
         IHttpContextAccessor httpContextAccessor
     )
     {
-        _mapper = mapper;
         _userManager = userManager;
         _mfaRepository = mfaRepository;
         _mailRepository = mailRepository;
@@ -50,40 +46,42 @@ public class UserAccountRepository
     /// </summary>
     /// <param name="request">The user account model containing the details of the account to be created.</param>
     /// <returns>A result containing the created user account model or a failure message.</returns>
-    public async Task<Result<UserAccountModel>> CreateUserAccountAsync(UserAccountModel request)
+    public async Task<Result<UserAccountAggregate>> CreateUserAccountAsync(UserAccountAggregate userAccountAggregate, string password)
     {
-        UserAccountAggregate userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);
-        
         userAccountAggregate.UserName ??= userAccountAggregate.Email;
-        // userAccountAggregate.TwoFactorEnabled = true;
         
-        IdentityResult result = await _userManager.CreateAsync(userAccountAggregate, request.Password);
-        request.Password = null!;
+        IdentityResult result = await _userManager.CreateAsync(userAccountAggregate, password);
+        password = null!;
         
         if (!result.Succeeded)
-            return Result<UserAccountModel>.Failure(
+            return Result<UserAccountAggregate>.Failure(
                 result.Errors.Select(e => e.Description).ToArray());
         
         IdentityResult roleResult = await _userManager.AddToRoleAsync(userAccountAggregate, FoRole.User);
         if (!roleResult.Succeeded)
-            return Result<UserAccountModel>.Failure(
+            return Result<UserAccountAggregate>.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         
         Result<MfaViewModel> mfaViewModel = await _mfaRepository.MfaSetup(userAccountAggregate);
         if (!mfaViewModel.Succeeded)
-            return Result<UserAccountModel>.Failure(
+            return Result<UserAccountAggregate>.Failure(
                 roleResult.Errors.Select(e => e.Description).ToArray());
         
         Result isMailSent =  await _mailRepository.SendEmailConfirmation(userAccountAggregate, mfaViewModel.Value!);
         
-        if (isMailSent.Succeeded)
-        {
-            UserAccountModel userLoginDataModel = _mapper.Map<UserAccountModel>(userAccountAggregate);
-            return Result<UserAccountModel>.Success(userLoginDataModel);
-        }
+        return isMailSent.Succeeded
+            ? Result<UserAccountAggregate>.Success(userAccountAggregate)
+            : Result<UserAccountAggregate>.Failure(
+                result.Errors.Select(e => e.Description).ToArray());
+    }
+
+    public async Task<Result<UserAccountAggregate>> UpdateUserAccountAsync(UserAccountAggregate userAccountAggregate)
+    {
+        var result = await _userManager.UpdateAsync(userAccountAggregate);
         
-        return Result<UserAccountModel>.Failure(
-            result.Errors.Select(e => e.Description).ToArray());
+        return result.Succeeded
+            ? Result<UserAccountAggregate>.Success(userAccountAggregate)
+            : Result<UserAccountAggregate>.Failure(result.Errors.FirstOrDefault()?.Description ?? "An unknown error occurred");
     }
     
     /// <summary>
@@ -91,19 +89,19 @@ public class UserAccountRepository
     /// </summary>
     /// <param name="userLoginDataModel">The user account model to check for existing login data.</param>
     /// <returns>True if the login data already exists; otherwise, false.</returns>
-    public async Task<bool> IsUserLoginDataExisted(UserAccountModel userLoginDataModel)
+    public async Task<bool> IsUserLoginDataExisted(UserAccountAggregate userAccountAggregate)
     {
         bool email = await _userManager.Users
             .AsQueryable()
             .AnyAsync(
                 u =>
-                    u.Email == userLoginDataModel.Email);
+                    u.Email == userAccountAggregate.Email);
         
         bool phone = await _userManager.Users
             .AsQueryable()
             .AnyAsync(
                 u =>
-                    u.PhoneNumber == userLoginDataModel.PhoneNumber);
+                    u.PhoneNumber == userAccountAggregate.PhoneNumber);
         
         return email || phone;
     }
@@ -152,4 +150,19 @@ public class UserAccountRepository
         var principal = _httpContextAccessor.HttpContext?.User;
         return principal != null ? await _userManager.GetUserAsync(principal) : null;
     }
+    
+    public async Task<Result<UserAccountAggregate>> GetCurrentUser(string eid)
+    {
+        var principal = _httpContextAccessor.HttpContext?.User;
+        
+        if (principal == null)
+            return Result<UserAccountAggregate>.Failure("You do not have permission");
+        
+        var user = await _userManager.GetUserAsync(principal);
+        
+        return user!.EId == eid 
+            ? Result<UserAccountAggregate>.Success(user)
+            : Result<UserAccountAggregate>.Failure("You do not have permission");
+    }
+    
 }

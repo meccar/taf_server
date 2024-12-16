@@ -2,7 +2,6 @@ using System.Net;
 using System.Net.Mail;
 using System.Text;
 using Domain.Aggregates;
-using Domain.Interfaces;
 using Domain.Interfaces.Credentials;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
@@ -150,7 +149,6 @@ public class MailRepository : IMailRepository
             return Result<UserAccountAggregate>.Failure("Could not verify your account");
 
         return Result<UserAccountAggregate>.Success(user);
-
     }
     
     /// <summary>

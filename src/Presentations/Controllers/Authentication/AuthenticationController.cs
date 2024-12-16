@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Application.Commands.Auth.Delete;
 using Application.Commands.Auth.Register;
 using Application.Queries.Auth.Login;
 using Application.Queries.Auth.VerifyUser;
@@ -146,6 +147,26 @@ public class AuthenticationController
         var response = await _mediator.Send(new VerifyUserByAuthenticatorQuery(userEmailRequestDto, userByAuthenticatorRequestDto));
         
         _logger.LogInformation("END: Verify User");
+        
+        return Ok(response);
+    }
+    
+    [HttpPatch("delete/{eid}")]
+    [SwaggerOperation(
+        Summary = "Delete User",
+        Description = "Returns a JSON object indicating if user is an admin"        
+    )]
+    [SwaggerResponse(200, "Successfully deleted user", typeof(object))]
+    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(500, "An error occurred while processing the request")]
+    [UserGuard]
+    public async Task<ActionResult> DeleteUser([FromRoute] string eid)
+    {
+        _logger.LogInformation("START: Delete User");
+
+        var response = await _mediator.Send(new DeleteUserCommand(eid));
+        
+        _logger.LogInformation("END: Delete User");
         
         return Ok(response);
     }

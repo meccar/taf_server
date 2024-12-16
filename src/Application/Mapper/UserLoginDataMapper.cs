@@ -24,12 +24,5 @@ public static class UserLoginDataMapper
     /// </remarks>
     public static void CreateMap(IMapperConfigurationExpression config)
     {
-        // Map UserAccountModel to UserAccountAggregate, ignoring the EId field during the mapping
-        config.CreateMap<UserAccountModel, UserAccountAggregate>()
-            .ForMember(dest => dest.EId, opt => opt.Ignore());
-        
-        // Map UserAccountAggregate to UserAccountModel, ignoring the Password field during the mapping
-        config.CreateMap<UserAccountAggregate, UserAccountModel>()
-            .ForMember(dest => dest.Password, opt => opt.Ignore());
     }
 }

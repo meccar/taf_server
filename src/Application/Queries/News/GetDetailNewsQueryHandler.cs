@@ -21,12 +21,10 @@ public class GetDetailNewsQueryHandler : TransactionalQueryHandler<GetDetailNews
     {
         var result = await UnitOfWork.NewsRepository.GetDetailNewsAsync(request.Eid);
         
-        if (result.Succeeded)
-            return _mapper.Map<GetDetailNewsResponseDto>(result.Value); 
-        
-        throw new BadRequestException(
-            result.Errors.FirstOrDefault() 
-            ?? "There was an error getting the news"
-        );
+        return result.Succeeded
+            ? _mapper.Map<GetDetailNewsResponseDto>(result.Value) 
+            : throw new BadRequestException(
+                result.Errors.FirstOrDefault() 
+                ?? "There was an error getting the news");
     }
 }
