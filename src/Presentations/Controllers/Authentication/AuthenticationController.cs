@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Application.Commands.Auth.Delete;
 using Application.Commands.Auth.Register;
+using Application.Commands.UserAccount;
 using Application.Queries.Auth.Login;
 using Application.Queries.Auth.VerifyUser;
 using Asp.Versioning;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Authentication.Login;
 using Shared.Dtos.Authentication.Register;
+using Shared.Dtos.UserAccount;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Presentations.Controllers.Authentication;
@@ -20,7 +22,7 @@ namespace Presentations.Controllers.Authentication;
 /// </summary>
 [ApiController]
 [ApiVersion("1.0")]
-[Route("api/v{version:apiVersion}")]
+[Route("api/v{version:apiVersion}/[controller]")]
 // [Route("api/v{version:apiVersion}/[controller]")]
 
 public class AuthenticationController
@@ -151,7 +153,31 @@ public class AuthenticationController
         return Ok(response);
     }
     
-    [HttpPatch("delete/{eid}")]
+    [HttpPatch("update/{eid}")]
+    [SwaggerOperation(
+        Summary = "Update a user",
+        Description =
+            "Update a user with the provided details. Returns a sign-in response upon successful registration."
+    )]
+    [SwaggerResponse(201, "User successfully registered", typeof(UpdateUserAccountResponseDto))]
+    [SwaggerResponse(400, "Invalid user input")]
+    [SwaggerResponse(500, "An error occurred while processing the request")]
+    [UserGuard]
+    public async Task<ActionResult<UpdateUserAccountResponseDto>> UpdateUserAccount(
+        [FromRoute] string eid,
+        [FromBody] UpdateUserAccountRequestDto updateUserAccountRequestDto
+    )
+    {
+        _logger.LogInformation($"START: Updating user account with id: {eid}");
+
+        var response = await _mediator.Send(new UpdateUserAccountCommand(updateUserAccountRequestDto, eid));
+        
+        _logger.LogInformation($"END: User account with id {eid} updated");
+
+        return Ok(response);
+    }
+    
+    [HttpDelete("delete/{eid}")]
     [SwaggerOperation(
         Summary = "Delete User",
         Description = "Returns a JSON object indicating if user is an admin"        
