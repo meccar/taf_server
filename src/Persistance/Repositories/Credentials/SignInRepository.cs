@@ -44,7 +44,7 @@ public class SignInRepository
         
         var token = _tokenRepository.GenerateTokenPair(user);
         
-        password = "Password@1234";
+        // password = "Password@1234";
         
         // If no password is provided, attempt external sign-in
         if(password == null)
