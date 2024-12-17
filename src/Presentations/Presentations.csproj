@@ -20,7 +20,7 @@
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-      <Content Include="certificate.pfx">
+        <Content Include="certificate.pfx" Condition="Exists('certificate.pfx')">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
