@@ -11,13 +11,14 @@ ARG TARGETARCH
 WORKDIR /src
 
 # Copy and restore dependencies
-RUN echo ls
-COPY ["src/Domain/Domain.csproj", "Domain/"]
-COPY ["src/Shared/Shared.csproj", "Shared/"]
-COPY ["src/Persistance/Persistance.csproj", "Persistance/"]
-COPY ["src/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
-COPY ["src/Application/Application.csproj", "Application/"]
-COPY ["src/Presentations/Presentations.csproj", "Presentations/"]
+RUN echo "Listing files in /src:" && ls /src
+
+COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["Shared/Shared.csproj", "Shared/"]
+COPY ["Persistance/Persistance.csproj", "Persistance/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Application/Application.csproj", "Application/"]
+COPY ["Presentations/Presentations.csproj", "Presentations/"]
 
 # Restore dependencies
 RUN dotnet restore -a $TARGETARCH -r linux-$TARGETARCH "Presentations/Presentations.csproj" 
