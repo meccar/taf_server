@@ -11,19 +11,26 @@ ARG TARGETARCH
 WORKDIR /src
 
 # Copy and restore dependencies
-COPY ["src/Domain/Domain.csproj", "Domain/"]
-COPY ["src/Shared/Shared.csproj", "Shared/"]
-COPY ["src/Persistance/Persistance.csproj", "Persistance/"]
-COPY ["src/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
-COPY ["src/Application/Application.csproj", "Application/"]
-COPY ["src/Presentations/certificate.pfx", "Presentations/"]
-COPY ["src/Presentations/Presentations.csproj", "Presentations/"]
+#COPY ["src/Domain/Domain.csproj", "Domain/"]
+#COPY ["src/Shared/Shared.csproj", "Shared/"]
+#COPY ["src/Persistance/Persistance.csproj", "Persistance/"]
+#COPY ["src/Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+#COPY ["src/Application/Application.csproj", "Application/"]
+#COPY ["src/Presentations/Presentations.csproj", "Presentations/"]
+COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["Shared/Shared.csproj", "Shared/"]
+COPY ["Persistance/Persistance.csproj", "Persistance/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+COPY ["Application/Application.csproj", "Application/"]
+COPY ["Presentations/Presentations.csproj", "Presentations/"]
 
 # Restore dependencies
 RUN dotnet restore -a $TARGETARCH -r linux-$TARGETARCH "Presentations/Presentations.csproj" 
 
 # Copy entire source code
-COPY ./src .
+#COPY ["src/Presentations/certificate.pfx", "Presentations/"]
+#COPY ./src .
+COPY . .
 
 # Build and publish
 WORKDIR "/src/Presentations"
