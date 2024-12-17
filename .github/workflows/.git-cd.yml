@@ -81,10 +81,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 #          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
-#          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:latest
-#          cache-to: type=inline
+          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:latest
+          cache-to: type=inline
           platforms: linux/amd64
-          no-cache: true
+#          no-cache: true
           
       - name: Scan image for vulnerabilities
         uses: anchore/scan-action@v3

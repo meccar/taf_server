@@ -11,11 +11,9 @@ ARG TARGETARCH
 WORKDIR /src
 
 # Copy and restore dependencies
-RUN echo "Listing files in /src:" && ls /src
-
-COPY ["Domain/Domain.csproj", "Domain/"]
-COPY ["Shared/Shared.csproj", "Shared/"]
-COPY ["Persistance/Persistance.csproj", "Persistance/"]
+COPY ["Domain.csproj", "Domain/"]
+COPY ["src/Shared/Shared.csproj", "Shared/"]
+COPY ["src/src/Persistance/Persistance.csproj", "Persistance/"]
 COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
 COPY ["Application/Application.csproj", "Application/"]
 COPY ["Presentations/Presentations.csproj", "Presentations/"]
