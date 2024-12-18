@@ -72,7 +72,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           #          context: ${{ matrix.service.context }}
-          context: ./artifacts/src
+          context: ./artifacts
           file: ${{ matrix.service.dockerfile }}
           push: true
 #          tags: |
