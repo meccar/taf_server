@@ -72,7 +72,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           #          context: ${{ matrix.service.context }}
-          context: ./artifacts/src
+          context: ./artifacts
           file: ${{ matrix.service.dockerfile }}
           push: true
 #          tags: |
@@ -80,7 +80,6 @@ jobs:
 #            ${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:${{ github.sha }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-#          cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server:latest
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/taf_server_${{ matrix.service.name }}:latest
           cache-to: type=inline
           platforms: linux/amd64

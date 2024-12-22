@@ -94,7 +94,6 @@ public class AuthenticationController
         var response = await _mediator.Send(new LoginQuery(loginDto));
         
         _logger.LogInformation("END: Login");
-        
         return Ok(response);
     }
     

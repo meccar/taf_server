@@ -8,58 +8,61 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
+      matrix:
         dotnet-version: ['8.0.x']
-#        service:
-#          - name: identity_server
-#            project: src/IdentityServer/IdentityServer.csproj
-#          - name: presentations
-#            project: src/Presentations/Presentations.csproj
-            
+          #        service:
+          #          - name: identity_server
+          #            project: src/IdentityServer/IdentityServer.csproj
+          #          - name: presentations
+          #            project: src/Presentations/Presentations.csproj
+    
     steps:
       - uses: actions/checkout@v4
       - name: Setup dotnet ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v3
         with:
-            dotnet-version: ${{ matrix.dotnet-version }}
-            
+          dotnet-version: ${{ matrix.dotnet-version }}
+          cache: true
+
       - name: Install dependencies
         run: dotnet restore taf_server.sln
-      
+
       - name: Build
         run: dotnet build --configuration Release taf_server.sln
-        
+
       - name: Test with dotnet CLI
         run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" taf_server.sln
-
-      - name: Publish
-        run: |
-          mkdir -p ./artifacts/
-          dotnet publish taf_server.sln -c Release -o ./artifacts/
-
-#      - name: Publish ${{ matrix.service.name }}
-#        run: |
-#          mkdir -p ./artifacts/${{ matrix.service.name }}
-#          dotnet publish "${{ matrix.service.project }}" -c Release -o "./artifacts/${{ matrix.service.name }}"
           
+          #      - name: Publish
+          #        run: |
+          #          mkdir -p ./artifacts/
+          #          dotnet publish taf_server.sln -c Release -o ./artifacts/
+          
+          #      - name: Publish ${{ matrix.service.name }}
+          #        run: |
+          #          mkdir -p ./artifacts/${{ matrix.service.name }}
+          #          dotnet publish "${{ matrix.service.project }}" -c Release -o "./artifacts/${{ matrix.service.name }}"
+
       - name: Upload built artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
-          path: ./artifacts/
+          #          name: build-artifacts
+          name: dotnet-results-${{ matrix.dotnet-version }}
+          #          path: ./artifacts/
+          path: TestResults-${{ matrix.dotnet-version }}
         if: ${{ always() }}
-
-#      - name: Upload ${{ matrix.service.name }} artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: ${{ matrix.service.name }}-artifacts
-#          path: ./artifacts/${{ matrix.service.name }}
-#        if: ${{ always() }}
         
-#      - name: Upload dotnet test results
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: dotnet-results-${{ matrix.dotnet-version }}
-#          path: TestResults-${{ matrix.dotnet-version }}
-#        if: ${{ always() }}
+        #      - name: Upload ${{ matrix.service.name }} artifacts
+        #        uses: actions/upload-artifact@v4
+        #        with:
+        #          name: ${{ matrix.service.name }}-artifacts
+        #          path: ./artifacts/${{ matrix.service.name }}
+        #        if: ${{ always() }}
+        
+        #      - name: Upload dotnet test results
+        #        uses: actions/upload-artifact@v4
+        #        with:
+        #          name: dotnet-results-${{ matrix.dotnet-version }}
+        #          path: TestResults-${{ matrix.dotnet-version }}
+        #        if: ${{ always() }}
         
