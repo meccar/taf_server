@@ -22,6 +22,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
             dotnet-version: ${{ matrix.dotnet-version }}
+            cache: true
             
       - name: Install dependencies
         run: dotnet restore taf_server.sln
@@ -32,10 +33,10 @@ jobs:
       - name: Test with dotnet CLI
         run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" taf_server.sln
 
-      - name: Publish
-        run: |
-          mkdir -p ./artifacts/
-          dotnet publish taf_server.sln -c Release -o ./artifacts/
+#      - name: Publish
+#        run: |
+#          mkdir -p ./artifacts/
+#          dotnet publish taf_server.sln -c Release -o ./artifacts/
 
 #      - name: Publish ${{ matrix.service.name }}
 #        run: |
@@ -45,8 +46,10 @@ jobs:
       - name: Upload built artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts
-          path: ./artifacts/
+#          name: build-artifacts
+          name: dotnet-results-${{ matrix.dotnet-version }}
+#          path: ./artifacts/
+          path: TestResults-${{ matrix.dotnet-version }}
         if: ${{ always() }}
 
 #      - name: Upload ${{ matrix.service.name }} artifacts
