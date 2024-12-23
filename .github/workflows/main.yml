@@ -36,24 +36,30 @@ jobs:
         run: dotnet build taf_server.sln --configuration Release --verbosity minimal --no-restore
 
       - name: Test with dotnet CLI
-        run: dotnet test taf_server.sln --configuration Release --verbosity minimal --no-build --no-restore --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+        run: dotnet test taf_server.sln --configuration Release --verbosity minimal --no-build --no-restore --logger trx --results-directory "TestResults"
 
       - name: Publish
-        run: dotnet publish taf_server.sln --configuration Release --no-build --no-restore 
+        run: dotnet publish taf_server.sln --configuration Release --no-build --no-restore -o "./publish"
           
           #      - name: Publish ${{ matrix.service.name }}
           #        run: |
           #          mkdir -p ./artifacts/${{ matrix.service.name }}
           #          dotnet publish "${{ matrix.service.project }}" -c Release -o "./artifacts/${{ matrix.service.name }}"
 
-      - name: Upload built artifacts
+      - name: Upload core artifacts
         uses: actions/upload-artifact@v4
         with:
-          #          name: build-artifacts
-          name: dotnet-results-${{ matrix.dotnet-version }}
-          #          path: ./artifacts/
-          path: TestResults-${{ matrix.dotnet-version }}
-        if: ${{ always() }}
+          name: build-artifacts
+          path: ./publish/**/*
+          compression-level: 9
+        if: success()
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: TestResults
+        if: always()
         
         #      - name: Upload ${{ matrix.service.name }} artifacts
         #        uses: actions/upload-artifact@v4
