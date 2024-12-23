@@ -1,8 +1,12 @@
 name: .NET Build
 on:
   push:
-    branches:
-      - master
+    branches: [master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -17,26 +21,25 @@ jobs:
           #            project: src/Presentations/Presentations.csproj
     
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup dotnet ${{ matrix.dotnet-version }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup .NET ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
-#          cache: true
-
+          
       - name: Install dependencies
         run: dotnet restore taf_server.sln
 
       - name: Build
-        run: dotnet build --configuration Release taf_server.sln
+        run: dotnet build taf_server.sln --configuration Release --verbosity minimal --no-restore
 
       - name: Test with dotnet CLI
-        run: dotnet test --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}" taf_server.sln
-          
-          #      - name: Publish
-          #        run: |
-          #          mkdir -p ./artifacts/
-          #          dotnet publish taf_server.sln -c Release -o ./artifacts/
+        run: dotnet test taf_server.sln --configuration Release --verbosity minimal --no-build --no-restore --logger trx --results-directory "TestResults-${{ matrix.dotnet-version }}"
+
+      - name: Publish
+        run: dotnet publish taf_server.sln --configuration Release --no-build --no-restore 
           
           #      - name: Publish ${{ matrix.service.name }}
           #        run: |
