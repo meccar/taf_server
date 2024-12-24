@@ -107,7 +107,7 @@ public class Index : PageModel
             Telemetry.Metrics.UserLogout(idp);
 
             // if it's a local login, we can ignore this workflow
-            if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
+            if (idp is not null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
             {
                 // check if the identity provider supports external logout
                 if (await HttpContext.GetSchemeSupportsSignOutAsync(idp))

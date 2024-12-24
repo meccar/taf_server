@@ -11,14 +11,10 @@ namespace Persistance.Repositories.News;
 public class NewsRepository
     : RepositoryBase<NewsAggregate>, INewsRepository 
 {
-    private readonly IMapper _mapper;
-
     public NewsRepository(
-        ApplicationDbContext context,
-        IMapper mapper
+        ApplicationDbContext context
     ) : base(context)
     {
-        _mapper = mapper;
     }
 
     public async Task<Result<List<NewsAggregate>>> GetAllNewsAsync()
@@ -36,26 +32,35 @@ public class NewsRepository
         var result = await FindByCondition(x => x.Uuid == id, true)
                                             .FirstOrDefaultAsync();
         
-        return result != null
+        return result is not null
             ? Result<NewsAggregate>.Success(result)
-            : Result<NewsAggregate>.Failure("Failed to get news");
+            : Result<NewsAggregate>.Failure("The News does not exist");
     }
     
     public async Task<Result<NewsAggregate>> CreateNewsAsync(NewsAggregate newsAggregate)
     {
         var created = await CreateAsync(newsAggregate);
 
-        return created != null
+        return created is not null
             ? Result<NewsAggregate>.Success(created.Entity)
             : Result<NewsAggregate>.Failure("Failed to create news");
     }
 
-    public async Task<Result<NewsAggregate>> UpdateAsync(NewsAggregate newsAggregate)
+    public async Task<Result<NewsAggregate>> UpdateNewsAsync(NewsAggregate newsAggregate)
     {
         var result = await UpdateAsync(newsAggregate);
         
-        return result.Succeeded
-            ? Result<NewsAggregate>.Success(result.Value!)
-            : Result<NewsAggregate>.Failure(result.Errors.FirstOrDefault() ?? "Failed to update news");
+        return result is not null
+            ? Result<NewsAggregate>.Success(result)
+            : Result<NewsAggregate>.Failure("Failed to update news");
+    }
+
+    public async Task<Result<NewsAggregate>> SoftDeleteAsync(NewsAggregate newsAggregate)
+    {
+        var updated = await UpdateAsync(newsAggregate);
+        
+        return updated is not null
+            ? Result<NewsAggregate>.Success(updated)
+            : Result<NewsAggregate>.Failure("Failed to update news");
     }
 }

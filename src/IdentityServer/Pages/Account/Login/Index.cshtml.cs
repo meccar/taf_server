@@ -198,7 +198,7 @@ public class Index : PageModel
     /// <returns>A task that represents the asynchronous operation. The task result contains an IActionResult.</returns>
     private async Task<IActionResult> HandleCancelButton(AuthorizationRequest? context)
     {
-        if (context != null)
+        if (context is not null)
         {
             // If the user cancels, deny authorization and send an "Access Denied" response
             ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
@@ -224,7 +224,7 @@ public class Index : PageModel
     /// <returns>A task that represents the asynchronous operation. The task result contains an IActionResult.</returns>
     private IActionResult HandleSuccessfulLogin(AuthorizationRequest? context)
     {
-        if (context != null)
+        if (context is not null)
         {
             ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
 
@@ -261,7 +261,7 @@ public class Index : PageModel
         Input = new InputModel { ReturnUrl = returnUrl };
 
         var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
-        if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
+        if (context?.IdP is not null && await _schemeProvider.GetSchemeAsync(context.IdP) is not null)
         {
             HandleIdentityProvider(context);
             return;
@@ -302,7 +302,7 @@ public class Index : PageModel
         var providers = await GetExternalProviders();
         var allowLocal = true;
         
-        if (context?.Client != null)
+        if (context?.Client is not null)
         {
             allowLocal = context.Client.EnableLocalLogin;
             if (context.Client.IdentityProviderRestrictions.Count > 0)
@@ -329,7 +329,7 @@ public class Index : PageModel
         var schemes = await _schemeProvider.GetAllSchemesAsync();
 
         var providers = schemes
-            .Where(x => x.DisplayName != null)
+            .Where(x => x.DisplayName is not null)
             .Select(x => new ViewModel.ExternalProvider(
                 x.Name,
                 x.DisplayName ?? x.Name

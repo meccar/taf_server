@@ -127,7 +127,7 @@ public class Index : PageModel
             ModelState.AddModelError("", ConsentOptions.InvalidSelectionErrorMessage);
         }
 
-        if (grantedConsent != null)
+        if (grantedConsent is not null)
         {
             ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
 
@@ -163,7 +163,7 @@ public class Index : PageModel
         ArgumentNullException.ThrowIfNull(returnUrl);
 
         var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
-        if (request != null)
+        if (request is not null)
         {
             View = CreateConsentViewModel(request);
             return true;
@@ -201,7 +201,7 @@ public class Index : PageModel
         foreach (var parsedScope in request.ValidatedResources.ParsedScopes)
         {
             var apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
-            if (apiScope != null)
+            if (apiScope is not null)
             {
                 var scopeVm = CreateScopeViewModel(parsedScope, apiScope, Input == null || Input.ScopesConsented.Contains(parsedScope.RawValue));
                 scopeVm.Resources = apiResources.Where(x => x.Scopes.Contains(parsedScope.ParsedName))

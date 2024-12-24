@@ -154,6 +154,7 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
         else
             _context.Set<T>().Update(entity);
         
+        await _context.SaveChangesAsync();
         return entity;
     }
     /// <summary>

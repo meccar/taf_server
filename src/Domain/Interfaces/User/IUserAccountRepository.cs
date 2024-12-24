@@ -44,6 +44,6 @@ public interface IUserAccountRepository
     Task<Result> ValidateUserLoginData(string email, string password);
 
     Task<Result<UserAccountAggregate>> GetCurrentUser(string eid);
-    Task<UserAccountAggregate?> GetCurrentUser();
+    Task<Result<UserAccountAggregate>> GetCurrentUser();
     Task<Result<UserAccountAggregate>> UpdateUserAccountAsync(UserAccountAggregate userAccountAggregate);
 }

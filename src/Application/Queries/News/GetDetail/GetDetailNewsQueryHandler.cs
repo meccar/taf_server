@@ -3,7 +3,7 @@ using Domain.Interfaces;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
 
-namespace Application.Queries.News;
+namespace Application.Queries.News.GetDetail;
 
 public class GetDetailNewsQueryHandler : TransactionalQueryHandler<GetDetailNewsQuery, GetDetailNewsResponseDto>
 {

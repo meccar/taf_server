@@ -1,4 +1,3 @@
-using Application.Commands;
 using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces;
@@ -6,9 +5,8 @@ using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
 using Shared.Dtos.Pagination;
 using Shared.Helpers;
-using Shared.Model;
 
-namespace Application.Queries.News;
+namespace Application.Queries.News.GetAll;
 
 public class GetAllNewsCommandHandler : TransactionalQueryHandler<GetAllNewsQuery, PaginationResponse<GetAllNewsResponseDto>>
 {

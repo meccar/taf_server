@@ -1,7 +1,7 @@
 using Domain.SeedWork.Query;
 using Shared.Dtos.News;
 
-namespace Application.Queries.News;
+namespace Application.Queries.News.GetDetail;
 
 public class GetDetailNewsQuery : IQuery<GetDetailNewsResponseDto>
 {
