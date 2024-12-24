@@ -13,8 +13,6 @@ namespace Persistance.Repositories.User;
 public class UserProfileRepository
     : RepositoryBase<UserProfileAggregate>, IUserProfileRepository
 {
-    private readonly IMapper _mapper;
-    private readonly ApplicationDbContext _context;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UserProfileRepository"/> class.
@@ -22,13 +20,10 @@ public class UserProfileRepository
     /// <param name="context">The application database context for accessing the database.</param>
     /// <param name="mapper">The AutoMapper instance for mapping between models and entities.</param>
     public UserProfileRepository(
-        ApplicationDbContext context,
-        IMapper mapper
+        ApplicationDbContext context
         )
         : base(context)
     {
-        _mapper = mapper;
-        _context = context;
     }
     
     /// <summary>

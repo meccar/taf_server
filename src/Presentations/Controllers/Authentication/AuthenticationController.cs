@@ -167,11 +167,11 @@ public class AuthenticationController
         [FromBody] UpdateUserAccountRequestDto updateUserAccountRequestDto
     )
     {
-        _logger.LogInformation($"START: Updating user account with id: {eid}");
+        _logger.LogInformation($"START: Updating user account");
 
         var response = await _mediator.Send(new UpdateUserAccountCommand(updateUserAccountRequestDto, eid));
         
-        _logger.LogInformation($"END: User account with id {eid} updated");
+        _logger.LogInformation($"END: User account updated");
 
         return Ok(response);
     }

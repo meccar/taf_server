@@ -130,7 +130,7 @@ public class Consent : PageModel
             ModelState.AddModelError("", ConsentOptions.InvalidSelectionErrorMessage);
         }
 
-        if (result != null)
+        if (result is not null)
         {
             // Complete the login request and communicate outcome to IdentityServer
             await _interaction.CompleteLoginRequestAsync(result);
@@ -156,7 +156,7 @@ public class Consent : PageModel
         ArgumentNullException.ThrowIfNull(id);
 
         var request = await _interaction.GetLoginRequestByInternalIdAsync(id);
-        if (request != null && request.Subject.GetSubjectId() == User.GetSubjectId())
+        if (request is not null && request.Subject.GetSubjectId() == User.GetSubjectId())
         {
             View = CreateConsentViewModel(request);
             return true;
@@ -194,7 +194,7 @@ public class Consent : PageModel
         foreach (var parsedScope in request.ValidatedResources.ParsedScopes)
         {
             var apiScope = request.ValidatedResources.Resources.FindApiScope(parsedScope.ParsedName);
-            if (apiScope != null)
+            if (apiScope is not null)
             {
                 var scopeVm = CreateScopeViewModel(parsedScope, apiScope, Input == null || Input.ScopesConsented.Contains(parsedScope.RawValue));
                 scopeVm.Resources = apiResources.Where(x => x.Scopes.Contains(parsedScope.ParsedName))

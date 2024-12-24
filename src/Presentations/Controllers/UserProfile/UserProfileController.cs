@@ -27,7 +27,7 @@ public class UserProfileController
         _mediator = mediator;
     }
 
-    [HttpPatch("eid")]
+    [HttpPatch("update/{eid}")]
     [SwaggerResponse(201, "User successfully registered", typeof(UpdateUserProfileResponseDto))]
     [SwaggerResponse(400, "Invalid user input")]
     [SwaggerResponse(500, "An error occurred while processing the request")]
@@ -37,11 +37,11 @@ public class UserProfileController
         [FromBody] UpdateUserProfileRequestDto updateUserProfileRequestDto
     )
     {
-        _logger.LogInformation($"START: Updating user profile with id: {eid}");
+        _logger.LogInformation($"START: Updating user profile");
 
         var response = await _mediator.Send(new UpdateUserProfileCommand(updateUserProfileRequestDto, eid));
         
-        _logger.LogInformation($"END: User profile with id {eid} updated");
+        _logger.LogInformation($"END: User profile updated");
 
         return Ok(response);
     }

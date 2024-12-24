@@ -5,7 +5,8 @@ using Shared.Dtos.Exceptions;
 
 namespace Application.Commands.Auth.Delete;
 
-public class DeleteUserCommandHandler : TransactionalCommandHandler<DeleteUserCommand, SuccessResponseDto>
+public class DeleteUserCommandHandler 
+    : TransactionalCommandHandler<DeleteUserCommand, SuccessResponseDto>
 {
     private readonly IMapper _mapper;
     public DeleteUserCommandHandler(
@@ -16,15 +17,20 @@ public class DeleteUserCommandHandler : TransactionalCommandHandler<DeleteUserCo
         _mapper = mapper;
     }
 
-    protected override async Task<SuccessResponseDto> ExecuteCoreAsync(DeleteUserCommand request, CancellationToken cancellationToken)
+    protected override async Task<SuccessResponseDto> ExecuteCoreAsync(
+        DeleteUserCommand request,
+        CancellationToken cancellationToken)
     {
-        var getCurrentUserResult = await UnitOfWork.UserAccountRepository.GetCurrentUser(request.UserAccountEid);
+        var getCurrentUserResult = await UnitOfWork
+            .UserAccountRepository
+            .GetCurrentUser(request.UserAccountEid);
         
         if (!getCurrentUserResult.Succeeded)
             throw new UnauthorizedException(getCurrentUserResult.Errors.FirstOrDefault()!);
 
-
-        var getUserProfileResult = await UnitOfWork.UserProfileRepository.GetUserProfileAsync(getCurrentUserResult.Value!.UserProfileId);
+        var getUserProfileResult = await UnitOfWork
+            .UserProfileRepository
+            .GetUserProfileAsync(getCurrentUserResult.Value!.UserProfileId);
         
         if (!getUserProfileResult.Succeeded)
             throw new UnauthorizedException(getUserProfileResult.Errors.FirstOrDefault()!);
@@ -32,7 +38,9 @@ public class DeleteUserCommandHandler : TransactionalCommandHandler<DeleteUserCo
         getUserProfileResult.Value!.DeletedAt = DateTime.Now;
         getUserProfileResult.Value!.IsDeleted = true;
         
-        var softDeleteUserAccountResult = await UnitOfWork.UserProfileRepository.SoftDeleteUserAccount(getUserProfileResult.Value!);
+        var softDeleteUserAccountResult = await UnitOfWork
+            .UserProfileRepository
+            .SoftDeleteUserAccount(getUserProfileResult.Value!);
 
         return softDeleteUserAccountResult.Succeeded
             ? new SuccessResponseDto(true)

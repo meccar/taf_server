@@ -2,7 +2,7 @@ using Domain.SeedWork.Query;
 using Shared.Dtos.News;
 using Shared.Dtos.Pagination;
 
-namespace Application.Queries.News;
+namespace Application.Queries.News.GetAll;
 
 public class GetAllNewsQuery : IQuery<PaginationResponse<GetAllNewsResponseDto>>
 {

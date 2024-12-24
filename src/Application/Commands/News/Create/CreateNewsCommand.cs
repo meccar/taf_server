@@ -1,7 +1,7 @@
 using Domain.SeedWork.Command;
 using Shared.Dtos.News;
 
-namespace Application.Commands.News;
+namespace Application.Commands.News.Create;
 
 public class CreateNewsCommand : ICommand<CreateNewsResponseDto>
 {

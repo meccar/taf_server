@@ -26,7 +26,7 @@ public class UpdateUserAccountCommandHandler : TransactionalCommandHandler<Updat
         if (user == null)
             throw new UnauthorizedException("You do not have permission to update this user");
         
-        if (!(user.EId == request.Eid))
+        if (!(user.Value!.EId == request.Eid))
             throw new UnauthorizedException("You do not have permission to update this user");
         
         var userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);

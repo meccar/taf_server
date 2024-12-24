@@ -4,7 +4,7 @@ using Domain.Interfaces;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
 
-namespace Application.Commands.News;
+namespace Application.Commands.News.Create;
 
 public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCommand, CreateNewsResponseDto>
 {
@@ -24,8 +24,8 @@ public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCo
 
         var newsAggregate = _mapper.Map<NewsAggregate>(request);
         
-        newsAggregate.CreatedByUserAccountId = user!.Id;
-        newsAggregate.UpdatedByUserAccountId = user.Id;
+        newsAggregate.CreatedByUserAccountId = user.Value!.Id;
+        newsAggregate.UpdatedByUserAccountId = user.Value!.Id;
         newsAggregate.CreatedAt = DateTime.Now;
         newsAggregate.DeletedAt = null;
         

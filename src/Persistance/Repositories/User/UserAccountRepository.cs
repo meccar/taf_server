@@ -145,10 +145,12 @@ public class UserAccountRepository
         return Result.Failure("Invalid email or Password");
     }
 
-    public async Task<UserAccountAggregate?> GetCurrentUser()
+    public async Task<Result<UserAccountAggregate>> GetCurrentUser()
     {
         var principal = _httpContextAccessor.HttpContext?.User;
-        return principal != null ? await _userManager.GetUserAsync(principal) : null;
+        return principal != null 
+            ? Result<UserAccountAggregate>.Success((await _userManager.GetUserAsync(principal))!)
+            : Result<UserAccountAggregate>.Failure("You do not have permission");
     }
     
     public async Task<Result<UserAccountAggregate>> GetCurrentUser(string eid)
@@ -164,5 +166,4 @@ public class UserAccountRepository
             ? Result<UserAccountAggregate>.Success(user)
             : Result<UserAccountAggregate>.Failure("You do not have permission");
     }
-    
 }

@@ -1,4 +1,5 @@
 using Application.Commands.News;
+using Application.Commands.News.Create;
 using AutoMapper;
 using Domain.Aggregates;
 using Shared.Dtos.News;

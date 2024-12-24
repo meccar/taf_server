@@ -1,5 +1,11 @@
+using System.Runtime.CompilerServices;
 using Application.Commands.News;
+using Application.Commands.News.Create;
+using Application.Commands.News.Delete;
+using Application.Commands.News.Update;
 using Application.Queries.News;
+using Application.Queries.News.GetAll;
+using Application.Queries.News.GetDetail;
 using Asp.Versioning;
 using Infrastructure.Decorators.Guards;
 using MediatR;
@@ -113,6 +119,27 @@ public class NewsController
         
         _logger.LogInformation("END: News Item {eid} Updated");
 
+        return Ok(response);
+    }
+
+    [HttpDelete("delete/{eid}")]
+    [SwaggerOperation(
+        Summary = "Delete News Item",
+        Description = "Deletes an existing news item with provided information"
+    )]
+    [SwaggerResponse(200, "News successfully deleted", typeof(object))]
+    [SwaggerResponse(400, "Invalid delete parameters")]
+    [SwaggerResponse(500, "Internal server error")]
+    [UserGuard]
+    public async Task<ActionResult> DeleteNews(
+        [FromRoute] string eid)
+    {
+        _logger.LogInformation("START: Deleting News Item");
+
+        var response = await _mediator.Send(new DeleteNewsCommand(eid));
+        
+        _logger.LogInformation("END: News Item Deleted");
+        
         return Ok(response);
     }
 }
