@@ -141,7 +141,7 @@ public class MailRepository : IMailRepository
         );
 
         if (!validation)
-            return Result<UserAccountAggregate>.Failure("Could not verify your account");
+            return Result<UserAccountAggregate>.Failure("Token is invalid or has expired");
         
         var confirmResult = await _userManager.ConfirmEmailAsync(user, emailKey); 
         

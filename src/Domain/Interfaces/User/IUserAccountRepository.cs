@@ -43,6 +43,7 @@ public interface IUserAccountRepository
     /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the credentials are valid.</returns>
     Task<Result> ValidateUserLoginData(string email, string password);
 
+    Task<Result<UserAccountAggregate>> IsExistingAndVerifiedUserAccount(string Eid);
     Task<Result<UserAccountAggregate>> GetCurrentUser(string eid);
     Task<Result<UserAccountAggregate>> GetCurrentUser();
     Task<Result<UserAccountAggregate>> UpdateUserAccountAsync(UserAccountAggregate userAccountAggregate);

@@ -145,22 +145,39 @@ public class UserAccountRepository
         return Result.Failure("Invalid email or Password");
     }
 
+    public async Task<Result<UserAccountAggregate>> IsExistingAndVerifiedUserAccount(string Eid)
+    {
+        var result = await _userManager
+                                            .Users
+                                            .AsQueryable()
+                                            .FirstOrDefaultAsync(
+                                                u 
+                                                    => u.EId == Eid);
+        if (result == null)
+            return Result<UserAccountAggregate>.Failure("Account does not exist");
+        
+        if (result.EmailConfirmed)
+            return Result<UserAccountAggregate>.Failure("Account's email is already confirmed");
+        
+        return Result<UserAccountAggregate>.Success(result);
+    }
+    
     public async Task<Result<UserAccountAggregate>> GetCurrentUser()
     {
-        var principal = _httpContextAccessor.HttpContext?.User;
-        return principal != null 
-            ? Result<UserAccountAggregate>.Success((await _userManager.GetUserAsync(principal))!)
+        var result = _httpContextAccessor.HttpContext?.User;
+        return result != null 
+            ? Result<UserAccountAggregate>.Success((await _userManager.GetUserAsync(result))!)
             : Result<UserAccountAggregate>.Failure("You do not have permission");
     }
     
     public async Task<Result<UserAccountAggregate>> GetCurrentUser(string eid)
     {
-        var principal = _httpContextAccessor.HttpContext?.User;
+        var result = _httpContextAccessor.HttpContext?.User;
         
-        if (principal == null)
+        if (result == null)
             return Result<UserAccountAggregate>.Failure("You do not have permission");
         
-        var user = await _userManager.GetUserAsync(principal);
+        var user = await _userManager.GetUserAsync(result);
         
         return user!.EId == eid 
             ? Result<UserAccountAggregate>.Success(user)
