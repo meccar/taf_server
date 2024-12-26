@@ -199,12 +199,12 @@ public class AuthenticationController
 
     [HttpGet("get/token-verification-email/{eid}")]
     [SwaggerOperation(
-        Summary = "Get Email verification token"
+        Summary = "Get Email verification token",
+        Description = "Returns a JSON object indicating if new token verification has been sent"        
     )]
     [SwaggerResponse(StatusCodes.Status200OK, "Returns token email")]
     [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing the request")]
-    [UserGuard]
     public async Task<ActionResult> GetNewVerificationToken([FromRoute] string eid)
     {
         _logger.LogInformation("START: Get New verification token");

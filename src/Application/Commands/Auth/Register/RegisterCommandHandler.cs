@@ -3,7 +3,6 @@ using Domain.Aggregates;
 using Domain.Interfaces;
 using Shared.Dtos.Authentication.Register;
 using Shared.Dtos.Exceptions;
-using Shared.Model;
 
 namespace Application.Commands.Auth.Register;
 

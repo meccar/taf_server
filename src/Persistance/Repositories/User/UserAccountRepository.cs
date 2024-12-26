@@ -1,4 +1,3 @@
-using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces.Credentials;
 using Domain.Interfaces.User;
