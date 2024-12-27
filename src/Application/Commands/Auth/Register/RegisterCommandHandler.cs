@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces;
+using Domain.Interfaces.Credentials;
 using Shared.Dtos.Authentication.Register;
 using Shared.Dtos.Exceptions;
+using Shared.FileObjects;
 
 namespace Application.Commands.Auth.Register;
 
@@ -13,6 +15,8 @@ namespace Application.Commands.Auth.Register;
 public class RegisterCommandHandler : TransactionalCommandHandler<RegisterCommand, RegisterUserResponseDto>
 {
     private readonly IMapper _mapper;
+    private readonly IMfaRepository _mfaRepository;
+    private readonly IMailRepository _mailRepository;
     
     /// <summary>
     /// Initializes a new instance of the <see cref="RegisterCommandHandler"/> class.
@@ -21,10 +25,14 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
     /// <param name="mapper">The AutoMapper instance used to map between different data models and DTOs.</param>
     public RegisterCommandHandler(
         IUnitOfWork unitOfWork,
-        IMapper mapper
+        IMapper mapper,
+        IMfaRepository mfaRepository,
+        IMailRepository mailRepository
         ) : base(unitOfWork)
     {
         _mapper = mapper;
+        _mfaRepository = mfaRepository;
+        _mailRepository = mailRepository;
     }
     
     /// <summary>
@@ -56,23 +64,46 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
             .UserProfileRepository
             .CreateUserProfileAsync(userProfileAggregate);
 
-        if (!userProfile.Succeeded)
+        if (userProfile == null)
             throw new BadRequestException("Failed to create user account");
 
         // Associate login data with the new account
-        userAccountAggregate.UserProfileId = userProfile.Value!.Id;
+        userAccountAggregate.UserProfileId = userProfile.Id;
 
-        var userAccount = await UnitOfWork
+        // var userAccount = await UnitOfWork
+        //     .UserAccountRepository
+        //     .CreateUserAccountAsync(userAccountAggregate, request.Password);
+
+        var createUserAccountResult = await UnitOfWork
             .UserAccountRepository
-            .CreateUserAccountAsync(userAccountAggregate, request.Password);
+            .CreateAsync(userAccountAggregate, request.Password);
+        
+        if (!createUserAccountResult.Succeeded)
+            throw new BadRequestException("Failed to create user account");
 
-        if (!userAccount.Succeeded)
-            throw new BadRequestException("Failed to create user login data");
-
+        var roleResult = await UnitOfWork
+            .UserAccountRepository
+            .AddToRoleAsync(userAccountAggregate, FoRole.User);
+        
+        if (!roleResult.Succeeded)
+            throw new BadRequestException("Failed to create user account");
+        
+        var mfaResult = await _mfaRepository
+            .MfaSetup(userAccountAggregate);
+        
+        if (!mfaResult.Succeeded)
+            throw new BadRequestException("Failed to create user account");
+        
+        var mailResult = await _mailRepository
+            .SendEmailConfirmation(userAccountAggregate, mfaResult.Value!);
+        
+        if (!mailResult.Succeeded)
+            throw new BadRequestException("Failed to create user account");
+        
         // Attach login data to the user account
-        userProfile.Value.UserAccount = userAccount.Value!;
+        userProfile.UserAccount = userAccountAggregate!;
 
-        var response = _mapper.Map<RegisterUserResponseDto>(userProfile.Value);
+        var response = _mapper.Map<RegisterUserResponseDto>(userProfile);
 
         return response;
     }

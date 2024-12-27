@@ -1,4 +1,5 @@
 using Domain.Aggregates;
+using Microsoft.AspNetCore.Identity;
 using Shared.Model;
 using Shared.Results;
 
@@ -19,8 +20,10 @@ public interface IUserAccountRepository
     /// </summary>
     /// <param name="userAccountModel">The user account model containing the data to create a new user.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains a <see cref="Result{UserAccountModel}"/> object with the created user account.</returns>
-    Task<Result<UserAccountAggregate>> CreateUserAccountAsync(UserAccountAggregate userAccountAggregate, string password);
+    // Task<Result<UserAccountAggregate>> CreateUserAccountAsync(UserAccountAggregate userAccountAggregate, string password);
 
+    Task<IdentityResult> CreateAsync(UserAccountAggregate userAccountAggregate, string password);
+    Task<IdentityResult> AddToRoleAsync(UserAccountAggregate userAccountAggregate, string role);
     /// <summary>
     /// Checks if the provided user login data (email and password) already exists in the repository.
     /// </summary>

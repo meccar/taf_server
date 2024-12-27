@@ -18,7 +18,7 @@ public interface IUserProfileRepository
     /// </summary>
     /// <param name="createUserAccountDto">The user profile model containing the data to create a new user profile.</param>
     /// <returns>A task representing the asynchronous operation. The task result contains a <see cref="Result{UserProfileModel}"/> object with the created user profile.</returns>
-    Task<Result<UserProfileAggregate>> CreateUserProfileAsync(UserProfileAggregate userProfileAggregate);
+    Task<UserProfileAggregate?> CreateUserProfileAsync(UserProfileAggregate userProfileAggregate);
 
     Task<Result<UserProfileAggregate>> UpdateUserProfileAsync(UserProfileAggregate userProfileAggregate);
 
