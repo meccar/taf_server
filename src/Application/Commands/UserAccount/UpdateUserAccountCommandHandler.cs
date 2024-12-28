@@ -26,17 +26,17 @@ public class UpdateUserAccountCommandHandler : TransactionalCommandHandler<Updat
         if (user == null)
             throw new UnauthorizedException("You do not have permission to update this user");
         
-        if (!(user.Value!.EId == request.Eid))
+        if (user.Value!.EId != request.Eid)
             throw new UnauthorizedException("You do not have permission to update this user");
         
         var userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);
         
-        var result = await UnitOfWork.UserAccountRepository.UpdateUserAccountAsync(userAccountAggregate);
+        // var result = await UnitOfWork.UserAccountRepository.UpdateUserAccountAsync(userAccountAggregate);
+        var result = await UnitOfWork.UserAccountRepository.UpdateAsync(userAccountAggregate);
 
         return result.Succeeded
-            ? _mapper.Map<UpdateUserAccountResponseDto>(result.Value)
+            ? _mapper.Map<UpdateUserAccountResponseDto>(userAccountAggregate)
             : throw new BadRequestException(
-                result.Errors.FirstOrDefault() 
-                ?? "Failed to update user");
+                result.Errors.FirstOrDefault()!);
     }
 }

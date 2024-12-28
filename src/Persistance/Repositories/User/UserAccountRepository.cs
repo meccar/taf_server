@@ -50,7 +50,7 @@ public class UserAccountRepository
     {
         return await _userManager.AddToRoleAsync(userAccountAggregate, role);
     }
-    
+
     /// <summary>
     /// Creates a new user account asynchronously.
     /// </summary>
@@ -84,15 +84,18 @@ public class UserAccountRepository
     //         : Result<UserAccountAggregate>.Failure(
     //             result.Errors.Select(e => e.Description).ToArray());
     // }
-
-    public async Task<Result<UserAccountAggregate>> UpdateUserAccountAsync(UserAccountAggregate userAccountAggregate)
+    public async Task<IdentityResult> UpdateAsync(UserAccountAggregate userAccountAggregate)
     {
-        var result = await _userManager.UpdateAsync(userAccountAggregate);
-        
-        return result.Succeeded
-            ? Result<UserAccountAggregate>.Success(userAccountAggregate)
-            : Result<UserAccountAggregate>.Failure(result.Errors.FirstOrDefault()?.Description ?? "An unknown error occurred");
+        return await _userManager.UpdateAsync(userAccountAggregate);
     }
+    // public async Task<Result<UserAccountAggregate>> UpdateUserAccountAsync(UserAccountAggregate userAccountAggregate)
+    // {
+    //     var result = await _userManager.UpdateAsync(userAccountAggregate);
+    //     
+    //     return result.Succeeded
+    //         ? Result<UserAccountAggregate>.Success(userAccountAggregate)
+    //         : Result<UserAccountAggregate>.Failure(result.Errors.FirstOrDefault()?.Description ?? "An unknown error occurred");
+    // }
     
     /// <summary>
     /// Checks whether a user with the same login data (email or phone number) already exists.
