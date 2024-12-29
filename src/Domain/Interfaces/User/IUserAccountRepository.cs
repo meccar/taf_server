@@ -49,6 +49,5 @@ public interface IUserAccountRepository
     Task<Result<UserAccountAggregate>> IsExistingAndVerifiedUserAccount(string Eid);
     Task<Result<UserAccountAggregate>> GetCurrentUser(string eid);
     Task<Result<UserAccountAggregate>> GetCurrentUser();
-    // Task<Result<UserAccountAggregate>> UpdateUserAccountAsync(UserAccountAggregate userAccountAggregate);
     Task<IdentityResult> UpdateAsync(UserAccountAggregate userAccountAggregate);
 }

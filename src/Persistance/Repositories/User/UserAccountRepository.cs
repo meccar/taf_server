@@ -88,14 +88,6 @@ public class UserAccountRepository
     {
         return await _userManager.UpdateAsync(userAccountAggregate);
     }
-    // public async Task<Result<UserAccountAggregate>> UpdateUserAccountAsync(UserAccountAggregate userAccountAggregate)
-    // {
-    //     var result = await _userManager.UpdateAsync(userAccountAggregate);
-    //     
-    //     return result.Succeeded
-    //         ? Result<UserAccountAggregate>.Success(userAccountAggregate)
-    //         : Result<UserAccountAggregate>.Failure(result.Errors.FirstOrDefault()?.Description ?? "An unknown error occurred");
-    // }
     
     /// <summary>
     /// Checks whether a user with the same login data (email or phone number) already exists.
