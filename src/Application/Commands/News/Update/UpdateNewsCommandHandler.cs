@@ -32,7 +32,7 @@ public class UpdateNewsCommandHandler : TransactionalCommandHandler<UpdateNewsCo
                 GetNewsResult.Errors.FirstOrDefault() 
                 ?? "There was an error getting the news");
         
-        if (!(user.Value!.Id == GetNewsResult.Value!.CreatedByUserAccountId))
+        if (user.Id != GetNewsResult.Value!.CreatedByUserAccountId)
             throw new UnauthorizedException("You do not have permission to update the news");
 
         var newsAggregate = _mapper.Map<NewsAggregate>(request);

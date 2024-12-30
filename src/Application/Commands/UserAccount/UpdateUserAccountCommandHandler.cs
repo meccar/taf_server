@@ -3,7 +3,6 @@ using Domain.Aggregates;
 using Domain.Interfaces;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.UserAccount;
-using Shared.Model;
 
 namespace Application.Commands.UserAccount;
 
@@ -26,7 +25,7 @@ public class UpdateUserAccountCommandHandler : TransactionalCommandHandler<Updat
         if (user == null)
             throw new UnauthorizedException("You do not have permission to update this user");
         
-        if (user.Value!.EId != request.Eid)
+        if (user.EId != request.Eid)
             throw new UnauthorizedException("You do not have permission to update this user");
         
         var userAccountAggregate = _mapper.Map<UserAccountAggregate>(request);

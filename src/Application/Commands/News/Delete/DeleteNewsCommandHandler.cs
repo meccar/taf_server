@@ -26,8 +26,8 @@ public class DeleteNewsCommandHandler
             .UserAccountRepository
             .GetCurrentUser();
 
-        if (!getCurrentUserResult.Succeeded)
-            throw new UnauthorizedException(getCurrentUserResult.Errors.FirstOrDefault()!);
+        if (getCurrentUserResult == null)
+            throw new UnauthorizedException("You are not logged in");
 
         var newsAggregate = await UnitOfWork
             .NewsRepository
@@ -36,7 +36,7 @@ public class DeleteNewsCommandHandler
         if(!newsAggregate.Succeeded)
             throw new NotFoundException(newsAggregate.Errors.FirstOrDefault()!);
 
-        if(newsAggregate.Value!.CreatedByUserAccountId != getCurrentUserResult.Value!.Id)
+        if(newsAggregate.Value!.CreatedByUserAccountId != getCurrentUserResult.Id)
             throw new UnauthorizedException("You do not have permission to delete this news!");
 
         var softDeleteNewsResult = await UnitOfWork

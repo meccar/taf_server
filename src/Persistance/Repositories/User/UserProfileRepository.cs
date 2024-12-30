@@ -1,9 +1,6 @@
-using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces.User;
-using Microsoft.EntityFrameworkCore;
 using Persistance.Data;
-using Shared.Results;
 
 namespace Persistance.Repositories.User;
 
@@ -38,13 +35,9 @@ public class UserProfileRepository
         return created?.Entity;
     }
 
-    public async Task<Result<UserProfileAggregate>> UpdateUserProfileAsync(UserProfileAggregate userProfileAggregate)
+    public async Task<UserProfileAggregate?> UpdateUserProfileAsync(UserProfileAggregate userProfileAggregate)
     {
-        var updated = await UpdateAsync(userProfileAggregate);
-        
-        return updated != null
-            ? Result<UserProfileAggregate>.Success(updated)
-            : Result<UserProfileAggregate>.Failure("Failed to update user profile. Please try again.");
+        return await UpdateAsync(userProfileAggregate);
     }
     
     /// <summary>
@@ -52,21 +45,13 @@ public class UserProfileRepository
     /// </summary>
     /// <param name="userId">The user ID for which the account status is to be retrieved.</param>
     /// <returns>The status of the user account.</returns>
-    public async Task<Result<UserProfileAggregate>> GetUserProfileAsync(int eid)
+    public async Task<UserProfileAggregate?> GetUserProfileAsync(int eid)
     {
-        var userAccount = await GetByIdAsync(eid);
-        
-        return userAccount != null
-            ? Result<UserProfileAggregate>.Success(userAccount)
-            : Result<UserProfileAggregate>.Failure("Failed to get user profile. Please try again.");
+       return await GetByIdAsync(eid);
     }
     
-    public async Task<Result<UserProfileAggregate>> SoftDeleteUserAccount(UserProfileAggregate userProfileAggregate)
+    public async Task<UserProfileAggregate?> SoftDeleteUserAccount(UserProfileAggregate userProfileAggregate)
     {
-        var updated = await UpdateAsync(userProfileAggregate);
-        
-        return updated != null
-            ? Result<UserProfileAggregate>.Success(updated)
-            : Result<UserProfileAggregate>.Failure("Failed to update user profile. Please try again.");
+        return await UpdateAsync(userProfileAggregate);
     }
 }

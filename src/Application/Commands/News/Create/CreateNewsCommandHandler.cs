@@ -21,11 +21,14 @@ public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCo
     protected override async Task<CreateNewsResponseDto> ExecuteCoreAsync(CreateNewsCommand request, CancellationToken cancellationToken)
     {
         var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
-
+        
+        if (user == null)
+            throw new UnauthorizedException("You are not logged in");
+        
         var newsAggregate = _mapper.Map<NewsAggregate>(request);
         
-        newsAggregate.CreatedByUserAccountId = user.Value!.Id;
-        newsAggregate.UpdatedByUserAccountId = user.Value!.Id;
+        newsAggregate.CreatedByUserAccountId = user.Id;
+        newsAggregate.UpdatedByUserAccountId = user.Id;
         newsAggregate.CreatedAt = DateTime.Now;
         newsAggregate.DeletedAt = null;
         

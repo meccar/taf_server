@@ -33,14 +33,14 @@ public class GetNewVerificationTokenQueryHandler
             .UserAccountRepository
             .IsExistingAndVerifiedUserAccount(request.UserAccountEid);
 
-        if (!getRequestedUser.Succeeded)
-            throw new BadRequestException(getRequestedUser.Errors.FirstOrDefault()!);
+        if (getRequestedUser == null)
+            throw new BadRequestException("User not found");
         
-        var mfaSetupResult = await _mfaRepository.MfaSetup(getRequestedUser.Value!);
+        var mfaSetupResult = await _mfaRepository.MfaSetup(getRequestedUser);
         if (!mfaSetupResult.Succeeded)
             throw new BadRequestException(mfaSetupResult.Errors.FirstOrDefault()!);
         
-        var isMailSent =  await _mailRepository.SendEmailConfirmation(getRequestedUser.Value!, mfaSetupResult.Value!);
+        var isMailSent =  await _mailRepository.SendEmailConfirmation(getRequestedUser, mfaSetupResult.Value!);
 
         return isMailSent.Succeeded
             ? new SuccessResponseDto(true)

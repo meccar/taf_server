@@ -4,9 +4,6 @@ using Domain.Interfaces.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shared.FileObjects;
-using Shared.Model;
-using Shared.Results;
 
 namespace Persistance.Repositories.User;
 
@@ -121,71 +118,35 @@ public class UserAccountRepository
         
         return result;
     }
-    
-    /// <summary>
-    /// Validates the user's login data (email and password).
-    /// </summary>
-    /// <param name="email">The user's email.</param>
-    /// <param name="password">The user's password.</param>
-    /// <returns>True if the login data is valid; otherwise, false.</returns>
-    public async Task<Result> ValidateUserLoginData(string email, string password)
+
+    public async Task<UserAccountAggregate?> IsExistingAndVerifiedUserAccount(string Eid)
     {
-        UserAccountAggregate? user = await _userManager.FindByEmailAsync(email);
-        
-        if (user == null)
-        {
-            return Result.Failure("Invalid email or Password");
-        }
-
-        bool isEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
-        bool isCorrectPassword = await _userManager.CheckPasswordAsync(user, password);
-        
-        if (isEmailConfirmed && isCorrectPassword && user.IsTwoFactorVerified)
-        {
-            await _userManager.ResetAccessFailedCountAsync(user);
-            return Result.Success();
-
-        }
-        
-        return Result.Failure("Invalid email or Password");
-    }
-
-    public async Task<Result<UserAccountAggregate>> IsExistingAndVerifiedUserAccount(string Eid)
-    {
-        var result = await _userManager
+        return await _userManager
                                             .Users
                                             .AsQueryable()
                                             .FirstOrDefaultAsync(
                                                 u 
-                                                    => u.EId == Eid);
-        if (result == null)
-            return Result<UserAccountAggregate>.Failure("Account does not exist");
-        
-        if (result.EmailConfirmed)
-            return Result<UserAccountAggregate>.Failure("Account's email is already confirmed");
-        
-        return Result<UserAccountAggregate>.Success(result);
+                                                    => u.EId == Eid 
+                                                && u.EmailConfirmed
+                                            );
     }
     
-    public async Task<Result<UserAccountAggregate>> GetCurrentUser()
+    public async Task<UserAccountAggregate?> GetCurrentUser()
     {
         var result = _httpContextAccessor.HttpContext?.User;
         return result != null 
-            ? Result<UserAccountAggregate>.Success((await _userManager.GetUserAsync(result))!)
-            : Result<UserAccountAggregate>.Failure("You do not have permission");
+            ? await _userManager.GetUserAsync(result)
+            : null;
     }
     
-    public async Task<Result<UserAccountAggregate>> GetCurrentUser(string eid)
+    public async Task<UserAccountAggregate?> GetCurrentUser(string eid)
     {
         var result = _httpContextAccessor.HttpContext?.User;
         
-        if (result == null)
-            return Result<UserAccountAggregate>.Failure("You do not have permission");
+        if (result == null) return null;
         
         var user = await _userManager.GetUserAsync(result);
         
-        return user!.EId == eid 
-            ? Result<UserAccountAggregate>.Success(user)
-            : Result<UserAccountAggregate>.Failure("You do not have permission");
+        return user!.EId == eid ? user : null;
     }
 }
