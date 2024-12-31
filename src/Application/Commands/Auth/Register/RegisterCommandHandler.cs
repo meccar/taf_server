@@ -64,7 +64,7 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
             .UserProfileRepository
             .CreateUserProfileAsync(userProfileAggregate);
 
-        if (userProfile == null)
+        if (userProfile is null)
             throw new BadRequestException("Failed to create user account");
 
         // Associate login data with the new account

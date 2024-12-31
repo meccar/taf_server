@@ -33,7 +33,7 @@ public class GetNewVerificationTokenQueryHandler
             .UserAccountRepository
             .IsExistingAndVerifiedUserAccount(request.UserAccountEid);
 
-        if (getRequestedUser == null)
+        if (getRequestedUser is null)
             throw new BadRequestException("User not found");
         
         var mfaSetupResult = await _mfaRepository.MfaSetup(getRequestedUser);

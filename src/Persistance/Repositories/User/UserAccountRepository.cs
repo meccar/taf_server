@@ -122,13 +122,13 @@ public class UserAccountRepository
     public async Task<UserAccountAggregate?> IsExistingAndVerifiedUserAccount(string Eid)
     {
         return await _userManager
-                                            .Users
-                                            .AsQueryable()
-                                            .FirstOrDefaultAsync(
-                                                u 
-                                                    => u.EId == Eid 
-                                                && u.EmailConfirmed
-                                            );
+                        .Users
+                        .AsQueryable()
+                        .FirstOrDefaultAsync(
+                            u 
+                                => u.EId == Eid 
+                            && u.EmailConfirmed
+                        );
     }
     
     public async Task<UserAccountAggregate?> GetCurrentUser()

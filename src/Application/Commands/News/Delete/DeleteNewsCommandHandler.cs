@@ -26,25 +26,28 @@ public class DeleteNewsCommandHandler
             .UserAccountRepository
             .GetCurrentUser();
 
-        if (getCurrentUserResult == null)
+        if (getCurrentUserResult is null)
             throw new UnauthorizedException("You are not logged in");
 
         var newsAggregate = await UnitOfWork
             .NewsRepository
             .GetDetailNewsAsync(request.NewsEid);
         
-        if(!newsAggregate.Succeeded)
-            throw new NotFoundException(newsAggregate.Errors.FirstOrDefault()!);
+        if(newsAggregate is null)
+            throw new NotFoundException("News not found");
 
-        if(newsAggregate.Value!.CreatedByUserAccountId != getCurrentUserResult.Id)
+        if(newsAggregate.CreatedByUserAccountId != getCurrentUserResult.Id)
             throw new UnauthorizedException("You do not have permission to delete this news!");
 
+        newsAggregate.DeletedAt = DateTime.Now;
+        newsAggregate.IsDeleted = true;
+        
         var softDeleteNewsResult = await UnitOfWork
             .NewsRepository
-            .SoftDeleteAsync(newsAggregate.Value);
+            .SoftDeleteAsync(newsAggregate);
         
-       return softDeleteNewsResult.Succeeded
+       return softDeleteNewsResult is not null
            ? new SuccessResponseDto(true)
-           : throw new BadRequestException(softDeleteNewsResult.Errors.FirstOrDefault()!);
+           : throw new BadRequestException("There was an error processing your request");
     }
 }

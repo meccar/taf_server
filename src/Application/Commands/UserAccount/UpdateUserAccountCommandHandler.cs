@@ -22,7 +22,7 @@ public class UpdateUserAccountCommandHandler : TransactionalCommandHandler<Updat
     {
         var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
 
-        if (user == null)
+        if (user is null)
             throw new UnauthorizedException("You do not have permission to update this user");
         
         if (user.EId != request.Eid)

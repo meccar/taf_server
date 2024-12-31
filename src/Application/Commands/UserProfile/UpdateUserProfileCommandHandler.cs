@@ -25,7 +25,7 @@ public class
     {
         var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
 
-        if (user == null)
+        if (user is null)
             throw new UnauthorizedException("You do not have permission to update this user");
 
         if (user.UserProfile.EId != request.Eid)
@@ -37,7 +37,7 @@ public class
         
         var result = await UnitOfWork.UserProfileRepository.UpdateUserProfileAsync(userProfileAggregate);
 
-        return result != null
+        return result is not null
             ? _mapper.Map<UpdateUserProfileResponseDto>(userProfileAggregate)
             : throw new BadRequestException("Failed to update the user's profile");
     }

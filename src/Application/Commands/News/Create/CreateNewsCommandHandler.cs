@@ -22,7 +22,7 @@ public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCo
     {
         var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
         
-        if (user == null)
+        if (user is null)
             throw new UnauthorizedException("You are not logged in");
         
         var newsAggregate = _mapper.Map<NewsAggregate>(request);
@@ -34,11 +34,9 @@ public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCo
         
         var result = await UnitOfWork.NewsRepository.CreateNewsAsync(newsAggregate);
 
-        if (result.Succeeded)
-            return _mapper.Map<CreateNewsResponseDto>(result.Value); 
+        if (result is not null)
+            return _mapper.Map<CreateNewsResponseDto>(result); 
         
-        throw new BadRequestException(
-            result.Errors.FirstOrDefault() 
-            ?? "There was an error creating the news");
+        throw new BadRequestException("There was an error creating the news");
     }
 }

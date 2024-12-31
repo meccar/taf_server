@@ -25,14 +25,14 @@ public class DeleteUserCommandHandler
             .UserAccountRepository
             .GetCurrentUser(request.UserAccountEid);
         
-        if (getCurrentUserResult == null)
+        if (getCurrentUserResult is null)
             throw new UnauthorizedException("You are not logged in.");
 
         var getUserProfileResult = await UnitOfWork
             .UserProfileRepository
             .GetUserProfileAsync(getCurrentUserResult.UserProfileId);
         
-        if (getUserProfileResult == null)
+        if (getUserProfileResult is null)
             throw new UnauthorizedException("You are not logged in.");
         
         getUserProfileResult.DeletedAt = DateTime.Now;
@@ -42,7 +42,7 @@ public class DeleteUserCommandHandler
             .UserProfileRepository
             .SoftDeleteUserAccount(getUserProfileResult);
 
-        return softDeleteUserAccountResult != null
+        return softDeleteUserAccountResult is not null
             ? new SuccessResponseDto(true)
             : throw new BadRequestException("There was an error. Please try again.");
     }

@@ -17,50 +17,34 @@ public class NewsRepository
     {
     }
 
-    public async Task<Result<List<NewsAggregate>>> GetAllNewsAsync()
+    public async Task<List<NewsAggregate>?> GetAllNewsAsync()
     {
         var result =  FindAll(true)
                                             .ToList();
         
-        return result.Count > 0
-            ? Result<List<NewsAggregate>>.Success(result)
-            : Result<List<NewsAggregate>>.Failure("Failed to get news");
+        return result.Count > 0 ? result : null;
     }
     
-    public async Task<Result<NewsAggregate>> GetDetailNewsAsync(string id)
+    public async Task<NewsAggregate?> GetDetailNewsAsync(string id)
     {
-        var result = await FindByCondition(x => x.Uuid == id, true)
+        return await FindByCondition(x => x.Uuid == id, true)
                                             .FirstOrDefaultAsync();
-        
-        return result is not null
-            ? Result<NewsAggregate>.Success(result)
-            : Result<NewsAggregate>.Failure("The News does not exist");
     }
     
-    public async Task<Result<NewsAggregate>> CreateNewsAsync(NewsAggregate newsAggregate)
+    public async Task<NewsAggregate?> CreateNewsAsync(NewsAggregate newsAggregate)
     {
         var created = await CreateAsync(newsAggregate);
 
-        return created is not null
-            ? Result<NewsAggregate>.Success(created.Entity)
-            : Result<NewsAggregate>.Failure("Failed to create news");
+        return created?.Entity;
     }
 
-    public async Task<Result<NewsAggregate>> UpdateNewsAsync(NewsAggregate newsAggregate)
+    public async Task<NewsAggregate?> UpdateNewsAsync(NewsAggregate newsAggregate)
     {
-        var result = await UpdateAsync(newsAggregate);
-        
-        return result is not null
-            ? Result<NewsAggregate>.Success(result)
-            : Result<NewsAggregate>.Failure("Failed to update news");
+        return await UpdateAsync(newsAggregate);
     }
 
-    public async Task<Result<NewsAggregate>> SoftDeleteAsync(NewsAggregate newsAggregate)
+    public async Task<NewsAggregate?> SoftDeleteAsync(NewsAggregate newsAggregate)
     {
-        var updated = await UpdateAsync(newsAggregate);
-        
-        return updated is not null
-            ? Result<NewsAggregate>.Success(updated)
-            : Result<NewsAggregate>.Failure("Failed to update news");
+        return await UpdateAsync(newsAggregate);
     }
 }
