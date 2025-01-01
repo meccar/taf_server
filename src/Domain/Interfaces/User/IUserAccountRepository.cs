@@ -1,6 +1,5 @@
 using Domain.Aggregates;
 using Microsoft.AspNetCore.Identity;
-using Shared.Results;
 
 namespace Domain.Interfaces.User;
 
@@ -37,6 +36,7 @@ public interface IUserAccountRepository
     /// <returns>A task representing the asynchronous operation. The task result is a boolean indicating whether the login data exists.</returns>
     Task<bool> IsUserLoginDataExisted(string userLoginData);
     Task<UserAccountAggregate?> IsExistingAndVerifiedUserAccount(string Eid);
+    Task<UserAccountAggregate?> GetUserByEmail(string email);
     Task<UserAccountAggregate?> GetCurrentUser(string eid);
     Task<UserAccountAggregate?> GetCurrentUser();
     Task<IdentityResult> UpdateAsync(UserAccountAggregate userAccountAggregate);

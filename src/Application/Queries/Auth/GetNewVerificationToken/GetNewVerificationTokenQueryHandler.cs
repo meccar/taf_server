@@ -37,13 +37,13 @@ public class GetNewVerificationTokenQueryHandler
             throw new BadRequestException("User not found");
         
         var mfaSetupResult = await _mfaRepository.MfaSetup(getRequestedUser);
-        if (!mfaSetupResult.Succeeded)
-            throw new BadRequestException(mfaSetupResult.Errors.FirstOrDefault()!);
+        if (mfaSetupResult is null)
+            throw new BadRequestException("Something went wrong, please try again");
         
-        var isMailSent =  await _mailRepository.SendEmailConfirmation(getRequestedUser, mfaSetupResult.Value!);
+        var isMailSent =  await _mailRepository.SendEmailConfirmation(getRequestedUser, mfaSetupResult);
 
-        return isMailSent.Succeeded
+        return isMailSent
             ? new SuccessResponseDto(true)
-            : throw new BadRequestException(isMailSent.Errors.FirstOrDefault()!);
+            : throw new BadRequestException("Something went wrong, please try again");
     }
 }

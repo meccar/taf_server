@@ -5,7 +5,6 @@ using Domain.Interfaces.Tokens;
 using Microsoft.AspNetCore.Identity;
 using Shared.Enums;
 using Shared.Model;
-using Shared.Results;
 
 namespace Persistance.Repositories.Credentials;
 
@@ -22,7 +21,6 @@ public class SignInRepository
         UserManager<UserAccountAggregate> userManager,
         SignInManager<UserAccountAggregate> signInManager,
         ITokenRepository tokenRepository
-
     )
     {
         _unitOfWork = unitOfWork;
@@ -31,17 +29,12 @@ public class SignInRepository
         _tokenRepository = tokenRepository;
     }
 
-    public async Task<Result<(UserAccountAggregate, UserTokenModel)>> SignInAsync(
-        string email,
+    public async Task<(UserAccountAggregate, UserTokenModel)?> SignInAsync(
+        UserAccountAggregate user,
         string? password,
         bool isPersistent
     )
     {
-        UserAccountAggregate? user = await _userManager.FindByEmailAsync(email);
-
-        if (user == null)
-            return Result<(UserAccountAggregate, UserTokenModel)>.Failure("Invalid email or Password");
-        
         var token = _tokenRepository.GenerateTokenPair(user);
         
         // password = "Password@1234";
@@ -49,23 +42,17 @@ public class SignInRepository
         // If no password is provided, attempt external sign-in
         if(password == null)
             return await ExternalSignInAsync(user, token);
-        
-        // var claimsIdentity = new ClaimsIdentity(token.Claims, user.EId);
-        // var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-        //
-        // if (_signInManager.IsSignedIn(claimsPrincipal))
-        //     return Result<(UserAccountAggregate, UserTokenModel)>.Failure("User has already signed in");
 
         return await InternalSignInAsync(user, password, isPersistent, token);
     }
 
-    private async Task<Result<(UserAccountAggregate, UserTokenModel)>> ExternalSignInAsync(
+    private async Task<(UserAccountAggregate, UserTokenModel)?> ExternalSignInAsync(
         UserAccountAggregate userAccountAggregate,
         UserTokenModel userTokenModel
     )
     {
         if (!userAccountAggregate.IsTwoFactorVerified)
-            return Result<(UserAccountAggregate, UserTokenModel)>.Failure("Account has not been verified");
+            return null;
         
         var signInResult = await _userManager.AddLoginAsync(userAccountAggregate, new UserLoginInfo(            
             userTokenModel.LoginProvider.ToString()!,
@@ -73,11 +60,11 @@ public class SignInRepository
             userTokenModel.LoginProvider.ToString()));
         
         return signInResult.Succeeded 
-            ? Result<(UserAccountAggregate, UserTokenModel)>.Success((userAccountAggregate, userTokenModel))
-            : Result<(UserAccountAggregate, UserTokenModel)>.Failure("Invalid email or Password");
+            ? (userAccountAggregate, userTokenModel)
+            : null;
     }
     
-    private async Task<Result<(UserAccountAggregate, UserTokenModel)>> InternalSignInAsync(
+    private async Task<(UserAccountAggregate, UserTokenModel)?> InternalSignInAsync(
         UserAccountAggregate userAccountAggregate,
         string password, 
         bool isPersistent, 
@@ -85,10 +72,10 @@ public class SignInRepository
     )
     {
         if (!await _userManager.CheckPasswordAsync(userAccountAggregate, password))
-            return Result<(UserAccountAggregate, UserTokenModel)>.Failure("Invalid email or Password");
+            return null;
         
         if (!userAccountAggregate.IsTwoFactorVerified)
-            return Result<(UserAccountAggregate, UserTokenModel)>.Failure("Account has not been verified");
+            return null;
         
         await _signInManager.RememberTwoFactorClientAsync(userAccountAggregate);
         
@@ -102,7 +89,7 @@ public class SignInRepository
         password = null!;
         
         if (!signInResult.Succeeded)
-            return Result<(UserAccountAggregate, UserTokenModel)>.Failure("Invalid email or Password");
+            return null;
 
         token.LoginProvider = EProvider.PASSWORD;
         token.Name = ETokenName.REFRESH;
@@ -112,12 +99,12 @@ public class SignInRepository
             .RemoveLoginAndAuthenticationTokenAsync(userAccountAggregate, token);
         
         if(!removeLoginAndAuthenticationTokenResult)
-            return Result<(UserAccountAggregate, UserTokenModel)>.Failure("Invalid email or Password");
+            return null;
         
         foreach (var claim in token.Claims)
             await _userManager.AddClaimAsync(userAccountAggregate, claim);
         
         await _signInManager.SignInWithClaimsAsync(userAccountAggregate, isPersistent, token.Claims);
-        return Result<(UserAccountAggregate, UserTokenModel)>.Success((userAccountAggregate, token));
+        return (userAccountAggregate, token);
     }
 }

@@ -1,6 +1,5 @@
 using Domain.Aggregates;
 using Shared.Model;
-using Shared.Results;
 
 namespace Domain.Interfaces.Tokens;
 
@@ -25,5 +24,5 @@ public interface IJwtRepository
     /// <param name="user">The <see cref="UserAccountAggregate"/> representing the user for whom the tokens are generated.</param>
     /// <param name="token">The <see cref="UserTokenModel"/> containing token-related data for generating the response.</param>
     /// <returns>A <see cref="Result{T}"/> containing a <see cref="TokenModel"/> with the generated JWT and refresh token details.</returns>
-    Task<Result<TokenModel>> GenerateAuthResponseWithRefreshTokenCookie(UserAccountAggregate user, UserTokenModel token);
+    Task<TokenModel?> GenerateAuthResponseWithRefreshTokenCookie(UserAccountAggregate user, UserTokenModel token);
 }

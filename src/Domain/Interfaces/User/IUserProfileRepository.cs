@@ -1,6 +1,4 @@
 using Domain.Aggregates;
-using Shared.Model;
-using Shared.Results;
 
 namespace Domain.Interfaces.User;
 

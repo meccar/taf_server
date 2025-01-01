@@ -53,16 +53,21 @@ public class LoginQueryHandler : TransactionalQueryHandler<LoginQuery, LoginResp
     /// </remarks>
     protected override async Task<LoginResponseDto> ExecuteCoreAsync(LoginQuery request, CancellationToken cancellationToken)
     {
+        var user = await UnitOfWork.UserAccountRepository.GetUserByEmail(request.Email);
+        
+        if (user is null)
+            throw new BadRequestException("Could not verify your account");
+        
         var result = await _signInRepository
             .SignInAsync(
-                request.Email,
+                user,
                 request.Password,
                 false
             );
         
         request.Password = null!;
         
-        if (result.Succeeded)
+        if (result is not null)
         {
             // Generate authentication token and refresh token
             var tokenGenerationResult = await _jwtTokenRepository
@@ -71,10 +76,10 @@ public class LoginQueryHandler : TransactionalQueryHandler<LoginQuery, LoginResp
                     result.Value.Item2
                 );
             
-            if (tokenGenerationResult.Succeeded)
-                return _mapper.Map<LoginResponseDto>(tokenGenerationResult.Value); 
+            if (tokenGenerationResult is not null)
+                return _mapper.Map<LoginResponseDto>(tokenGenerationResult); 
         }
         
-        throw new UnauthorizedException(result.Errors.FirstOrDefault() ?? "Invalid credentials");
+        throw new UnauthorizedException("Invalid credentials");
     }
 }

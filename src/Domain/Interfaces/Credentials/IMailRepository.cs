@@ -1,6 +1,5 @@
 using Domain.Aggregates;
 using Shared.Model;
-using Shared.Results;
 
 namespace Domain.Interfaces.Credentials;
 
@@ -17,7 +16,7 @@ public interface IMailRepository
     /// <param name="userAccount">The <see cref="UserAccountAggregate"/> representing the user's account to whom the email confirmation will be sent.</param>
     /// <param name="mfaViewModel">The <see cref="MfaViewModel"/> containing the multi-factor authentication data needed for the confirmation email.</param>
     /// <returns>A <see cref="Task{Result}"/> representing the asynchronous operation. The result contains the status of the email sending operation.</returns>
-    Task<Result> SendEmailConfirmation(UserAccountAggregate userAccount, MfaViewModel mfaViewModel);
+    Task<bool> SendEmailConfirmation(UserAccountAggregate userAccount, MfaViewModel mfaViewModel);
 
     /// <summary>
     /// Verifies the provided email confirmation token to validate its authenticity and expiration status.
@@ -25,5 +24,5 @@ public interface IMailRepository
     /// </summary>
     /// <param name="token">The confirmation token to be verified.</param>
     /// <returns>A <see cref="string"/> that returns the result of the verification. If valid, returns the user identifier or null if invalid.</returns>
-    Task<Result<UserAccountAggregate>> VerifyEmailConfirmationToken(string token);
+    Task<UserAccountAggregate?> VerifyEmailConfirmationToken(UserAccountAggregate user, string userKey, string emailKey);
 }

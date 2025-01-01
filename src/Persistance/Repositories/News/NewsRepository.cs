@@ -1,10 +1,7 @@
-using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces.News;
 using Microsoft.EntityFrameworkCore;
 using Persistance.Data;
-using Shared.Model;
-using Shared.Results;
 
 namespace Persistance.Repositories.News;
 

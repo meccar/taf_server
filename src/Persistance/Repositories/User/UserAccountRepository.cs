@@ -14,8 +14,6 @@ public class UserAccountRepository
     : IUserAccountRepository
 {
     private readonly UserManager<UserAccountAggregate> _userManager;
-    private readonly IMfaRepository _mfaRepository;
-    private readonly IMailRepository _mailRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     /// <summary>
@@ -26,14 +24,10 @@ public class UserAccountRepository
     /// <param name="mailRepository">The repository responsible for sending confirmation emails.</param>
     public UserAccountRepository(
         UserManager<UserAccountAggregate> userManager,
-        IMfaRepository mfaRepository,
-        IMailRepository mailRepository,
         IHttpContextAccessor httpContextAccessor
     )
     {
         _userManager = userManager;
-        _mfaRepository = mfaRepository;
-        _mailRepository = mailRepository;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -47,40 +41,7 @@ public class UserAccountRepository
     {
         return await _userManager.AddToRoleAsync(userAccountAggregate, role);
     }
-
-    /// <summary>
-    /// Creates a new user account asynchronously.
-    /// </summary>
-    /// <param name="request">The user account model containing the details of the account to be created.</param>
-    /// <returns>A result containing the created user account model or a failure message.</returns>
-    // public async Task<Result<UserAccountAggregate>> CreateUserAccountAsync(UserAccountAggregate userAccountAggregate, string password)
-    // {
-    //     userAccountAggregate.UserName ??= userAccountAggregate.Email;
-    //     
-    //     IdentityResult result = await _userManager.CreateAsync(userAccountAggregate, password);
-    //     password = null!;
-    //     
-    //     if (!result.Succeeded)
-    //         return Result<UserAccountAggregate>.Failure(
-    //             result.Errors.Select(e => e.Description).ToArray());
-    //     
-    //     IdentityResult roleResult = await _userManager.AddToRoleAsync(userAccountAggregate, FoRole.User);
-    //     if (!roleResult.Succeeded)
-    //         return Result<UserAccountAggregate>.Failure(
-    //             roleResult.Errors.Select(e => e.Description).ToArray());
-    //     
-    //     Result<MfaViewModel> mfaViewModel = await _mfaRepository.MfaSetup(userAccountAggregate);
-    //     if (!mfaViewModel.Succeeded)
-    //         return Result<UserAccountAggregate>.Failure(
-    //             roleResult.Errors.Select(e => e.Description).ToArray());
-    //     
-    //     Result isMailSent =  await _mailRepository.SendEmailConfirmation(userAccountAggregate, mfaViewModel.Value!);
-    //     
-    //     return isMailSent.Succeeded
-    //         ? Result<UserAccountAggregate>.Success(userAccountAggregate)
-    //         : Result<UserAccountAggregate>.Failure(
-    //             result.Errors.Select(e => e.Description).ToArray());
-    // }
+    
     public async Task<IdentityResult> UpdateAsync(UserAccountAggregate userAccountAggregate)
     {
         return await _userManager.UpdateAsync(userAccountAggregate);
@@ -129,6 +90,11 @@ public class UserAccountRepository
                                 => u.EId == Eid 
                             && u.EmailConfirmed
                         );
+    }
+
+    public async Task<UserAccountAggregate?> GetUserByEmail(string email)
+    {
+        return await _userManager.FindByEmailAsync(email);
     }
     
     public async Task<UserAccountAggregate?> GetCurrentUser()

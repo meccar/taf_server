@@ -2,10 +2,8 @@ using Domain.Aggregates;
 using Domain.Interfaces;
 using Domain.Interfaces.Tokens;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Shared.Configurations.Environment;
 using Shared.Model;
-using Shared.Results;
 
 namespace Persistance.Repositories.Tokens;
 
@@ -16,7 +14,6 @@ public class JwtRepository : IJwtRepository
 {
     private readonly EnvironmentConfiguration _environment;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly UserManager<UserAccountAggregate> _userManager;
     private readonly ITokenRepository _tokenRepository;
     private readonly IHttpContextAccessor _httpContextAccessor;
     
@@ -31,14 +28,12 @@ public class JwtRepository : IJwtRepository
     public JwtRepository(
         EnvironmentConfiguration environment,
         IUnitOfWork unitOfWork,
-        UserManager<UserAccountAggregate> userManager,
         ITokenRepository tokenRepository,
         IHttpContextAccessor httpContextAccessor
         )
     {
         _environment = environment;
         _unitOfWork = unitOfWork;
-        _userManager = userManager;
         _tokenRepository = tokenRepository;
         _httpContextAccessor = httpContextAccessor;
     }
@@ -48,7 +43,7 @@ public class JwtRepository : IJwtRepository
     /// </summary>
     /// <param name="email">The email address of the user.</param>
     /// <returns>A <see cref="TokenModel"/> containing authentication tokens.</returns>
-    public async Task<Result<TokenModel>> GenerateAuthResponseWithRefreshTokenCookie(
+    public async Task<TokenModel?> GenerateAuthResponseWithRefreshTokenCookie(
         UserAccountAggregate user,
         UserTokenModel token
     )
@@ -66,17 +61,16 @@ public class JwtRepository : IJwtRepository
             )
         );
 
-        if (refreshToken == null)
-            return Result<TokenModel>.Failure("Failed while logging in, please try again.");
+        if (refreshToken is null)
+            return null;
         
-        return Result<TokenModel>
-            .Success(new TokenModel(
+        return new TokenModel(
             token.Token!.TokenType,
             token.Token.AccessToken,
             token.Token.AccessTokenExpires,
             token.Token.RefreshToken,
             token.Token.RefreshTokenExpires
-        ));
+        );
     }
     
     public async Task<TokenModel> GenerateAuthResponseWithRefreshTokenCookie(

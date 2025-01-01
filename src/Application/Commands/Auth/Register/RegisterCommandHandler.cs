@@ -91,13 +91,13 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
         var mfaResult = await _mfaRepository
             .MfaSetup(userAccountAggregate);
         
-        if (!mfaResult.Succeeded)
+        if (mfaResult is null)
             throw new BadRequestException("Failed to create user account");
         
         var mailResult = await _mailRepository
-            .SendEmailConfirmation(userAccountAggregate, mfaResult.Value!);
+            .SendEmailConfirmation(userAccountAggregate, mfaResult);
         
-        if (!mailResult.Succeeded)
+        if (!mailResult)
             throw new BadRequestException("Failed to create user account");
         
         // Attach login data to the user account
