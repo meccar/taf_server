@@ -1,6 +1,5 @@
 using Domain.Aggregates;
 using Shared.Model;
-using Shared.Results;
 
 namespace Domain.Interfaces.Credentials;
 
@@ -18,6 +17,6 @@ public interface ISignInRepository
     /// <param name="isPersistent">A boolean value indicating whether the authentication session should be persistent.</param>
     /// <returns>A <see cref="Result{T}"/> containing a tuple with the <see cref="UserAccountAggregate"/> 
     /// representing the authenticated user and the <see cref="UserTokenModel"/> for the session.</returns>
-    Task<Result<(UserAccountAggregate, UserTokenModel)>> SignInAsync(string email, string password, bool isPersistent);
+    Task<(UserAccountAggregate, UserTokenModel)?> SignInAsync(UserAccountAggregate user, string password, bool isPersistent);
 
 }

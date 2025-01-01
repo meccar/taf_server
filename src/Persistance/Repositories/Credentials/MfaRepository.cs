@@ -1,10 +1,8 @@
 using System.Net;
 using Domain.Aggregates;
-using Domain.Interfaces;
 using Domain.Interfaces.Credentials;
 using Microsoft.AspNetCore.Identity;
 using Shared.Model;
-using Shared.Results;
 
 namespace Persistance.Repositories.Credentials;
 
@@ -31,7 +29,7 @@ public class MfaRepository : IMfaRepository
     /// </summary>
     /// <param name="user">The user account for which MFA is being set up.</param>
     /// <returns>A <see cref="MfaViewModel"/> containing the shared key and QR code URI.</returns>
-    public async Task<Result<MfaViewModel>> MfaSetup(UserAccountAggregate user)
+    public async Task<MfaViewModel?> MfaSetup(UserAccountAggregate user)
     {
         // Disable 2FA first
         await _userManager.SetTwoFactorEnabledAsync(user, false);
@@ -41,24 +39,24 @@ public class MfaRepository : IMfaRepository
         string? unformattedKey = await _userManager.GetAuthenticatorKeyAsync(user);
     
         if (string.IsNullOrEmpty(unformattedKey))
-            return Result<MfaViewModel>.Failure("Failed to get authenticator key");
+            return null;
 
         await _userManager.UpdateSecurityStampAsync(user);
         
         var updateResult = await _userManager.UpdateAsync(user);
         if (!updateResult.Succeeded)
-            return Result<MfaViewModel>.Failure("Failed to save authenticator key");
+            return null;
         
         // Enable 2FA
         var result = await _userManager.SetTwoFactorEnabledAsync(user, true);
         if (!result.Succeeded)
-            throw new InvalidOperationException("Failed to enable two-factor authentication");
+            return null;
 
-        return Result<MfaViewModel>.Success(new MfaViewModel
+        return new MfaViewModel
         {
             SharedKey = unformattedKey,
             AuthenticatorUri = GenerateQrCodeUri(user.Email!, unformattedKey)
-        });
+        };
     }
 
     /// <summary>
@@ -67,19 +65,14 @@ public class MfaRepository : IMfaRepository
     /// <param name="user">The user attempting to validate the MFA token.</param>
     /// <param name="token">The MFA token provided by the user.</param>
     /// <returns>A <see cref="Result"/> indicating success or failure.</returns>
-    public async Task<Result> ValidateMfa(UserAccountAggregate user, string token)
+    public async Task<bool> ValidateMfa(UserAccountAggregate user, string token)
     {
-        // UserAccountAggregate? user = await _userManager.FindByEmailAsync(email);
-        //
-        // if (user == null)
-        //     return Result.Failure("Account does not exist");
-
         if (!await _userManager.GetTwoFactorEnabledAsync(user))
-            return Result.Failure("Invalid 2-factor provider");
+            return false;
         
         var providers = await _userManager.GetValidTwoFactorProvidersAsync(user); 
         if (!providers.Contains(_userManager.Options.Tokens.AuthenticatorTokenProvider))
-            return Result.Failure("Invalid 2-factor provider");
+            return false;
 
         // using _userManager.GenerateTwoFactorTokenAsync because TwoFactorToken is actually
         // the token sent through SMS
@@ -103,11 +96,10 @@ public class MfaRepository : IMfaRepository
 
             var updateResult = await _userManager.UpdateAsync(user);
             
-            return updateResult.Succeeded ? Result.Success() : Result.Failure();
-            
+            return updateResult.Succeeded;
         }
         
-        return Result.Failure("Invalid authenticator code");
+        return false;
     }
     
     /// <summary>

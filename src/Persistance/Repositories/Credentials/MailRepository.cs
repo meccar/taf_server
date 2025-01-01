@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.WebUtilities;
 using QRCoder;
 using Shared.Configurations.Environment;
 using Shared.Model;
-using Shared.Results;
 
 namespace Persistance.Repositories.Credentials;
 
@@ -40,7 +39,7 @@ public class MailRepository : IMailRepository
     /// <param name="userAccount">The user account to send the confirmation email to.</param>
     /// <param name="mfaViewModel">The MFA view model containing MFA information.</param>
     /// <returns>A <see cref="Result"/> indicating the success or failure of the operation.</returns>
-    public async Task<Result> SendEmailConfirmation(UserAccountAggregate userAccount, MfaViewModel mfaViewModel)
+    public async Task<bool> SendEmailConfirmation(UserAccountAggregate userAccount, MfaViewModel mfaViewModel)
     {
         string userToken = await _userManager.GenerateUserTokenAsync(
             userAccount,
@@ -101,7 +100,7 @@ public class MailRepository : IMailRepository
         mailMessage.IsBodyHtml = true;
             
         await smtpClient.SendMailAsync(mailMessage);
-        return Result.Success();
+        return true;
     }
 
     /// <summary>
@@ -109,46 +108,25 @@ public class MailRepository : IMailRepository
     /// </summary>
     /// <param name="token">The confirmation token received by the user.</param>
     /// <returns>The email of the user if the token is valid, or null if the token is invalid.</returns>
-    public async Task<Result<UserAccountAggregate>> VerifyEmailConfirmationToken(string token)
+    public async Task<UserAccountAggregate?> VerifyEmailConfirmationToken(
+        UserAccountAggregate user, string userKey, string emailKey)
     {
-        string decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(token));
-
-        string[] parts = decodedToken.Split(':');
-
-        if (parts.Length < 3)
-            return Result<UserAccountAggregate>.Failure("Could not verify your account");
-            
-        string email = parts[0];
-        string userKey = parts[2];
-        string emailKey = parts[3];
-        
-        var tokenProvider = _userManager.Options.Tokens.EmailConfirmationTokenProvider;
-        var purpose = UserManager<UserAccountAggregate>.ConfirmEmailTokenPurpose;
-
-        var user = await _userManager.FindByEmailAsync(email);
-
-        if (user == null)
-            return Result<UserAccountAggregate>.Failure("Could not verify your account");
-
         if (await _userManager.IsEmailConfirmedAsync(user))
-            return Result<UserAccountAggregate>.Success(user);
+            return user;
         
         bool validation = await _userManager.VerifyUserTokenAsync(
             user, 
-            tokenProvider, 
-            purpose, 
+            _userManager.Options.Tokens.EmailConfirmationTokenProvider, 
+            UserManager<UserAccountAggregate>.ConfirmEmailTokenPurpose, 
             userKey
         );
-
-        if (!validation)
-            return Result<UserAccountAggregate>.Failure("Could not verify your account");
         
         var confirmResult = await _userManager.ConfirmEmailAsync(user, emailKey); 
         
-        if (!confirmResult.Succeeded) 
-            return Result<UserAccountAggregate>.Failure("Could not verify your account");
+        if (confirmResult.Succeeded && validation) 
+            return user;
 
-        return Result<UserAccountAggregate>.Success(user);
+        return null;
     }
     
     /// <summary>

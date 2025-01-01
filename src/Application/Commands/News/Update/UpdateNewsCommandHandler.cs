@@ -22,27 +22,23 @@ public class UpdateNewsCommandHandler : TransactionalCommandHandler<UpdateNewsCo
     {
         var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
 
-        if (user == null)
+        if (user is null)
             throw new BadRequestException("User not found");
         
-        var GetNewsResult = await UnitOfWork.NewsRepository.GetDetailNewsAsync(request.Eid);
+        var getNewsResult = await UnitOfWork.NewsRepository.GetDetailNewsAsync(request.Eid);
         
-        if (!GetNewsResult.Succeeded)
-            throw new BadRequestException(
-                GetNewsResult.Errors.FirstOrDefault() 
-                ?? "There was an error getting the news");
+        if (getNewsResult is null)
+            throw new BadRequestException("There was an error getting the news");
         
-        if (!(user.Value!.Id == GetNewsResult.Value!.CreatedByUserAccountId))
+        if (user.Id != getNewsResult.CreatedByUserAccountId)
             throw new UnauthorizedException("You do not have permission to update the news");
 
         var newsAggregate = _mapper.Map<NewsAggregate>(request);
         
         var result = await UnitOfWork.NewsRepository.UpdateNewsAsync(newsAggregate);
         
-        return result.Succeeded 
-            ?_mapper.Map<UpdateNewsResponseDto>(result.Value)
-            : throw new BadRequestException(
-                result.Errors.FirstOrDefault()
-                ?? "There was an error updating the news");
+        return result is not null 
+            ?_mapper.Map<UpdateNewsResponseDto>(result)
+            : throw new BadRequestException("There was an error updating the news");
     }
 }

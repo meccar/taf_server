@@ -21,21 +21,22 @@ public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCo
     protected override async Task<CreateNewsResponseDto> ExecuteCoreAsync(CreateNewsCommand request, CancellationToken cancellationToken)
     {
         var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
-
+        
+        if (user is null)
+            throw new UnauthorizedException("You are not logged in");
+        
         var newsAggregate = _mapper.Map<NewsAggregate>(request);
         
-        newsAggregate.CreatedByUserAccountId = user.Value!.Id;
-        newsAggregate.UpdatedByUserAccountId = user.Value!.Id;
+        newsAggregate.CreatedByUserAccountId = user.Id;
+        newsAggregate.UpdatedByUserAccountId = user.Id;
         newsAggregate.CreatedAt = DateTime.Now;
         newsAggregate.DeletedAt = null;
         
         var result = await UnitOfWork.NewsRepository.CreateNewsAsync(newsAggregate);
 
-        if (result.Succeeded)
-            return _mapper.Map<CreateNewsResponseDto>(result.Value); 
+        if (result is not null)
+            return _mapper.Map<CreateNewsResponseDto>(result); 
         
-        throw new BadRequestException(
-            result.Errors.FirstOrDefault() 
-            ?? "There was an error creating the news");
+        throw new BadRequestException("There was an error creating the news");
     }
 }

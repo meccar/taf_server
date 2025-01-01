@@ -25,25 +25,25 @@ public class DeleteUserCommandHandler
             .UserAccountRepository
             .GetCurrentUser(request.UserAccountEid);
         
-        if (!getCurrentUserResult.Succeeded)
-            throw new UnauthorizedException(getCurrentUserResult.Errors.FirstOrDefault()!);
+        if (getCurrentUserResult is null)
+            throw new UnauthorizedException("You are not logged in.");
 
         var getUserProfileResult = await UnitOfWork
             .UserProfileRepository
-            .GetUserProfileAsync(getCurrentUserResult.Value!.UserProfileId);
+            .GetUserProfileAsync(getCurrentUserResult.UserProfileId);
         
-        if (!getUserProfileResult.Succeeded)
-            throw new UnauthorizedException(getUserProfileResult.Errors.FirstOrDefault()!);
+        if (getUserProfileResult is null)
+            throw new UnauthorizedException("You are not logged in.");
         
-        getUserProfileResult.Value!.DeletedAt = DateTime.Now;
-        getUserProfileResult.Value!.IsDeleted = true;
+        getUserProfileResult.DeletedAt = DateTime.Now;
+        getUserProfileResult.IsDeleted = true;
         
         var softDeleteUserAccountResult = await UnitOfWork
             .UserProfileRepository
-            .SoftDeleteUserAccount(getUserProfileResult.Value!);
+            .SoftDeleteUserAccount(getUserProfileResult);
 
-        return softDeleteUserAccountResult.Succeeded
+        return softDeleteUserAccountResult is not null
             ? new SuccessResponseDto(true)
-            : throw new BadRequestException(softDeleteUserAccountResult.Errors.FirstOrDefault()!);
+            : throw new BadRequestException("There was an error. Please try again.");
     }
 }

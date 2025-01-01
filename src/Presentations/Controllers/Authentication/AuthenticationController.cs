@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Application.Commands.Auth.Delete;
 using Application.Commands.Auth.Register;
 using Application.Commands.UserAccount;
+using Application.Queries.Auth.GetNewVerificationToken;
 using Application.Queries.Auth.Login;
 using Application.Queries.Auth.VerifyUser;
 using Asp.Versioning;
@@ -193,6 +194,25 @@ public class AuthenticationController
         
         _logger.LogInformation("END: Delete User");
         
+        return Ok(response);
+    }
+
+    [HttpGet("get/token-verification-email/{eid}")]
+    [SwaggerOperation(
+        Summary = "Get Email verification token",
+        Description = "Returns a JSON object indicating if new token verification has been sent"        
+    )]
+    [SwaggerResponse(StatusCodes.Status200OK, "Returns token email")]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing the request")]
+    public async Task<ActionResult> GetNewVerificationToken([FromRoute] string eid)
+    {
+        _logger.LogInformation("START: Get New verification token");
+
+        var response = await _mediator.Send(new GetNewVerificationTokenQuery(eid));
+        
+        _logger.LogInformation("END: Get New verification token");
+
         return Ok(response);
     }
 }

@@ -1,6 +1,5 @@
 using Domain.Aggregates;
 using Shared.Model;
-using Shared.Results;
 
 namespace Domain.Interfaces.Credentials;
 
@@ -16,7 +15,7 @@ public interface IMfaRepository
     /// </summary>
     /// <param name="user">The <see cref="UserAccountAggregate"/> representing the user for whom MFA is being set up.</param>
     /// <returns>A <see cref="Task{MfaViewModel}"/> representing the asynchronous operation. The result is an <see cref="MfaViewModel"/> containing the MFA setup details.</returns>
-    Task<Result<MfaViewModel>> MfaSetup(UserAccountAggregate user);
+    Task<MfaViewModel?> MfaSetup(UserAccountAggregate user);
 
     /// <summary>
     /// Validates the multi-factor authentication (MFA) token submitted by a user.
@@ -25,5 +24,5 @@ public interface IMfaRepository
     /// <param name="user">The user attempting to validate the MFA token.</param>
     /// <param name="token">The MFA token provided by the user for validation.</param>
     /// <returns>A <see cref="Task{Result}"/> representing the asynchronous operation. The result contains the outcome of the token validation, indicating whether it is valid or not.</returns>
-    Task<Result> ValidateMfa(UserAccountAggregate user, string token);
+    Task<bool> ValidateMfa(UserAccountAggregate user, string token);
 }

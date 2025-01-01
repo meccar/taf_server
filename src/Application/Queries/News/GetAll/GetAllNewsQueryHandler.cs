@@ -24,7 +24,7 @@ public class GetAllNewsCommandHandler : TransactionalQueryHandler<GetAllNewsQuer
     {
         var result = await UnitOfWork.NewsRepository.GetAllNewsAsync();
 
-        if (result.Succeeded)
+        if (result is not null)
         {
             var paginationResponse = new PaginationHelper<NewsAggregate>(
                 pageNumber: request.PaginationParams.PageNumber,
@@ -35,7 +35,7 @@ public class GetAllNewsCommandHandler : TransactionalQueryHandler<GetAllNewsQuer
                 category: request.PaginationParams.Category
             );
         
-            var paginatedNews = paginationResponse.Paginate(result.Value!);
+            var paginatedNews = paginationResponse.Paginate(result);
             
             return new PaginationResponse<GetAllNewsResponseDto>
             {
@@ -50,9 +50,7 @@ public class GetAllNewsCommandHandler : TransactionalQueryHandler<GetAllNewsQuer
             // return _mapper.Map<PaginationResponse<GetAllNewsResponseDto>>(result.Value); 
         }
         
-        throw new BadRequestException(
-            result.Errors.FirstOrDefault() 
-            ?? "There was an error getting the news"
+        throw new BadRequestException("There was an error getting the news"
         );
     }
 }

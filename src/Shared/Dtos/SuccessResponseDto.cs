@@ -1,5 +1,3 @@
-using Shared.Results;
-
 namespace Shared.Dtos;
 
 public class SuccessResponseDto

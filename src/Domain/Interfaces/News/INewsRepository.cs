@@ -1,14 +1,12 @@
 using Domain.Aggregates;
-using Shared.Model;
-using Shared.Results;
 
 namespace Domain.Interfaces.News;
 
 public interface INewsRepository
 {
-    Task<Result<List<NewsAggregate>>> GetAllNewsAsync();
-    Task<Result<NewsAggregate>> CreateNewsAsync(NewsAggregate newsAggregate);
-    Task<Result<NewsAggregate>> GetDetailNewsAsync(string id);
-    Task<Result<NewsAggregate>> UpdateNewsAsync(NewsAggregate newsAggregate);
-    Task<Result<NewsAggregate>> SoftDeleteAsync(NewsAggregate newsAggregate);
+    Task<List<NewsAggregate>?> GetAllNewsAsync();
+    Task<NewsAggregate?> CreateNewsAsync(NewsAggregate newsAggregate);
+    Task<NewsAggregate?> GetDetailNewsAsync(string id);
+    Task<NewsAggregate?> UpdateNewsAsync(NewsAggregate newsAggregate);
+    Task<NewsAggregate?> SoftDeleteAsync(NewsAggregate newsAggregate);
 }

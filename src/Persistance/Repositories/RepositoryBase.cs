@@ -107,9 +107,9 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : EntityBase
     /// <param name="id">The identifier of the entity.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains 
     /// the entity with the specified identifier.</returns>
-    public async Task<T> GetByIdAsync(int id)
+    public async Task<T?> GetByIdAsync(int id)
     {
-        return (await _context.Set<T>().FindAsync(id))!;
+        return await _context.Set<T>().FindAsync(id);
     }
     /// <summary>
     /// Retrieves an entity by its identifier asynchronously, including specified related entities.

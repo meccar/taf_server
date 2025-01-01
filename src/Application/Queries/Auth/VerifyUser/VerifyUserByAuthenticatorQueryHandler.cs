@@ -1,11 +1,11 @@
+using System.Text;
 using AutoMapper;
-using Domain.Aggregates;
 using Domain.Interfaces;
 using Domain.Interfaces.Credentials;
 using Domain.Interfaces.Tokens;
+using Microsoft.AspNetCore.WebUtilities;
 using Shared.Dtos.Authentication.Credentials;
 using Shared.Dtos.Exceptions;
-using Shared.Results;
 
 namespace Application.Queries.Auth.VerifyUser;
 
@@ -57,39 +57,55 @@ public class VerifyUserByAuthenticatorQueryHandler : TransactionalQueryHandler<V
         VerifyUserByAuthenticatorQuery request,
         CancellationToken cancellationToken)
     {
-        Result<UserAccountAggregate> verifyEmailConfirmationTokenResult = await _mailRepository
-            .VerifyEmailConfirmationToken(request.UrlToken);
+        string decodedToken = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.UrlToken));
 
-        if (!verifyEmailConfirmationTokenResult.Succeeded)
-            throw new BadRequestException(
-                verifyEmailConfirmationTokenResult.Errors.FirstOrDefault() 
-                ?? "Something went wrong"
-            );   
+        string[] parts = decodedToken.Split(':');
 
-        Result validateMfaResult = await _mfaRepository
+        if (parts.Length < 3)
+            throw new BadRequestException("Could not verify your account");
+            
+        string email = parts[0];
+        string userKey = parts[2];
+        string emailKey = parts[3];
+        
+        var user = await UnitOfWork.UserAccountRepository.GetUserByEmail(email);
+        
+        if (user is null)
+            throw new BadRequestException("Could not verify your account");
+
+        var verifyEmailConfirmationTokenResult = await _mailRepository
+            .VerifyEmailConfirmationToken(user, userKey, emailKey);
+
+        if (verifyEmailConfirmationTokenResult is null)
+            throw new BadRequestException("Something went wrong");   
+
+        var validateMfaResult = await _mfaRepository
                 .ValidateMfa(
-                    verifyEmailConfirmationTokenResult.Value!,
+                    verifyEmailConfirmationTokenResult,
                     request.AuthenticatorToken
                 );
 
-        if (!validateMfaResult.Succeeded)
-            throw new BadRequestException(
-                validateMfaResult.Errors.FirstOrDefault() 
-                ?? "MFA validation failed"
-            );
+        if (!validateMfaResult)
+            throw new BadRequestException("Invalid 2-factor token");
         
         var signInResult = await _signInRepository
             .SignInAsync(
-                verifyEmailConfirmationTokenResult.Value!.Email!,
+                user,
                 null!,
                 false
             );
+        
+        if (signInResult is null)
+            throw new BadRequestException("Failed while logging in, please try again.");
         
         var tokenModel = await _jwtTokenRepository
             .GenerateAuthResponseWithRefreshTokenCookie(
                 signInResult.Value.Item1, signInResult.Value.Item2 
             );
+
+        if (tokenModel is null)
+            throw new BadRequestException("Failed while logging in, please try again.");
         
-        return _mapper.Map<VerifyUserResponseDto>(tokenModel.Value);
+        return _mapper.Map<VerifyUserResponseDto>(tokenModel);
     }
 }
