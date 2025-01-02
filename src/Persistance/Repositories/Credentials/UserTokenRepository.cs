@@ -1,5 +1,4 @@
 using Domain.Aggregates;
-using Domain.Interfaces;
 using Domain.Interfaces.Credentials;
 using Microsoft.AspNetCore.Identity;
 using Shared.Model;

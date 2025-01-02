@@ -62,17 +62,13 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
         // Create user account
         var userProfile = await UnitOfWork
             .UserProfileRepository
-            .CreateUserProfileAsync(userProfileAggregate);
+            .CreateAsync(userProfileAggregate);
 
         if (userProfile is null)
             throw new BadRequestException("Failed to create user account");
 
         // Associate login data with the new account
-        userAccountAggregate.UserProfileId = userProfile.Id;
-
-        // var userAccount = await UnitOfWork
-        //     .UserAccountRepository
-        //     .CreateUserAccountAsync(userAccountAggregate, request.Password);
+        userAccountAggregate.UserProfileId = userProfile.Entity.Id;
 
         var createUserAccountResult = await UnitOfWork
             .UserAccountRepository
@@ -97,14 +93,10 @@ public class RegisterCommandHandler : TransactionalCommandHandler<RegisterComman
         var mailResult = await _mailRepository
             .SendEmailConfirmation(userAccountAggregate, mfaResult);
         
-        if (!mailResult)
-            throw new BadRequestException("Failed to create user account");
+        userProfile.Entity.UserAccount = userAccountAggregate;
         
-        // Attach login data to the user account
-        userProfile.UserAccount = userAccountAggregate!;
-
-        var response = _mapper.Map<RegisterUserResponseDto>(userProfile);
-
-        return response;
+        return mailResult
+            ? _mapper.Map<RegisterUserResponseDto>(userProfile.Entity)
+            : throw new BadRequestException("Failed to create user account");
     }
 }

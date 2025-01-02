@@ -15,12 +15,12 @@ jobs:
         service:
           - name: presentation
 #            context: ./src/Presentations
-            context: ./artifacts/src/Presentations
+            context: ./publish/src/Presentations
 #            dockerfile: ./src/Presentations/Dockerfile
             dockerfile: ./src/Presentations/Dockerfile
           - name: identity_server
 #            context: ./src/IdentityServer
-            context: ./artifacts/src/IdentityServer
+            context: ./publish/src/IdentityServer
 #            dockerfile: ./src/IdentityServer/Dockerfile
             dockerfile: ./src/IdentityServer/Dockerfile
     steps:

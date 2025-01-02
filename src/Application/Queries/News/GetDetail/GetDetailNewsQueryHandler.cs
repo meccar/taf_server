@@ -1,5 +1,6 @@
 using AutoMapper;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
 
@@ -19,7 +20,10 @@ public class GetDetailNewsQueryHandler : TransactionalQueryHandler<GetDetailNews
 
     protected override async Task<GetDetailNewsResponseDto> ExecuteCoreAsync(GetDetailNewsQuery request, CancellationToken cancellationToken)
     {
-        var result = await UnitOfWork.NewsRepository.GetDetailNewsAsync(request.Eid);
+        var result = await UnitOfWork
+            .NewsRepository
+            .FindByCondition(x => x.Uuid == request.Eid, true)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         
         return result is not null
             ? _mapper.Map<GetDetailNewsResponseDto>(result) 

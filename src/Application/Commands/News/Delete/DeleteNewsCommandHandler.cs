@@ -1,5 +1,6 @@
 using AutoMapper;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Shared.Dtos;
 using Shared.Dtos.Exceptions;
 
@@ -31,7 +32,8 @@ public class DeleteNewsCommandHandler
 
         var newsAggregate = await UnitOfWork
             .NewsRepository
-            .GetDetailNewsAsync(request.NewsEid);
+            .FindByCondition(x => x.Uuid == request.NewsEid, true)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         
         if(newsAggregate is null)
             throw new NotFoundException("News not found");
@@ -44,7 +46,7 @@ public class DeleteNewsCommandHandler
         
         var softDeleteNewsResult = await UnitOfWork
             .NewsRepository
-            .SoftDeleteAsync(newsAggregate);
+            .UpdateAsync(newsAggregate);
         
        return softDeleteNewsResult is not null
            ? new SuccessResponseDto(true)

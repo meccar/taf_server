@@ -22,35 +22,34 @@ public class GetAllNewsCommandHandler : TransactionalQueryHandler<GetAllNewsQuer
 
     protected override async Task<PaginationResponse<GetAllNewsResponseDto>> ExecuteCoreAsync(GetAllNewsQuery request, CancellationToken cancellationToken)
     {
-        var result = await UnitOfWork.NewsRepository.GetAllNewsAsync();
+        var newsAggregate = UnitOfWork
+                                .NewsRepository
+                                .FindAll(true)
+                                .ToList();
 
-        if (result is not null)
-        {
-            var paginationResponse = new PaginationHelper<NewsAggregate>(
-                pageNumber: request.PaginationParams.PageNumber,
-                pageSize: request.PaginationParams.PageSize,
-                searchTerm: request.PaginationParams.SearchTerm,
-                sortBy: request.PaginationParams.SortBy,
-                isAscending: request.PaginationParams.IsAscending,
-                category: request.PaginationParams.Category
-            );
-        
-            var paginatedNews = paginationResponse.Paginate(result);
-            
-            return new PaginationResponse<GetAllNewsResponseDto>
-            {
-                Items = _mapper.Map<List<GetAllNewsResponseDto>>(paginatedNews.Items),
-                PageNumber = paginatedNews.PageNumber,
-                PageSize = paginatedNews.PageSize,
-                TotalItems = paginatedNews.TotalItems,
-                TotalPages = paginatedNews.TotalPages,
-                HasPreviousPage = paginatedNews.HasPreviousPage,
-                HasNextPage = paginatedNews.HasNextPage
-            };
-            // return _mapper.Map<PaginationResponse<GetAllNewsResponseDto>>(result.Value); 
-        }
-        
-        throw new BadRequestException("There was an error getting the news"
+        if (newsAggregate.Count < 1)
+            throw new NotFoundException("No News found");
+
+        var paginationResponse = new PaginationHelper<NewsAggregate>(
+            pageNumber: request.PaginationParams.PageNumber,
+            pageSize: request.PaginationParams.PageSize,
+            searchTerm: request.PaginationParams.SearchTerm!,
+            sortBy: request.PaginationParams.SortBy!,
+            isAscending: request.PaginationParams.IsAscending,
+            category: request.PaginationParams.Category!
         );
+    
+        var paginatedNews = paginationResponse.Paginate(newsAggregate);
+        
+        return new PaginationResponse<GetAllNewsResponseDto>
+        {
+            Items = _mapper.Map<List<GetAllNewsResponseDto>>(paginatedNews.Items),
+            PageNumber = paginatedNews.PageNumber,
+            PageSize = paginatedNews.PageSize,
+            TotalItems = paginatedNews.TotalItems,
+            TotalPages = paginatedNews.TotalPages,
+            HasPreviousPage = paginatedNews.HasPreviousPage,
+            HasNextPage = paginatedNews.HasNextPage
+        };
     }
 }

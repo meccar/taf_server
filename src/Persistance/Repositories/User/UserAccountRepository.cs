@@ -1,5 +1,4 @@
 using Domain.Aggregates;
-using Domain.Interfaces.Credentials;
 using Domain.Interfaces.User;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
