@@ -22,36 +22,4 @@ public class UserProfileRepository
         : base(context)
     {
     }
-    
-    /// <summary>
-    /// Creates a new user profile asynchronously.
-    /// </summary>
-    /// <param name="request">The user profile model containing the details of the profile to be created.</param>
-    /// <returns>A result containing the created user profile model or a failure message.</returns>
-    public async Task<UserProfileAggregate?> CreateUserProfileAsync(UserProfileAggregate userProfileAggregate)
-    {
-        var created = await CreateAsync(userProfileAggregate);
-        
-        return created?.Entity;
-    }
-
-    public async Task<UserProfileAggregate?> UpdateUserProfileAsync(UserProfileAggregate userProfileAggregate)
-    {
-        return await UpdateAsync(userProfileAggregate);
-    }
-    
-    /// <summary>
-    /// Retrieves the status of a user account asynchronously by user ID.
-    /// </summary>
-    /// <param name="userId">The user ID for which the account status is to be retrieved.</param>
-    /// <returns>The status of the user account.</returns>
-    public async Task<UserProfileAggregate?> GetUserProfileAsync(int eid)
-    {
-       return await GetByIdAsync(eid);
-    }
-    
-    public async Task<UserProfileAggregate?> SoftDeleteUserAccount(UserProfileAggregate userProfileAggregate)
-    {
-        return await UpdateAsync(userProfileAggregate);
-    }
 }

@@ -32,11 +32,10 @@ public class CreateNewsCommandHandler : TransactionalCommandHandler<CreateNewsCo
         newsAggregate.CreatedAt = DateTime.Now;
         newsAggregate.DeletedAt = null;
         
-        var result = await UnitOfWork.NewsRepository.CreateNewsAsync(newsAggregate);
+        var result = await UnitOfWork.NewsRepository.CreateAsync(newsAggregate);
 
-        if (result is not null)
-            return _mapper.Map<CreateNewsResponseDto>(result); 
-        
-        throw new BadRequestException("There was an error creating the news");
+        return result is not null
+            ? _mapper.Map<CreateNewsResponseDto>(result.Entity) 
+            : throw new BadRequestException("There was an error creating the news");
     }
 }

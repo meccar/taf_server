@@ -67,19 +67,18 @@ public class LoginQueryHandler : TransactionalQueryHandler<LoginQuery, LoginResp
         
         request.Password = null!;
         
-        if (result is not null)
-        {
-            // Generate authentication token and refresh token
-            var tokenGenerationResult = await _jwtTokenRepository
-                .GenerateAuthResponseWithRefreshTokenCookie(
-                    result.Value.Item1,
-                    result.Value.Item2
-                );
+        if (result is null)
+            throw new UnauthorizedException("Invalid credentials");
             
-            if (tokenGenerationResult is not null)
-                return _mapper.Map<LoginResponseDto>(tokenGenerationResult); 
-        }
+        // Generate authentication token and refresh token
+        var tokenGenerationResult = await _jwtTokenRepository
+            .GenerateAuthResponseWithRefreshTokenCookie(
+                result.Value.Item1,
+                result.Value.Item2
+            );
         
-        throw new UnauthorizedException("Invalid credentials");
+        return tokenGenerationResult is not null
+            ? _mapper.Map<LoginResponseDto>(tokenGenerationResult) 
+            : throw new UnauthorizedException("Invalid credentials");
     }
 }

@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain.Aggregates;
 using Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Shared.Dtos.Exceptions;
 using Shared.Dtos.News;
 
@@ -24,8 +25,10 @@ public class UpdateNewsCommandHandler : TransactionalCommandHandler<UpdateNewsCo
 
         if (user is null)
             throw new BadRequestException("User not found");
-        
-        var getNewsResult = await UnitOfWork.NewsRepository.GetDetailNewsAsync(request.Eid);
+
+        var getNewsResult = await UnitOfWork.NewsRepository
+            .FindByCondition(x => x.Uuid == request.Eid, true)
+            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
         
         if (getNewsResult is null)
             throw new BadRequestException("There was an error getting the news");
@@ -35,7 +38,7 @@ public class UpdateNewsCommandHandler : TransactionalCommandHandler<UpdateNewsCo
 
         var newsAggregate = _mapper.Map<NewsAggregate>(request);
         
-        var result = await UnitOfWork.NewsRepository.UpdateNewsAsync(newsAggregate);
+        var result = await UnitOfWork.NewsRepository.UpdateAsync(newsAggregate);
         
         return result is not null 
             ?_mapper.Map<UpdateNewsResponseDto>(result)

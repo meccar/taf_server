@@ -30,7 +30,7 @@ public class DeleteUserCommandHandler
 
         var getUserProfileResult = await UnitOfWork
             .UserProfileRepository
-            .GetUserProfileAsync(getCurrentUserResult.UserProfileId);
+            .GetByIdAsync(getCurrentUserResult.UserProfileId);
         
         if (getUserProfileResult is null)
             throw new UnauthorizedException("You are not logged in.");
@@ -40,7 +40,7 @@ public class DeleteUserCommandHandler
         
         var softDeleteUserAccountResult = await UnitOfWork
             .UserProfileRepository
-            .SoftDeleteUserAccount(getUserProfileResult);
+            .UpdateAsync(getUserProfileResult);
 
         return softDeleteUserAccountResult is not null
             ? new SuccessResponseDto(true)

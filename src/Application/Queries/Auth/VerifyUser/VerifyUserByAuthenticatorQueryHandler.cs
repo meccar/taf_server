@@ -103,9 +103,8 @@ public class VerifyUserByAuthenticatorQueryHandler : TransactionalQueryHandler<V
                 signInResult.Value.Item1, signInResult.Value.Item2 
             );
 
-        if (tokenModel is null)
-            throw new BadRequestException("Failed while logging in, please try again.");
-        
-        return _mapper.Map<VerifyUserResponseDto>(tokenModel);
+        return tokenModel is not null
+            ? _mapper.Map<VerifyUserResponseDto>(tokenModel)
+            :throw new BadRequestException("Failed while logging in, please try again.");
     }
 }

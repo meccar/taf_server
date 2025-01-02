@@ -35,7 +35,7 @@ public class
 
         userProfileAggregate.UpdatedAt = DateTime.Now;
         
-        var result = await UnitOfWork.UserProfileRepository.UpdateUserProfileAsync(userProfileAggregate);
+        var result = await UnitOfWork.UserProfileRepository.UpdateAsync(userProfileAggregate);
 
         return result is not null
             ? _mapper.Map<UpdateUserProfileResponseDto>(userProfileAggregate)
