@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Shared.HttpResponses;
 
@@ -52,13 +53,13 @@ public class ApiResponse
     {
         return statusCode switch
         {
-            200 => "Success",
-            201 => "Created",
-            400 => "Bad request",
-            401 => "Unauthorized",
-            403 => "Forbidden",
-            404 => "Resource not found",
-            500 => "An unhandled error occurred",
+            StatusCodes.Status200OK => "Success",
+            StatusCodes.Status201Created => "Created",
+            StatusCodes.Status400BadRequest => "Bad request",
+            StatusCodes.Status401Unauthorized => "Unauthorized",
+            StatusCodes.Status403Forbidden => "Forbidden",
+            StatusCodes.Status404NotFound => "Resource not found",
+            StatusCodes.Status500InternalServerError => "An unhandled error occurred",
             _ => string.Empty
         };
     }

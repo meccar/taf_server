@@ -7,9 +7,7 @@ namespace Persistance.Repositories.News;
 public class NewsRepository
     : RepositoryBase<NewsAggregate>, INewsRepository 
 {
-    public NewsRepository(
-        ApplicationDbContext context
-    ) : base(context)
+    public NewsRepository(ApplicationDbContext context) : base(context)
     {
     }
 }

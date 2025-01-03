@@ -53,7 +53,7 @@ public class UserAccountAggregate : IdentityUser<int>
     
     [ForeignKey("UserProfileId")]
     [DeleteBehavior(DeleteBehavior.ClientSetNull)]
-    public virtual UserProfileAggregate UserProfile { get; set; } = null!;
+    public virtual UserProfileAggregate? UserProfile { get; set; } = null!;
     // public List<IdentityUserToken<int>> UserToken { get; set; } = new List<IdentityUserToken<int>>();
 
 }

@@ -57,9 +57,9 @@ public class AuthenticationController
         Description =
             "Registers a new user with the provided details. Returns a sign-in response upon successful registration."
     )]
-    [SwaggerResponse(201, "User successfully registered", typeof(RegisterUserResponseDto))]
-    [SwaggerResponse(400, "Invalid user input")]
-    [SwaggerResponse(500, "An error occurred while processing the request")]
+    [SwaggerResponse(StatusCodes.Status201Created, "User successfully registered", typeof(RegisterUserResponseDto))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid user input")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing the request")]
     [AllowAnonymous]
     //[ApiValidationFilter]
     public async Task<ActionResult<RegisterUserResponseDto>> Register([FromBody] RegisterUserRequestDto registerDto)
@@ -84,9 +84,9 @@ public class AuthenticationController
         Description =
             "Login as a user with the provided details. Returns a sign-in response upon successful registration."
     )]
-    [SwaggerResponse(200, "User successfully logined", typeof(LoginUserRequestDto))]
-    [SwaggerResponse(400, "Invalid user input")]
-    [SwaggerResponse(500, "An error occurred while processing the request")]
+    [SwaggerResponse(StatusCodes.Status200OK, "User successfully logined", typeof(LoginUserRequestDto))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid user input")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing the request")]
     [AllowAnonymous]
     public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginUserRequestDto loginDto)
     {
@@ -107,8 +107,8 @@ public class AuthenticationController
         Summary = "Get Admin Status",
         Description = "Returns a JSON object indicating if the user is an admin"
     )]
-    [SwaggerResponse(200, "Successfully fetched admin status", typeof(object))]
-    [SwaggerResponse(401, "Unauthorized")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Successfully fetched admin status", typeof(object))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
     [AdminGuard]
     public IActionResult GetAdminStatus()
     {
@@ -136,8 +136,8 @@ public class AuthenticationController
         Summary = "Verify User",
         Description = "Returns a JSON object indicating if email exists"
     )]
-    [SwaggerResponse(200, "Successfully verify user", typeof(object))]
-    [SwaggerResponse(400, "Unauthorized")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Successfully verify user", typeof(object))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Unauthorized")]
     // [UserGuard]
     public async Task<IActionResult> VerifyUser(
         [FromQuery] VerifyUserEmailRequestDto userEmailRequestDto,
@@ -159,9 +159,9 @@ public class AuthenticationController
         Description =
             "Update a user with the provided details. Returns a sign-in response upon successful registration."
     )]
-    [SwaggerResponse(201, "User successfully registered", typeof(UpdateUserAccountResponseDto))]
-    [SwaggerResponse(400, "Invalid user input")]
-    [SwaggerResponse(500, "An error occurred while processing the request")]
+    [SwaggerResponse(StatusCodes.Status201Created, "User successfully registered", typeof(UpdateUserAccountResponseDto))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid user input")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing the request")]
     [UserGuard]
     public async Task<ActionResult<UpdateUserAccountResponseDto>> UpdateUserAccount(
         [FromRoute] string eid,
@@ -182,9 +182,9 @@ public class AuthenticationController
         Summary = "Delete User",
         Description = "Returns a JSON object indicating if user is an admin"        
     )]
-    [SwaggerResponse(200, "Successfully deleted user", typeof(object))]
-    [SwaggerResponse(401, "Unauthorized")]
-    [SwaggerResponse(500, "An error occurred while processing the request")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Successfully deleted user", typeof(object))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, "Unauthorized")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "An error occurred while processing the request")]
     [UserGuard]
     public async Task<ActionResult> DeleteUser([FromRoute] string eid)
     {

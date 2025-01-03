@@ -44,8 +44,8 @@ public class ExceptionsController : IExceptionFilter
             BadRequestException => new BadRequestObjectResult(response),
             NotFoundException => new NotFoundObjectResult(response),
             UnauthorizedException => new UnauthorizedObjectResult(response),
-            ForbiddenException => new ObjectResult(response) { StatusCode = 403 },
-            _ => new ObjectResult(response) { StatusCode = 500 }
+            ForbiddenException => new ObjectResult(response) { StatusCode = StatusCodes.Status403Forbidden },
+            _ => new ObjectResult(response) { StatusCode = StatusCodes.Status500InternalServerError }
         };
 
         context.ExceptionHandled = true;

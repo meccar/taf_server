@@ -1,9 +1,6 @@
-using System.Runtime.CompilerServices;
-using Application.Commands.News;
 using Application.Commands.News.Create;
 using Application.Commands.News.Delete;
 using Application.Commands.News.Update;
-using Application.Queries.News;
 using Application.Queries.News.GetAll;
 using Application.Queries.News.GetDetail;
 using Asp.Versioning;
@@ -41,9 +38,9 @@ public class NewsController
         Summary = "Create a new News",
         Description = "Creates a new News with the provided details. Returns responses upon requests"
     )]
-    [SwaggerResponse(201, "News successfully created", typeof(CreateNewsResponseDto))]
-    [SwaggerResponse(400, "Invalid News input")]
-    [SwaggerResponse(500, "An error occured while processing the request")]
+    [SwaggerResponse(StatusCodes.Status201Created, "News successfully created", typeof(CreateNewsResponseDto))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid News input")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "An error occured while processing the request")]
     [UserGuard]
     public async Task<ActionResult<CreateNewsResponseDto>> Create(
         [FromBody] CreateNewsRequestDto createNewsRequestDto
@@ -63,9 +60,9 @@ public class NewsController
         Summary = "Get All News",
         Description = "Get All News"
     )]
-    [SwaggerResponse(200, "Get all news", typeof(GetAllNewsResponseDto))]
-    [SwaggerResponse(400, "Invalid News input")]
-    [SwaggerResponse(500, "An error occured while processing the request")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Get all news", typeof(GetAllNewsResponseDto))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid News input")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "An error occured while processing the request")]
     [AllowAnonymous]
     public async Task<ActionResult<PaginationResponse<GetAllNewsResponseDto>>> GetAll(
         [FromQuery] PaginationParams paginationParams
@@ -85,9 +82,9 @@ public class NewsController
         Summary = "Retrieve Detailed News Information",
         Description = "Fetches comprehensive details for a specific news item"
     )]
-    [SwaggerResponse(200, "Successfully retrieved news details", typeof(GetDetailNewsResponseDto))]
-    [SwaggerResponse(400, "Invalid request parameters")]
-    [SwaggerResponse(500, "Internal server error")]
+    [SwaggerResponse(StatusCodes.Status200OK, "Successfully retrieved news details", typeof(GetDetailNewsResponseDto))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid request parameters")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
     [AllowAnonymous]
     public async Task<ActionResult<GetDetailNewsResponseDto>> GetDetailNews(
         [FromRoute] string eid)
@@ -105,9 +102,9 @@ public class NewsController
         Summary = "Update News Item",
         Description = "Updates an existing news item with provided information"
     )]
-    [SwaggerResponse(200, "News successfully updated", typeof(UpdateNewsResponseDto))]
-    [SwaggerResponse(400, "Invalid update parameters")]
-    [SwaggerResponse(500, "Error during news update")]
+    [SwaggerResponse(StatusCodes.Status200OK, "News successfully updated", typeof(UpdateNewsResponseDto))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid update parameters")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Error during news update")]
     [UserGuard]
     public async Task<ActionResult<UpdateNewsResponseDto>> UpdateNews(
         [FromRoute] string eid,
@@ -127,9 +124,9 @@ public class NewsController
         Summary = "Delete News Item",
         Description = "Deletes an existing news item with provided information"
     )]
-    [SwaggerResponse(200, "News successfully deleted", typeof(object))]
-    [SwaggerResponse(400, "Invalid delete parameters")]
-    [SwaggerResponse(500, "Internal server error")]
+    [SwaggerResponse(StatusCodes.Status200OK, "News successfully deleted", typeof(object))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Invalid delete parameters")]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
     [UserGuard]
     public async Task<ActionResult> DeleteNews(
         [FromRoute] string eid)

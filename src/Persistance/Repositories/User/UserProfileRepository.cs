@@ -16,10 +16,7 @@ public class UserProfileRepository
     /// </summary>
     /// <param name="context">The application database context for accessing the database.</param>
     /// <param name="mapper">The AutoMapper instance for mapping between models and entities.</param>
-    public UserProfileRepository(
-        ApplicationDbContext context
-        )
-        : base(context)
+    public UserProfileRepository(ApplicationDbContext context) : base(context)
     {
     }
 }
