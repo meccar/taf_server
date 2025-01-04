@@ -19,16 +19,20 @@ public class GetProfileQueryHandler : TransactionalQueryHandler<GetProfileQuery,
 
     protected override async Task<GetProfileResponseDto> ExecuteCoreAsync(GetProfileQuery request, CancellationToken cancellationToken)
     {
-        var user = await UnitOfWork.UserAccountRepository.GetCurrentUser();
+        var userAccount = await UnitOfWork.UserAccountRepository.GetCurrentUser();
         
-        if (user is null)
+        if (userAccount is null)
             throw new UnauthorizedAccessException("User not found");
 
-        user.UserProfile = await UnitOfWork
+        var userProfile = await UnitOfWork
             .UserProfileRepository
-            .FindByCondition(x => x.Id == user.UserProfileId, true)
+            .FindByCondition(x => x.Id == userAccount.UserProfileId, true)
             .FirstOrDefaultAsync(cancellationToken: cancellationToken);
-
-        return _mapper.Map<GetProfileResponseDto>(user);
+        
+        if (userProfile is null)
+            throw new UnauthorizedAccessException("User not found");
+            
+        userProfile.UserAccount = userAccount;
+        return _mapper.Map<GetProfileResponseDto>(userProfile);
     }
 }
