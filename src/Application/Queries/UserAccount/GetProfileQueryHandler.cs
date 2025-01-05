@@ -27,7 +27,7 @@ public class GetProfileQueryHandler : TransactionalQueryHandler<GetProfileQuery,
         var userProfile = await UnitOfWork
             .UserProfileRepository
             .FindByCondition(x => x.Id == userAccount.UserProfileId, true)
-            .FirstOrDefaultAsync(cancellationToken: cancellationToken);
+            .FirstOrDefaultAsync(cancellationToken);
         
         if (userProfile is null)
             throw new UnauthorizedAccessException("User not found");
