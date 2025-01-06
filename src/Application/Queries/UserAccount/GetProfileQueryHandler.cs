@@ -1,6 +1,7 @@
 using AutoMapper;
 using Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Shared.Dtos.Exceptions;
 using Shared.Dtos.UserAccount;
 
 namespace Application.Queries.UserAccount;
@@ -22,7 +23,7 @@ public class GetProfileQueryHandler : TransactionalQueryHandler<GetProfileQuery,
         var userAccount = await UnitOfWork.UserAccountRepository.GetCurrentUser();
         
         if (userAccount is null)
-            throw new UnauthorizedAccessException("User not found");
+            throw new UnauthorizedException("You do not have permission to access");
 
         var userProfile = await UnitOfWork
             .UserProfileRepository
@@ -30,9 +31,11 @@ public class GetProfileQueryHandler : TransactionalQueryHandler<GetProfileQuery,
             .FirstOrDefaultAsync(cancellationToken);
         
         if (userProfile is null)
-            throw new UnauthorizedAccessException("User not found");
+            throw new UnauthorizedException("You do not have permission to access");
             
         userProfile.UserAccount = userAccount;
-        return _mapper.Map<GetProfileResponseDto>(userProfile);
+        var response = _mapper.Map<GetProfileResponseDto>(userProfile);
+
+        return response;
     }
 }

@@ -12,7 +12,7 @@ public static class NewsMapper
     {
         config.CreateMap<CreateNewsCommand, NewsAggregate>();
         config.CreateMap<NewsAggregate, GetDetailNewsResponseDto>();
+        config.CreateMap<NewsAggregate, GetAllNewsResponseDto>();
 
-        
     }
 }
